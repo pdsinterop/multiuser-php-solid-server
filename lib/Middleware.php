@@ -1,5 +1,5 @@
 <?php
-	namespace PdsInterop\PhpSolid;
+	namespace Pdsinterop\PhpSolid;
 
 	class Middleware {
 		public static function cors() {
