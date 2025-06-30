@@ -1,6 +1,6 @@
 <?php
-	require_once(__DIR__ . "/../config.php");
-	require_once(__DIR__ . "/../vendor/autoload.php");
+	require_once(__DIR__ . "/../../config.php");
+	require_once(__DIR__ . "/../../vendor/autoload.php");
 
 	use Pdsinterop\PhpSolid\Middleware;
 	use Pdsinterop\PhpSolid\Server;
@@ -345,7 +345,6 @@ EOF;
 					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
 				break;
 			}
-		break;
 		break;
 		case "OPTIONS":
 		break;

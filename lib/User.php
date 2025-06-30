@@ -101,6 +101,32 @@
 			return $result;
 		}
 
+		public static function getStorage($userId) {
+			self::connect();
+			$query = self::$pdo->prepare(
+				'SELECT storage FROM userStorage WHERE userId=:userId'
+			);
+			$query->execute([
+				':userId' => $userId
+			]);
+			$result = [];
+			while($row = $query->fetch()) {
+				$result[] = $row['storage'];
+			}
+			return $result;
+		}
+
+		public static function setStorage($userId, $storageUrl) {
+			self::connect();
+			$query = self::$pdo->prepare(
+				'INSERT OR REPLACE INTO storage VALUES(:userId, :storageUrl)'
+			);
+			$query->execute([
+				':userId' => $userId,
+				':storageUrl' => $storageUrl
+			]);
+		}
+
 		public static function getUser($email) {
 			self::connect();
 			$query = self::$pdo->prepare(
@@ -116,12 +142,36 @@
 				
 				$allowedClients = self::getAllowedClients($userData['userId']);
 				$userData['allowedClients'] = $allowedClients;
+				$userData['issuer'] = BASEURL;
+				$storage = self::getStorage($userData['userId']);
+				if ($storage) {
+					$userData['storage'] = $storage;
+				}
+				return $userData;
+			}
+			return false;
+		}
+
+		public static function getUserById($userId) {
+			self::connect();
+			$query = self::$pdo->prepare(
+				'SELECT user_id, data FROM users WHERE user_id=:userId'
+			);
+			$query->execute([
+				':userId' => $userId
+			]);
+			$result = $query->fetchAll();
+			if (sizeof($result) === 1) {
+				$userData = json_decode($result[0]['data'], true);
+				$userData['userId'] = $result[0]['user_id'];
+
+				$allowedClients = self::getAllowedClients($userData['userId']);
+				$userData['allowedClients'] = $allowedClients;
 				return $userData;
 			}
 			return false;			
 		}
 
-		
 		public static function checkPassword($email, $password) {
 			self::connect();
 			$query = self::$pdo->prepare(
