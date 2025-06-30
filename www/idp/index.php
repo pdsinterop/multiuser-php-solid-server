@@ -86,7 +86,7 @@
 						$approval = true;
 					}
 
-					$webId = "https://id-" . $user['userId'] . "." . BASEURL . "/#me";
+					$webId = "https://id-" . $user['userId'] . "." . BASEDOMAIN . "/#me";
 					$user = new \Pdsinterop\Solid\Auth\Entity\User();
 					$user->setIdentifier($webId);
 
