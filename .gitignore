@@ -3,5 +3,6 @@ keys/
 vendor/
 mailpit-data/
 db/
+pods/
 *~
 composer.lock
