@@ -1,0 +1,888 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "API documentation for PHP Solid IDP",
+    "version": "0.1",
+    "title": "PHP Solid IDP API",
+    "license": {
+      "name": "Copyright PDSInterop",
+      "url": "http://solid.local/api/v1/LICENSE"
+    }
+  },
+  "servers" : [
+    {
+      "url" : "/",
+      "description" : "Test here"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Well known",
+      "description": "Well-known endpoints (world readable configuration)",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/idp/api/v1/#well-known"
+      }
+    },
+    {
+      "name": "Account creation",
+      "description": "Endpoints related to account creation",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/idp/api/v1/#account-creation"
+      }
+    },
+    {
+      "name": "Login",
+      "description": "Endpoints related to the login flow",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/idp/api/v1/#login"
+      }
+    },
+    {
+      "name": "OIDC",
+      "description": "OpenID Connect endpoints",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/idp/api/v1/#oidc"
+      }
+    },
+    {
+      "name": "Consent",
+      "description": "Endpoints related to consent",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/idp/api/v1/#consent"
+      }
+    },
+    {
+      "name": "Password reset",
+      "description": "Endpoints related to password reset",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/idp/api/v1/#password-reset"
+      }
+    },
+    {
+      "name": "Account deletion",
+      "description": "Endpoints related to account deletion",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/idp/api/v1/#account-deletion"
+      }
+    }
+  ],
+  "paths": {
+    "/api/accounts/new": {
+      "post": {
+        "tags": [
+          "Account creation"
+        ],
+        "summary": "Create a new account",
+        "description": "This is the second step in account creation. After having a verification token for the e-mail address, this call allows creation of an account",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "email" : "alice@example.com",
+                  "password" : "********",
+                  "repeat_password" : "********",
+                  "confirm": "123-123"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "username": "264e30d9-bc83-4ff7-a3b5-68d12125cdd7",
+                    "webId": "https://id-264e30d9-bc83-4ff7-a3b5-68d12125cdd7.solid.local/profile/card#me",
+                    "email": "alice@example.com",
+                    "idp": "https://idp.solid.local"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounts/verify": {
+      "post": {
+        "tags": [
+          "Account creation"
+        ],
+        "summary": "Request verification e-mail for account creation",
+        "description": "First step in account creation. This sends a verification e-mail with a token, to be used in account creation",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "email" : "alice@example.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounts/delete": {
+      "post": {
+        "tags": [
+          "Account deletion"
+        ],
+        "summary": "Request account deletion",
+        "description": "",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "email" : "alice@example.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounts/delete/confirm": {
+      "post": {
+        "tags": [
+          "Account deletion"
+        ],
+        "summary": "Confirm requested account deletion",
+        "description": "",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "token" : "01HVNKVATFCFTHD1Z64SW8S3P9"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounts/reset-password": {
+      "post": {
+        "tags": [
+          "Password reset"
+        ],
+        "summary": "Request a password change",
+        "description": "",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "email" : "alice@example.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/accounts/change-password": {
+      "post": {
+        "tags": [
+          "Password reset"
+        ],
+        "summary": "Set a new password for an account (requires a token from the e-mail sent by reset-password",
+        "description": "",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "token" : "01HVP8TZFAK22D2396HCJMM3X8",
+                  "newPassword" : "********"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/password": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Login with the IDP",
+        "description": "",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "username" : "alice@example.com",
+                  "password" : "********",
+                  "response_type" : "code",
+                  "scope" : "openid offline_access webid",
+                  "client_id" : "10e057ee0f97bd9e3a001c220337f407",
+                  "redirect_uri" : "https://app.example.com",
+                  "state" : "a3c8de88ed1b46669277879a6fb9cd22"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Successful operation, redirects to logged in profile"
+          }
+        }
+      }
+    },
+    "/api/login/password": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Login with the IDP",
+        "description": "",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "username" : "alice@example.com",
+                  "password" : "********",
+                  "response_type" : "code",
+                  "scope" : "openid offline_access webid",
+                  "client_id" : "10e057ee0f97bd9e3a001c220337f407",
+                  "redirect_uri" : "https://app.example.com",
+                  "state" : "a3c8de88ed1b46669277879a6fb9cd22"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation, returns redirect URL to logged in profile",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "redirect" : "https://app.example.com"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sharing": {
+      "post": {
+        "tags": [
+          "Consent"
+        ],
+        "summary": "Sharing",
+        "description": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "client_id",
+            "description": "Client ID that is requesting the login",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "10e057ee0f97bd9e3a001c220337f407"
+            }
+          },
+          {
+            "in": "query",
+            "name": "redirect_uri",
+            "description": "Redirect URI, specifies where to redirect the browser to after the login",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "https://app.example.com"
+            }
+          },
+          {
+            "in": "query",
+            "name": "response_type",
+            "description": "Response type",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "code"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "description": "Scope used for the login",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "openid offline_access webid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "description": "State parameter to be used in token generation",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "a3c8de88ed1b46669277879a6fb9cd22"
+            }
+          },
+          {
+            "in": "query",
+            "name": "code_challenge",
+            "description": "Code challenge",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "tzb79LTem6G-bLfILlJfsc-O3677AfWw_I9LE8v4wrs"
+            }
+          },
+          {
+            "in": "query",
+            "name": "code_challenge_method",
+            "description": "Code challenge method",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "S256"
+            }
+          },
+          {
+            "in": "query",
+            "name": "prompt",
+            "description": "Prompt parameter",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "consent"
+            }
+          },
+          {
+            "in": "query",
+            "name": "response_mode",
+            "description": "Response mode",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "query"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "string",
+                  "example": "\"ok\""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Logout from the IDP",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "string",
+                  "example": "\"ok\""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/solid": {
+      "get": {
+        "tags": [
+          "Well known"
+        ],
+        "summary": "Get the Solid configuration for the IDP",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "root": "https://solid.local/.well-known/solid",
+                  "api": {
+                    "accounts": {
+                      "new": "https://solid.local/api/accounts/new",
+                      "recover": "https://solid.local/api/accounts/recover",
+                      "signin": "https://solid.local/login",
+                      "signout": "https://solid.local/logout",
+                      "validateToken": "https://solid.local/api/accounts/validateToken"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/openid-configuration": {
+      "get": {
+        "tags": [
+          "Well known",
+          "OIDC"
+        ],
+        "summary": "Get the OIDC configuration for the IDP",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "issuer": "https://example.com",
+                    "jwks_uri": "https://example.com/jwks",
+                    "scopes_supported": [
+                      "openid",
+                      "offline_access"
+                    ],
+                    "response_types_supported": [
+                      "code",
+                      "code token",
+                      "code id_token",
+                      "id_token code",
+                      "id_token",
+                      "id_token token",
+                      "code id_token token",
+                      "none"
+                    ],
+                    "token_types_supported": [
+                      "legacyPop",
+                      "dpop"
+                    ],
+                    "response_modes_supported": [
+                      "query",
+                      "fragment"
+                    ],
+                    "grant_types_supported": [
+                      "authorization_code",
+                      "implicit",
+                      "refresh_token",
+                      "client_credentials"
+                    ],
+                    "subject_types_supported": [
+                      "public"
+                    ],
+                    "id_token_signing_alg_values_supported": [
+                      "RS256"
+                    ],
+                    "token_endpoint_auth_methods_supported": [
+                      "client_secret_basic"
+                    ],
+                    "token_endpoint_auth_signing_alg_values_supported": [
+                      "RS256"
+                    ],
+                    "display_values_supported": [],
+                    "claim_types_supported": [
+                      "normal"
+                    ],
+                    "claims_supported": [],
+                    "claims_parameter_supported": false,
+                    "request_parameter_supported": true,
+                    "request_uri_parameter_supported": false,
+                    "require_request_uri_registration": false,
+                    "check_session_iframe": "https://example.com/session",
+                    "end_session_endpoint": "https://example.com/logout",
+                    "authorization_endpoint": "https://example.com/authorize",
+                    "token_endpoint": "https://example.com/token",
+                    "userinfo_endpoint": "https://example.com/userinfo",
+                    "registration_endpoint": "https://example.com/register"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jwks": {
+      "get": {
+        "tags": [
+          "OIDC"
+        ],
+        "summary": "Get the OIDC key information (JWKS) for the IDP",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "keys": [
+                      {
+                        "kid": "qqgc7N0Rtcw",
+                        "kty": "RSA",
+                        "alg": "RS256",
+                        "key_ops": [
+                          "verify"
+                        ],
+                        "ext": true,
+                        "n": "o_cJzljzWOUZ2wC-f37N2_l0YGHaGLxVQeTXq_ZOc3QQ2ImAbGkM4RqkKfYJDrxlgyRYicg6MUxbISiakTK2rQL6l8_54UJmkQCuEQMu1QXJhgaf5aJF-7IWkvMIyfywjXA5z5Pfd22YjWwIr0Rk7bJRv-wUCSlC_R3BBctMfvCMQ1NX5k1ic4IaPi_jhIEkK_QB26zA0q8Vq3CNi9_YkFd4tzF9tWMhvleqInfTnLSVyM4VSW8-7d1-uaNfGsdue0e_hVsMSvYx0OY4vDqj_-MPuRsypob9gxuR4BeH89ap31gkdA08C_WUVf7YnRbfM8jx2yZnek2B-hYsPZ2ltQ",
+                        "e": "AQAB"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorize": {
+      "get": {
+        "tags": [
+          "OIDC"
+        ],
+        "summary": "Request authorization for a client",
+        "description": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "client_id",
+            "description": "Client ID that is requesting the login",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "10e057ee0f97bd9e3a001c220337f407"
+            }
+          },
+          {
+            "in": "query",
+            "name": "redirect_uri",
+            "description": "Redirect URI, specifies where to redirect the browser to after the login",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "https://app.example.com"
+            }
+          },
+          {
+            "in": "query",
+            "name": "response_type",
+            "description": "Response type",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "code"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "description": "Scope used for the login",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "openid offline_access webid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "description": "State parameter to be used in token generation",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "a3c8de88ed1b46669277879a6fb9cd22"
+            }
+          },
+          {
+            "in": "query",
+            "name": "code_challenge",
+            "description": "Code challenge",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "tzb79LTem6G-bLfILlJfsc-O3677AfWw_I9LE8v4wrs"
+            }
+          },
+          {
+            "in": "query",
+            "name": "code_challenge_method",
+            "description": "Code challenge method",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "S256"
+            }
+          },
+          {
+            "in": "query",
+            "name": "prompt",
+            "description": "Prompt parameter",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "consent"
+            }
+          },
+          {
+            "in": "query",
+            "name": "response_mode",
+            "description": "Response mode",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example" : "query"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirects to login page"
+          }
+        }
+      }
+    },
+    "/register/": {
+      "post": {
+        "tags": [
+          "OIDC"
+        ],
+        "summary": "Register a client with the IDP",
+        "description": "",
+        "requestBody" : {
+          "required": true,
+          "content" : {
+            "application/json" : {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "client_name":"Pod provisioner",
+                  "application_type":"web",
+                  "redirect_uris":[
+                    "https://app.example.com"
+                  ],
+                  "subject_type":"public",
+                  "token_endpoint_auth_method":"client_secret_basic",
+                  "id_token_signed_response_alg":"RS256",
+                  "grant_types":[
+                    "authorization_code",
+                    "refresh_token"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "redirect_uris": [
+                      "https://app.example.com"
+                    ],
+                    "client_id": "4cef7c75e56b716b7e033613e4d07137",
+                    "client_secret": "976a179dd3812b5cf26e0dcb40a9735d",
+                    "response_types": [
+                      "code"
+                    ],
+                    "grant_types": [
+                      "authorization_code",
+                      "refresh_token"
+                    ],
+                    "application_type": "web",
+                    "client_name": "Pod provisioner",
+                    "subject_type": "public",
+                    "id_token_signed_response_alg": "RS256",
+                    "token_endpoint_auth_method": "client_secret_basic",
+                    "registration_access_token": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo4NDQzIiwiYXVkIjoiNGNlZjdjNzVlNTZiNzE2YjdlMDMzNjEzZTRkMDcxMzciLCJzdWIiOiI0Y2VmN2M3NWU1NmI3MTZiN2UwMzM2MTNlNGQwNzEzNyJ9.UMh73obOFl42osVst9HY_p9hGpxFGhpvMt7aFUTTWMPxfVkHouBausXCqFmkOBl3FfYnm7MJi6eq3LsB8mYTD_mW7NgLzxOFe1hAY-SL_5kiV3xKLQSTCQn0SKGxLlvhiVdrYD_iY3HEXmKLXmVmT25F0qbAvz3vTdUNNajClbWWw_NkPCrglKt7j9lCIVQRXsA6GLFHHBH6C4auubG3Kj25f28Xi7VkDifJmSRdXNuAWtqDYsRl9rmKTnOLCTbHQWH3SQNCzPw4s-VfcAb8-qe2sFkiG34LMKCG1Mqa6NXeb6sWH_DHpljkW5Vyot79S98Q_rcoV42L831EDPQMIg",
+                    "registration_client_uri": "https://example.com/register/4cef7c75e56b716b7e033613e4d07137",
+                    "client_id_issued_at": 1713345486,
+                    "client_secret_expires_at": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/token/": {
+      "post": {
+        "tags": [
+          "OIDC"
+        ],
+        "summary": "Get an access token from the IDP",
+        "description": "Requires authorization header + DPOP",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "grant_type" : "authorization_code",
+                  "redirect_uri" : "https://app.example.com",
+                  "client_id" : "10e057ee0f97bd9e3a001c220337f407"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "access_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6InNWY3YyNkMxRWNNIn0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo4NDQzIiwiYXVkIjoic29saWQiLCJzdWIiOiJodHRwczovLzMwNzIzN2U1LTQ2MmYtNGJjZS04ZTEwLTBhMTg4Yjc4N2FmNC5sb2NhbGhvc3Q6ODQ0My9wcm9maWxlL2NhcmQjbWUiLCJleHAiOjE3MTQ1NTU1NzcsImlhdCI6MTcxMzM0NTk3NywianRpIjoiMjI3YThkZTg2NDBmYTZmNiIsImNuZiI6eyJqa3QiOiJTY01tcUozdGxmLVZOWjdhcFdCNUVKSlUzZUY1UFpsWG9EY1BpRE1GTmE4In0sImNsaWVudF9pZCI6IjkwMTFlNjk2MTI4YzgzODdhMzliN2MzNGMyNjgwMWY3Iiwid2ViaWQiOiJodHRwczovLzMwNzIzN2U1LTQ2MmYtNGJjZS04ZTEwLTBhMTg4Yjc4N2FmNC5sb2NhbGhvc3Q6ODQ0My9wcm9maWxlL2NhcmQjbWUifQ.pSr3Cmo5ZFrQTFzG9rV_17FEdmAJKO4ws9BHNflfhq35wj6Vi-sEfzPRCFXV6pDYUl9wmpw_Q2JNj2fdSkZVF6oMXBC19yTgA3hX1XQ8Z4gepszvDOUeODW5g1-fAXOP7l7USeIhubQ9jGkkFWXkSn3Pj_ZY3gKn-GuQRxuiI5fnxzARc6dgOu7pTwCYaCXWv8lP0SsixXoinPR-2_FLi4wB_CkWRMhfcmPx3rM-uCzXDR5W3t390sFeGMLzUdQmk-AuktG7Oh3SWuXQh47Rj_fcjMsEklPXIf8Py2qcPj0xMXeFl682KF7hQ6KAUc7SXuskEI_kXYVP_N-C318AEA",
+                    "token_type":"Bearer",
+                    "expires_in":1209600,
+                    "refresh_token":"0407b985022c1548b6767e3b63e3c4fc",
+                    "id_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6InFxZ2M3TjBSdGN3In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo4NDQzIiwiYXVkIjoiOTAxMWU2OTYxMjhjODM4N2EzOWI3YzM0YzI2ODAxZjciLCJhenAiOiI5MDExZTY5NjEyOGM4Mzg3YTM5YjdjMzRjMjY4MDFmNyIsInN1YiI6Imh0dHBzOi8vMzA3MjM3ZTUtNDYyZi00YmNlLThlMTAtMGExODhiNzg3YWY0LmxvY2FsaG9zdDo4NDQzL3Byb2ZpbGUvY2FyZCNtZSIsImV4cCI6MTcxNDU1NTU3NywiaWF0IjoxNzEzMzQ1OTc3LCJqdGkiOiI0MGI1MzdmYzY0ZTIxMWJlIiwiYXRfaGFzaCI6ImFrMVEyRGdKSnA1RnRIM3hpdHV0R0EifQ.R5gRiKdtGNB4BfvdFIt_y8OctXRUE1_4meubJ7p_jkvlQlCH3LKNIwRc2eEZ0K847YhoeQFLKpP0O1mcKziJJTxEtiO_a0PHTFXAE2L1tny7NDXiH1-m2Dgqn0_juOepRZHwafy7jmXfHc1od9ULuPKLmhqLHxmRaCuBfRGJLg1Q1WzqwlPcOfcWWfrZDVVizwZ1_sdYzUiaaWako6HeAkl7LjVdUQbQdzw4gfSBfxTEuCcYzXd8PxdvDyT1YTPBv1wJf7O5t4HUlDzSdqyognXSt1zuvuoMGXK_ZCP7EvaqAoqkHt0F-E942q9YEvXR3UgNzE_k80NvaEaXPgfXvA"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/userinfo": {
+      "get": {
+        "tags": [
+          "OIDC"
+        ],
+        "summary": "Get userinfo from the IDP",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    }
+  }
+}

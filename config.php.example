@@ -1,0 +1,19 @@
+<?php
+    const BASEDOMAIN = "solid.local";
+    const BASEURL = "https://" . BASEDOMAIN;
+    const LIBDIR = __DIR__ . "/lib/";
+    const KEYDIR = __DIR__ . "/keys/";
+    const FRONTENDDIR = __DIR__ . "/frontend/";
+    const DBPATH = __DIR__ . "/db/solid.db";
+
+    const MAILER = [
+        "host" => "mailpit",
+        "port" => 1025,
+        // user
+        // pass
+        "from" => "info@muze.nl"
+    ];
+
+    const MAILSTYLES = [
+    ];
+    

@@ -1,0 +1,1250 @@
+<!DOCTYPE HTML>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Component CSS -->
+    <style>
+      /* solid-base-styles */
+      html,body {
+        padding: 0;
+        margin: 0;
+        font-family: var(--solid-font-family);
+        background: var(--solid-light-background);
+        color: var(--solid-light-text-color);
+        min-height: 100vh;
+      }
+      body:has(main.solid-dark) {
+        background: var(--solid-dark-background);
+        color: var(--solid-dark-text-color);  
+      }
+      
+      h1,h2,h3,h4,h5,h6 {
+        padding-top: 0;
+        margin-top: 0;
+        font-family: var(--solid-heading-font-family);
+        font-weight: var(--solid-heading-font-weight);
+      }
+      button {
+        cursor: pointer;
+      }
+      section.solid-dark {
+        background: var(--solid-dark-background);
+        color: var(--solid-dark-text-color);
+      }
+      header,
+      section {
+        padding: 0 calc((100vw - var(--solid-page-width)) / 2);
+        box-sizing: content-box;
+        max-width: var(--solid-page-width);;
+      }
+      section.solid-section-main {
+        padding: var(--solid-section-gap) calc((100vw - var(--solid-page-width)) / 2);
+      }
+      @media (max-width: 1106px) {
+        header,
+        section,
+        section.solid-section-main {
+          padding-left: 20px;
+          padding-right: 20px;
+        }  
+      }
+      a {
+        color: var(--solid-blue);
+      }
+      
+      
+      /* solid-root-styles */
+      :root {
+        --solid-blue: #d7ebff;
+        --solid-pink-active: #518488;
+        --solid-pink-inactive: #444444;
+        --solid-white-rose: #222222;
+      
+        --solid-page-width: 1056px;
+        --solid-font-family: Arial, sans-serif;
+        
+        --solid-section-gap: 80px;
+        --solid-heading-font-family: Arial, serif;
+        --solid-heading-font-weight: 700;
+      
+        --solid-content-gutter: 20px;
+        
+        --solid-light-background: var(--solid-white-rose);
+        --solid-light-text-color: var(--solid-blue);
+        
+        --solid-dark-background: var(--solid-blue);
+        --solid-dark-text-color: var(--solid-white-rose);
+        
+        --solid-form-width: 516px;
+        --solid-form-gap: 20px;
+        
+        --solid-button-border-size: 1px;
+        --solid-button-border-radius: 6px;
+        --solid-button-padding: 16px 20px 16px 20px;
+        --solid-button-width: 336px;
+        --solid-button-height: 56px;
+        --solid-button-font-size: 16px;
+        --solid-button-font-weight: 700;
+      
+        --solid-input-border-size: 1px;
+        --solid-input-border-radius: 6px;
+        --solid-input-padding: 16px 20px 16px 20px;
+        --solid-input-width: 336px;
+        --solid-input-height: 56px;
+        --solid-input-font-size: 16px;
+        --solid-input-font-weight: 700;
+        --solid-input-border-color: #888;
+        --solid-input-border: 0; /* var(--solid-input-border-size) solid var(--solid-input-border-color); */
+        --solid-input-box-shadow: 0px 0px 9px #0F0F0F1A;
+      
+        --solid-hint-background: transparent;
+        --solid-hint-text-color: var(--solid-blue);
+        --solid-hint-border-size: 0px;
+        --solid-hint-border-radius: 0px;
+        --solid-hint-padding: 0px;
+      
+        --solid-light-button-primary-background: var(--solid-pink-active);  
+        --solid-light-button-primary-text-color: var(--solid-blue);
+        --solid-light-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-active);
+      
+        --solid-light-button-secondary-background: var(--solid-white-rose);
+        --solid-light-button-secondary-text-color: var(--solid-blue);
+        --solid-light-button-secondary-border: var(--solid-button-border-size) solid var(--solid-pink-active);
+        
+        --solid-dark-button-primary-background: var(--solid-pink-active);  
+        --solid-dark-button-primary-text-color: var(--solid-blue);
+        --solid-dark-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-active);
+      
+        --solid-dark-button-secondary-background: var(--solid-blue);
+        --solid-dark-button-secondary-text-color: var(--solid-white-rose);
+        --solid-dark-button-secondary-border: var(--solid-button-border-size) solid var(--solid-white-rose);
+        
+        --solid-main-form-buttons-gap: 15px;
+      
+        --solid-checkbox-border-color: var(--solid-pink-active);
+        --solid-form-control-disabled-color: #959495;
+        --solid-checkbox-size: 1.3em;
+        --solid-checkbox-border-size: 1.5px;
+      }
+      /* footer-nav */
+      .solid-footer-nav {
+        grid-area: nav;
+      }
+      :root {
+        --solid-footer-nav-gap: 32px;
+      }
+      .solid-footer-nav ul {
+        list-style: none;
+        display: flex;
+        gap: var(--solid-footer-nav-gap);
+        justify-content: start;
+        padding: 0;
+        margin: 0;
+      }
+      .solid-footer-nav li {
+        list-style: none;
+      }
+      .solid-footer-nav a {
+        text-decoration: none;
+        color: var(--solid-white-rose);
+      }
+      /* footer */
+      .solid-footer-form {
+        display: grid;
+        grid-template-areas: "explainer buttons" "nav nav";
+        grid-template-columns: 1fr 1fr;
+      }
+      .solid-footer-form-explainer {
+        grid-area: explainer;
+      }
+      .solid-footer-form-buttons {
+        grid-area: buttons;
+        display: grid;
+        gap: var(--solid-main-form-buttons-gap);
+        justify-content: right;
+        align-content: center;
+      }
+      /* buttons */
+      .solid-button {
+        padding: var(--solid-button-padding);
+        border-radius: var(--solid-button-border-radius);
+        font-weight: var(--solid-button-font-weight);
+        font-size: var(--solid-button-font-size);
+        height: var(--solid-button-height);
+        width: var(--solid-button-width);
+        box-sizing: border-box;
+      }
+      .solid-button-primary {
+        background: var(--solid-light-button-primary-background);
+        color: var(--solid-light-button-primary-text-color);
+        border: var(--solid-light-button-primary-border);
+      }
+      .solid-button-secondary {
+        background: var(--solid-light-button-secondary-background);
+        color: var(--solid-light-button-secondary-text-color);
+        border: var(--solid-light-button-secondary-border);
+      }
+      .solid-dark .solid-button-primary {
+        background: var(--solid-dark-button-primary-background);
+        color: var(--solid-dark-button-primary-text-color);
+        border: var(--solid-dark-button-primary-border);
+      }
+      .solid-dark .solid-button-secondary {
+        background: var(--solid-dark-button-secondary-background);
+        color: var(--solid-dark-button-secondary-text-color);
+        border: var(--solid-dark-button-secondary-border);
+      }
+      /* checkbox */
+      .solid-form *:before,
+      .solid-form *:after {
+        box-sizing: border-box;
+      }
+      .solid-form label:has(input[type="checkbox"]) {
+        display: flex;
+        gap: calc(var(--solid-main-form-buttons-gap) / 2);
+      }
+      .solid-form input[type="checkbox"] {
+        /* Add if not using autoprefixer */
+        -webkit-appearance: none;
+        /* Remove most all native input styles */
+        appearance: none;
+        /* For iOS < 15 */
+        background-color: none;
+        /* Not removed via appearance */
+        margin: 0;
+      
+        font: inherit;
+        color: currentColor;
+        width: var(--solid-checkbox-size);
+        height: var(--solid-checkbox-size);
+        border: var(--solid-checkbox-border-size) solid var(--solid-checkbox-border-color);
+        border-radius: var(--solid-checkbox-size);
+        display: grid;
+        place-content: center;
+      }
+      
+      .solid-form input[type="checkbox"]::before {
+        width: var(--solid-checkbox-size);
+        height: var(--solid-checkbox-size);
+        border-radius: var(--solid-checkbox-size);
+        background: var(--solid-checkbox-border-color);
+      }
+      .solid-form input[type="checkbox"]:checked::before {
+        content: "";
+      }
+      
+      .solid-form input[type="checkbox"]:focus {
+        outline: max(2px, 0.15em) solid currentColor;
+        outline-offset: max(2px, 0.15em);
+      }
+      
+      .solid-form input[type="checkbox"]:disabled {
+        --solid-checkbox-border-color: var(--solid-form-control-disabled-color);
+        color: var(--solid-form-control-disabled-color);
+        cursor: not-allowed;
+      }
+      /* form */
+      .solid-form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--solid-form-gap);
+        max-width: var(--solid-form-width);
+        --solid-button-width: 100%;
+        --solid-input-width: 100%;
+      }
+      .solid-form p {
+        margin: 0;
+      }
+      .solid-form:invalid {
+        --solid-light-button-primary-background: var(--solid-pink-inactive);
+        --solid-dark-button-primary-background: var(--solid-pink-inactive);
+        --solid-light-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-inactive);
+        --solid-dark-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-inactive);
+      }
+      /* hint */
+      .solid-hint  {
+        box-sizing: border-box;
+        border-radius: var(--solid-hint-border-radius);
+        border: var(--solid-hint-border);
+        padding: var(--solid-hint-padding);
+        background: var(--solid-hint-background);
+        color: var(--solid-hint-text-color);
+      }
+      /* inputs */
+      .solid-input  {
+        width: var(--solid-input-width);
+        box-sizing: border-box;
+        border-radius: var(--solid-input-border-radius);
+        border: var(--solid-input-border);
+        padding: var(--solid-input-padding);
+        box-shadow: var(--solid-input-box-shadow);
+      }
+      /* header-logo */
+      :root {
+        --solid-logo-height: 40px;
+      }
+      
+      .solid-header .solid-header-logo svg {
+        height: var(--solid-logo-height);
+      }
+      body:has(main.solid-dark) .solid-header-logo svg .text-color {
+        fill: var(--solid-white-rose);
+      }
+      /* header-nav */
+      :root {
+        --solid-header-nav-gap: 32px;
+      }
+      .solid-header-nav ul {
+        list-style: none;
+        display: flex;
+        gap: var(--solid-header-nav-gap);
+        justify-content: end;
+        line-height: var(--solid-header-line-height);
+        font-family: var(--solid-heading-font-family);
+        font-weight: var(--solid-heading-font-weight);
+        padding: 0;
+        margin: 0;
+      }
+      .solid-header-nav li {
+        list-style: none;
+      }
+      .solid-header-nav a {
+        text-decoration: none;
+        color: var(--solid-blue);
+      }
+      /* header */
+      :root {
+        --solid-header-height: 120px;
+        --solid-header-line-height: 40px;
+      }
+      .solid-header {
+        --solid-button-height: 39px;
+        --solid-button-width: auto;
+        --solid-button-padding: 0 20px;
+      }
+      .solid-header {
+        display: grid;
+        grid-template-areas: "logo nav";
+        height: var(--solid-header-height);
+        align-content: center;
+      }
+      .solid-header .solid-header-logo {
+        grid-area: logo;
+      }
+      
+      .solid-header .solid-header-nav {
+        grid-area: nav;
+      }
+      
+      /* main */
+      .solid-main-form-buttons {
+        display: grid;
+        gap: var(--solid-main-form-buttons-gap);
+        justify-content: left;
+        align-content: center;
+      }
+      /* register */
+      .solid-register-info {
+        float: right;
+        border: 1px solid #888;
+        border-radius: 3px;
+        display: inline-block;
+        height: 1.2em;
+        width: 1.2em;
+        text-align: center;
+        line-height: 1.2em;
+        vertical-align: middle;
+        cursor: pointer;
+        font-family: var(--solid-heading-font-family);
+        font-weight: var(--solid-heading-font-weight);
+      }
+      /* simply-logo */
+      :root {
+        --simply-logo-color-primary: var(--solid-pink-active);
+        --simply-logo-color-secondary: white;
+      }
+    </style>
+    <!-- /Component CSS -->
+    <!-- Page CSS -->
+    <style>
+      
+    </style>
+    <!-- /Page CSS -->
+    <!-- Head HTML -->
+    <!-- cocon -->
+    <style>
+      @font-face {
+        font-family: 'Cocon';
+        font-style: normal;
+        font-weight: 500;
+        src: local('Cocon'), url('/assets/fonts/CoconRegularFont.woff') format('woff');
+      }
+    </style>
+    <!-- /Head HTML -->
+    <script>
+      var simplyDataApi = {};
+      var simplyApp = {};
+      window.addEventListener("simply-content-loaded", function() {
+        simply.bind = false;
+        /* Raw API */
+        var simplyRawApi = {
+          "delete" : function(endpoint, params={}) {
+            return fetch(simplyRawApi.url + endpoint + "/" + simplyRawApi.encodeGetParams(params), {
+              mode : 'cors',
+              headers: this.headers,
+              redirect: "manual",
+              method: "DELETE"
+            });
+          },
+          "encodeBodyParams" : function(params) {
+            return new URLSearchParams(params);
+          },
+          "encodeGetParams" : function(params) {
+            if (!params) {
+              return "";
+            }
+            return "?" + new URLSearchParams(params);
+          },
+          "get" : function(endpoint, params={}) {
+            return fetch(simplyRawApi.url + endpoint + "/" + simplyRawApi.encodeGetParams(params), {
+              mode : 'cors',
+              headers: this.headers
+            });
+          },
+          "headers" : {
+          	'Accept': 'application/json',
+          	'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          "post" : function(endpoint, params={}) {
+            return fetch(simplyRawApi.url + endpoint + "/", {
+          //    mode : 'cors',
+              headers: this.headers,
+              method: "POST",
+              redirect: "manual",
+              body: simplyRawApi.encodeBodyParams(params)
+            });
+          },
+          "postRaw" : function(endpoint, params={}, body) {
+            return fetch(simplyRawApi.url + endpoint + "/", {
+              mode : 'cors',
+              headers: this.headers,
+              method: "POST",
+              redirect: "manual",
+              body: body
+            });
+          },
+          "put" : function(endpoint, params={}) {
+            return fetch(simplyRawApi.url + endpoint + "/", {
+              mode: 'cors',
+              headers: this.headers,
+              method: "PUT",
+              redirect: "manual",
+              body: simplyRawApi.encodeBodyParams(params)
+            });
+          },
+          "putRaw" : function(endpoint, params={}, body) {
+            return fetch(simplyRawApi.url + endpoint + "/", {
+              mode: 'cors',
+              headers: this.headers,
+              method: "PUT",
+              redirect: "manual",
+              body: body
+            });
+          },
+          "url" : "/"
+        };
+        /* End of Raw API */
+        /* Data API */
+        simplyDataApi = {
+          "confirmDeleteAccount" : function(deleteAccountParams) {
+            return simplyRawApi.post("api/accounts/delete/confirm", deleteAccountParams)
+            .then(function(response) {
+              if (response.ok) { // 200 range, OK
+                return response.json();
+              } else {
+                throw new Error("Error result received from confirmDeleteAccount");
+              }
+            });
+          },
+          "deleteAccount" : function(deleteAccountParams) {
+            return simplyRawApi.post("api/accounts/delete", deleteAccountParams)
+            .then(function(response) {
+              if (response.ok) { // 200 range, OK
+                return response.json();
+              } else {
+                throw new Error("Error result received from deleteAccount");
+              }
+            });
+          },
+          "register" : function(registerParams) {
+            return simplyRawApi.post("api/accounts/new", registerParams)
+            .then(function(response) {
+              if (response.ok) { // 200 range, OK
+                return response.json();
+              } else {
+                throw new Error("Error result received from registration");
+              }
+            });
+          },
+          "verifyEmail" : function(verifyParams) {
+            return simplyRawApi.post("api/accounts/verify", verifyParams)
+            .then(function(response) {
+              if (response.ok) { // 200 range, OK
+                return response.json();
+              } else {
+                throw new Error("Error result received from verifyEmail");
+              }
+            });
+          },
+          "changePassword" : function(changeParams) {
+            return simplyRawApi.post("api/accounts/change-password", changeParams)
+            .then(function(response) {
+              if (response.ok) { // 200 range, OK
+                return response.json();
+              } else {
+                throw new Error("Error result received from changeParams");
+              }
+            });
+          },
+          "sendPasswordReset" : function(resetParams) {
+            return simplyRawApi.post("api/accounts/reset-password", resetParams)
+            .then(function(response) {
+              if (response.ok) { // 200 range, OK
+                return response.json();
+              } else {
+                throw new Error("Error result received from sendPasswordReset");
+              }
+            });
+          }
+        };
+        /* End of Data API */
+        simplyApp = simply.app({
+          /* Actions */
+          actions: {
+            "confirmDeleteAccount" : async function() {
+              let deleteAccountParams = {
+                "token" : editor.pageData.deleteAccountToken,
+              }
+              let result = await simplyDataApi.confirmDeleteAccount(deleteAccountParams);
+              return result;
+            },
+            "deleteAccount" : async function() {
+              let deleteAccountParams = {
+                "email" : editor.pageData.deleteAccount.email
+              }
+              let result = await simplyDataApi.deleteAccount(deleteAccountParams);
+              return result;
+            },
+            "register" : async function() {
+              let registerParams = editor.pageData.register;
+              registerParams['repeat_password'] = registerParams['password'];
+              let result = await simplyDataApi.register(registerParams);
+              return result;
+            },
+            "verifyEmail" : async function() {
+              let verifyParams = {
+                "email" : editor.pageData.register.email
+              }
+              let result = await simplyDataApi.verifyEmail(verifyParams);
+              return result;
+            },
+            "changePassword" : async function() {
+              let changeParams = {
+                "token" : editor.pageData.resetToken,
+                "newPassword" : editor.pageData.reset.password
+              }
+              let result = await simplyDataApi.changePassword(changeParams);
+              return result;
+            },
+            "sendPasswordReset" : async function() {
+              let resetParams = {
+                "email" : editor.pageData.reset.email
+              }
+              let result = await simplyDataApi.sendPasswordReset(resetParams);
+              return result;
+            }
+          },
+          /* /Actions */
+          /* Commands */
+          commands: {
+            "confirmDeleteAccount" : function(el) {
+              simplyApp.actions.confirmDeleteAccount()
+              .then(function() {
+                document.location.hash = "delete-account-done";
+              })
+            },
+            "deleteAccount" : function(el) {
+              simplyApp.actions.deleteAccount()
+              .then(function() {
+                document.location.hash = "delete-account-sent";
+              })
+            },
+            "autofocus" : function() {
+              let autofocus = document.querySelector("[autofocus]");
+              if (autofocus) {
+                autofocus.focus();
+              }
+            },
+            "loginDone" : function(el) {
+              el.setAttribute("action", "/login/password");
+              el.setAttribute("method", "POST");
+              el.submit();
+            //  document.location.hash = "login-done";
+            },
+            "loginPassword" : function(el) {
+              document.location.hash = "login-password";
+              simplyApp.commands.autofocus();
+            },
+            "registerDone" : function(el) {
+              simplyApp.actions.register()
+              .then(function(result) {
+                editor.pageData.createdWebId = result.webId;
+                document.location.hash="#register-thanks";
+              });
+            },
+            "registerNext" : function(el) {
+              document.location.hash="#register-password";
+              simplyApp.commands.autofocus();
+            },
+            "registerVerify" : function(el) {
+              simplyApp.actions.verifyEmail()
+              .then(function() {
+                document.location.hash="#register-verify";
+                simplyApp.commands.autofocus();
+              })
+            },
+            "changePassword" : function(el) {
+              simplyApp.actions.changePassword()
+              .then(function() {
+                document.location.hash = "reset-password-changed";
+              })
+            },
+            "resetPassword" : function(el) {
+              simplyApp.actions.sendPasswordReset()
+              .then(function() {
+                document.location.hash = "reset-password-sent";
+              })
+            },
+            "cancel" : function(el) {
+              document.location.href="#";
+            },
+            "sharing" : function(el) {
+              el.setAttribute("action", "/api/sharing");
+              el.setAttribute("method", "POST");
+              el.submit();
+            },
+            "login" : function(el) {
+              document.location.pathname = "/login/";
+            },
+            "register" : function(el) {
+              document.location.pathname = "/register/";
+            }
+          },
+          /* /Commands */
+          /* Routes */
+          routes: {
+            "/account/delete/confirm/#delete-account-done" : function(params) {
+              editor.pageData.page = "delete-account-done";
+            },
+            "/account/delete/confirm/" : function(params) {
+              editor.pageData.deleteAccountToken = new URL(document.location.href).searchParams.get('token');
+              editor.pageData.page = "delete-account-confirm";
+            },
+            "/account/delete/#delete-account-sent" : function(params) {
+              editor.pageData.page = "delete-account-sent";
+            },
+            "/account/delete/" : function(params) {
+              editor.pageData.page = "delete-account";
+            },
+            "/login/#login-done" : function(params) {
+              editor.pageData.page = "login-done";
+            },
+            "/login/#login-password" : function(params) {
+              editor.pageData.page = "login-password";
+            },
+            "/register/#register-password" : function(params) {
+              editor.pageData.page = "register-password";
+            },
+            "/register/#register-thanks" : function(params) {
+              editor.pageData.page = "register-thanks";
+            },
+            "/register/#register-verify" : function(params) {
+              editor.pageData.page = "register-verify";
+            },
+            "/change-password/#reset-password-changed" : function(params) {
+              editor.pageData.page = "reset-password-changed";
+            },
+            "/reset-password/#reset-password-sent" : function(params) {
+              editor.pageData.page = "reset-password-sent";
+            },
+            "/login/" : function(params) {
+              editor.pageData.loginParams = {};
+              let loginParams = ['response_type', 'display', 'scope', 'client_id', 'redirect_uri', 'state', 'nonce', 'request'];
+              loginParams.forEach(function(param) {
+                editor.pageData.loginParams[param] = new URL(document.location.href).searchParams.get(param);
+              });
+              editor.pageData.page = "login";
+            },
+            "/goodbye" : function(params) {
+              editor.pageData.page = "logout";
+            },
+            "/logout" : function(params) {
+              editor.pageData.page = "logout";
+            },
+            "/register/" : function(params) {
+              editor.pageData.page = "register";
+            },
+            "/change-password/" : function(params) {
+              editor.pageData.resetToken = new URL(document.location.href).searchParams.get('token');
+              editor.pageData.page = "change-password";
+            },
+            "/reset-password/" : function(params) {
+              editor.pageData.page = "reset-password";
+            },
+            "/sharing" : function(params) {
+              editor.pageData.sharingParams = {};
+              let sharingParams = ['response_type', 'display', 'scope', 'client_id', 'redirect_uri', 'state', 'nonce', 'request', 'returnUrl'];
+              sharingParams.forEach(function(param) {
+                editor.pageData.sharingParams[param] = new URL(document.location.href).searchParams.get(param);
+              });
+              editor.pageData.appOrigin = new URL(document.location.href).searchParams.get("redirect_uri");
+              editor.pageData.page = "sharing";
+            },
+            "/" : function(params) {
+              editor.pageData.page = "home";
+            }
+          }
+          /* /Routes */
+        });
+      });
+      function clone(ob) {
+        return JSON.parse(JSON.stringify(ob));
+      }
+      function updateDataSource(name) {
+        document.querySelectorAll('[data-simply-data="'+name+'"]').forEach(function(list) {
+          editor.list.applyDataSource(list, name);
+          list.dataBindingPaused = 0;
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Body HTML -->
+    
+    <!-- /Body HTML -->
+    <!-- Component HTML templates -->
+    <template id="delete-account-confirm">
+      <section>
+      <h1>Verwijder je account</h1>
+      <form class="solid-form" data-simply-command="confirmDeleteAccount" action="#">
+        <p>Verwijder je account</p>
+        <p class="solid-hint">Wij verwijderen je account en alle informatie. Dit kan daarna niet ongedaan worden gemaakt.</p>
+        <button class="solid-button solid-button-primary">Verwijder mijn account</button>
+      </form>
+    </section>
+    </template>
+    <template id="delete-account-done">
+      <section>
+      <h1>Verwijder je account</h1>
+      <form class="solid-form">
+        <p class="solid-hint">Je account is verwijderd.</p>
+      </form>
+    </section>
+    </template>
+    <template id="delete-account-sent">
+      <section>
+      <h1>Verwijder je account</h1>
+      <form class="solid-form">
+        <p class="solid-hint">Volg de instructies in het e-mailbericht om je account te verwijderen.</p>
+      </form>
+    </section>
+    </template>
+    <template id="delete-account">
+      <section>
+      <h1>Verwijder je account</h1>
+      <form class="solid-form" data-simply-command="deleteAccount" action="#">
+        <p>Wat is je e-mail?</p>
+        <p class="solid-hint">Je ontvangt een link op je e-mailadres. Met die link kun je je account verwijderen.</p>
+        <div class="solid-form-group">
+          <input autofocus class="solid-input" data-simply-field="deleteAccount.email" type="text" placeholder="E-mailadres" required>
+        </div>
+        <button class="solid-button solid-button-primary">Volgende</button>
+      </form>
+    </section>
+    </template>
+    <template id="footer-form-buttons">
+      <div class="solid-footer-form-buttons">
+      <button class="solid-button solid-button-primary" data-simply-command="register">Gratis aanmelden</button>
+      <button class="solid-button solid-button-secondary" data-simply-command="login">Inloggen</button>
+    </div>
+    </template>
+    <template id="footer-form-explainer">
+      <div class="solid-footer-form-explainer">
+      <h1>Aanmelden of inloggen</h1>
+    </div>
+    </template>
+    <template id="footer-form">
+      <section class="solid-dark solid-section-main solid-footer-form">
+      <simply-render rel="footer-form-explainer"></simply-render>
+      <simply-render rel="footer-form-buttons"></simply-render>
+      <simply-render rel="footer-nav"></simply-render>
+    </section>
+    </template>
+    <template id="footer-nav">
+      <nav class="solid-footer-nav">
+      <ul>
+        <li>
+          &copy; 2024
+        </li>
+        <li>
+          <a href="#privacy">Privacybeleid</a>
+        </li>
+        <li>
+          <a href="#algemene-voorwaarden">Algemene voorwaarden</a>
+        </li>
+      </ul>
+    </nav>
+    
+    </template>
+    <template id="hint">
+      <form class="solid-form">
+      <p class="solid-hint">Hello world</p>
+    </form>
+    </template>
+    <template id="primary-button-dark">
+      <div class="solid-dark">
+      <button class="solid-button solid-button-primary">Button</button>
+    </div>
+    </template>
+    <template id="primary-button-light">
+      <div class="solid-light">
+      <button class="solid-button solid-button-primary">Button</button>
+    </div>
+    </template>
+    <template id="secondary-button-dark">
+      <div class="solid-dark">
+      <button class="solid-button id-button-secondary">Button</button>
+    </div>
+    </template>
+    <template id="secondary-button-light">
+      <div class="solid-light">
+      <button class="solid-button solid-button-secondary">Button</button>
+    </div>
+    </template>
+    <template id="header-clean">
+      <header class="solid-header">
+      <simply-render rel="header-logo"></simply-render>
+    </header>
+    </template>
+    <template id="header-logo">
+      <div class="solid-header-logo">
+      <a href="/"><simply-render rel="logo"></simply-render></a>
+    </div>
+    </template>
+    <template id="header-nav">
+      <nav class="solid-header-nav">
+      <ul>
+        <!-- li>
+          <a href="#faq">Veelgestelde vragen</a>
+        </li -->
+        <li>
+          <button class="solid-button solid-button-secondary" data-simply-command="login">Inloggen</button>
+        </li>
+      </ul>
+    </nav>
+    
+    </template>
+    <template id="header">
+      <header class="solid-header">
+      <simply-render rel="header-logo"></simply-render>
+      <simply-render rel="header-nav"></simply-render>
+    </header>
+    </template>
+    <template id="login-password">
+      <section>
+      <h1>Inloggen</h1>
+      <form class="solid-form" data-simply-command="loginDone" action="#">
+        <input autofocus class="solid-input" name="password" data-simply-field="login.password" type="password" placeholder="Wachtwoord" required>
+        <input type="hidden" name="username" data-simply-field="login.email">
+        <input type="hidden" name="response_type" data-simply-field="loginParams.response_type">
+        <input type="hidden" name="display" data-simply-field="loginParams.display">
+        <input type="hidden" name="scope" data-simply-field="loginParams.scope">
+        <input type="hidden" name="client_id" data-simply-field="loginParams.client_id">
+        <input type="hidden" name="redirect_uri" data-simply-field="loginParams.redirect_uri">
+        <input type="hidden" name="state" data-simply-field="loginParams.state">
+        <input type="hidden" name="nonce" data-simply-field="loginParams.nonce">
+        <input type="hidden" name="request" data-simply-field="loginParams.request">
+        <button class="solid-button solid-button-primary">Inloggen</button>
+      </form>
+    </section>
+    </template>
+    <template id="login">
+      <section>
+      <h1>Inloggen</h1>
+      <form class="solid-form" data-simply-command="loginPassword" action="#">
+        <input autofocus class="solid-input" data-simply-field="login.email" type="text" placeholder="E-mailadres" required>
+        <button class="solid-button solid-button-primary">Volgende</button>
+      </form>
+    </section>
+    </template>
+    <template id="main-form-buttons">
+      <div class="solid-form">
+      <button class="solid-button solid-button-primary" data-simply-command="register">Registeren</button>
+      <button class="solid-button solid-button-secondary" data-simply-command="login">Inloggen</button>
+    </div>
+    </template>
+    <template id="main-form-explainer">
+      <h1>Maak je eigen online identiteit</h1>
+    <p>Met je eigen Solid Identity log je gemakkelijk in op diverse sites.</p>
+    </template>
+    <template id="main-form">
+      <section class="solid-form">
+      <simply-render rel="main-form-explainer"></simply-render>
+      <simply-render rel="main-form-buttons"></simply-render>
+    </section>
+    
+    </template>
+    <template id="register-password">
+      <section>
+      <h1>Registreren</h1>
+      <form class="solid-form" data-simply-command="registerVerify" action="#">
+        <p>Kies je wachtwoord</p>
+        <input type="hidden" data-simply-field="register.email">
+        <input autofocus class="solid-input" data-simply-field="register.password" type="password" placeholder="Wachtwoord" required>
+        <button class="solid-button solid-button-primary">Opslaan</button>
+      </form>
+    </section>
+    </template>
+    <template id="register-thanks">
+      <section>
+      <h1>Je identiteit is klaar voor gebruik!</h1>
+      <p>Je ontvangt ook een e-mailbericht met deze informatie. Je WebID is:</p>
+      <h2 data-simply-field="createdWebId"></h2>
+      <form action="#" class="solid-form">
+        <button class="solid-button solid-button-primary">Verder</button>
+      </form>
+    </section>
+    </template>
+    <template id="register-verify">
+      <section>
+      <h1>Voer je code in</h1>
+      <form class="solid-form" data-simply-command="registerDone" action="#">
+        <p>We hebben je een code gemailed. Voer deze code in om je registratie af te ronden.</p>
+        <input autofocus class="solid-input" data-simply-field="register.confirm" type="text" placeholder="xxxxxx" required>
+        <button class="solid-button solid-button-primary">Verifieer</button>
+      </form>
+    </section>
+    </template>
+    <template id="register">
+      <section>
+      <h1>Registreren</h1>
+      <form class="solid-form" data-simply-command="registerNext" action="#">
+        <p>Wat is je e-mail?</p>
+        <div class="solid-form-group">
+          <input autofocus class="solid-input" data-simply-field="register.email" type="text" placeholder="E-mailadres" required>
+        </div>
+        <button class="solid-button solid-button-primary">Volgende</button>
+      </form>
+    </section>
+    </template>
+    <template id="change-password">
+      <section>
+      <h1>Wachtwoordherstel</h1>
+      <form class="solid-form" data-simply-command="changePassword" action="#">
+        <p>Voer je nieuwe wachtwoord in</p>
+        <div class="solid-form-group">
+          <input autofocus class="solid-input" data-simply-field="reset.password" type="password" placeholder="Wachtwoord" required>
+        </div>
+        <button class="solid-button solid-button-primary">Volgende</button>
+      </form>
+    </section>
+    </template>
+    <template id="reset-password-changed">
+      <section>
+      <h1>Wachtwoordherstel</h1>
+      <form class="solid-form" action="#">
+        <p class="solid-hint">Je wachtwoord is aangepast!</p>
+      </form>
+    </section>
+    </template>
+    <template id="reset-password-sent">
+      <section>
+      <h1>Wachtwoordherstel</h1>
+      <form class="solid-form">
+        <p class="solid-hint">Volg de instructies in het e-mailbericht om je wachtwoord te herstellen.</p>
+      </form>
+    </section>
+    </template>
+    <template id="reset-password">
+      <section>
+      <h1>Wachtwoordherstel</h1>
+      <form class="solid-form" data-simply-command="resetPassword" action="#">
+        <p class="solid-hint">Je ontvangt een link op je e-mailadres. Met die link kun je een nieuw wachtwoord invoeren.</p>
+        <div class="solid-form-group">
+          <input autofocus class="solid-input" data-simply-field="reset.email" type="text" placeholder="E-mailadres" required>
+        </div>
+        <button class="solid-button solid-button-primary">Volgende</button>
+      </form>
+    </section>
+    </template>
+    <template id="sharing">
+      <section>
+      <h1>Toegang tot je pod verlenen voor <span data-simply-field="appOrigin" data-simply-transformer="appOrigin"></span>?</h1>
+      <form class="solid-form" data-simply-command="sharing" action="#">
+      <p>Bepaal welke toegang anderen hebben op jouw data</p>
+        <p><strong data-simply-field="appOrigin" data-simply-transformer="appOrigin"></strong> krijgt toestemming in jouw pod:</p>
+        <label>
+          <input type="checkbox" name="access_mode" value="Read" checked>
+          Lezen van alle gegevens
+        </label>
+        <label>
+          <input type="checkbox" name="access_mode" value="Append" checked>
+          Gegevens toevoegen
+        </label>
+    	<label>    
+          <input type="checkbox" name="access_mode" value="Write" checked>
+          Bestaande gegevens wijzigen of verwijdren
+        </label>
+        <label>
+            <input type="checkbox" name="access_mode" value="Control">
+            Anderen toegang geven of ontzeggen op mijn pod
+        </label>
+        <input type="hidden" name="response_type" data-simply-field="sharingParams.response_type">
+        <input type="hidden" name="display" data-simply-field="sharingParams.display">
+        <input type="hidden" name="scope" data-simply-field="sharingParams.scope">
+        <input type="hidden" name="client_id" data-simply-field="sharingParams.client_id">
+        <input type="hidden" name="redirect_uri" data-simply-field="sharingParams.redirect_uri">
+        <input type="hidden" name="state" data-simply-field="sharingParams.state">
+        <input type="hidden" name="nonce" data-simply-field="sharingParams.nonce">
+        <input type="hidden" name="request" data-simply-field="sharingParams.request">
+        <input type="hidden" name="returnUrl" data-simply-field="sharingParams.returnUrl">
+        <input type="hidden" name="consent" value="true">
+        <button class="solid-button solid-button-primary">Toegang verlenen</button>
+        <button data-simply-command="cancel" class="solid-button solid-button-secondary">Annuleren</button>
+      </form>
+    </section>
+    </template>
+    <template id="logo">
+      <svg viewbox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
+      <style type="text/css">
+        .st0 {
+          fill: var(--simply-logo-color-secondary);
+        }	
+        .st1 {
+          fill: var(--simply-logo-color-primary);
+        }
+        text {
+          font-family: Cocon;
+          font-size: 143px;
+          letter-spacing: -7px;
+          fill: var(--simply-logo-color-primary);
+          text-anchor: middle;
+        }
+      </style>
+      <g class="simply">
+        <path fill="black" id="s" d="m74.400002,87.400002c-16.200005,-2.599998 -21.400002,-3.800003 -21.400002,-9.599998c0,-4.100006 2.900002,-9 16.800003,-9c9.099998,0 17.299995,1.899994 23.599998,5.299995l0,-4.299995c0,-10.700005 -10.099998,-17.200005 -27,-17.200005c-17,0 -35.300003,8.599998 -35.300003,27.400002c0,11.5 6.300003,17.599998 20.5,19.599998c16.599998,2.300003 21.400002,4 21.400002,10.300003c0,9.099998 -11.900002,9.099998 -16.300003,9.099998c-11,0 -18.599998,-2.699997 -23.699997,-5.5l0,4c0,4.399994 0,17.800003 28.199997,17.800003c21,0 34.100006,-10.199997 34.100006,-26.5c0.099991,-14.800003 -11.300003,-19.800003 -20.900002,-21.400002z" class="st0"/>
+        <path fill="black" id="im" d="m187.600006,72.5c9.199997,0 13.900009,5.599998 13.900009,16.5l0,29.599998c0,10.599998 3.799988,14.099998 15.199997,14.099998l7.399994,0l0,-43.399994c0,-13.900002 7.300018,-16.800003 13.300018,-16.800003c10.099976,0 14.5,5.300003 14.5,17.300003l0,28.899994c0,9.199997 2.599976,14.100006 16.099976,14.100006l7.300018,0l0,-42.5c0,-24.300003 -12.700012,-37.700005 -35.900024,-37.700005c-11.199982,0 -20.5,8.300003 -23.699997,13.599998l-2.699997,4.400002l-1.899994,-4.799995c-2.200012,-5.5 -10.800003,-13.100002 -23.100006,-13.100002c-8.300003,0 -15.399994,1.599998 -21.199997,4.799999c-10.800003,5.900002 -16.5,17 -16.5,32.099998l0,12.200005c0,7.599998 -3.5,11.5 -11.199997,12.199997l-0.200012,0l-0.199997,0c-7.699997,-0.599998 -11.300003,-4.5 -11.300003,-12.199997l0,-27c0,-13.5 -4.099991,-17.200005 -19,-17.200005l-4.399994,0l0,48.400002c0,7.300003 1.800003,12.900002 5.199997,16.699997c5,5.5 15.699997,11.400009 29.400009,11.400009l0.599991,0c3.900009,0 7.199997,-0.5 10,-1.200012l0.600006,-0.099991c6.800003,-1.699997 10.800003,-4.100006 13,-5.699997l0.599991,-0.400009c2.800003,-2.099991 10.300003,-9.699997 10.400009,-20l0,-16.699997c0.300003,-6.900002 1.899994,-17.5 13.800003,-17.5z" class="st0"/>
+        <path id="i-dot" d="m115,45.099998c6.800003,0 12.300003,-5.199997 12.300003,-11.599998c0,-6.400002 -5.5,-11.6 -12.300003,-11.6c-6.899994,0 -12.5,5.199999 -12.5,11.6c0,6.400002 5.600006,11.599998 12.5,11.599998z" class="st1"/>
+        <path fill="black" id="p" d="m328.600006,52.599998c-27.899994,0 -43.299988,15.800003 -43.299988,44.5l0,43.900002c0,12.199997 4.5,17.5 14.899994,17.5l7.799988,0l0,-38.099998c0,0 0.200012,2.900002 4.900024,8.299995c5.5,5.600006 10.299988,6.5 19,6.5c21.899994,0 36.599976,-17.299995 36.599976,-43.099998c0,-23.299995 -16.399994,-39.5 -39.899994,-39.5zm1.600006,62.900002c-9.799988,0 -19.100006,-6.199997 -19.100006,-23.800003c0,-12.199997 8.100006,-19.799995 15.899994,-19.799995c11.800018,0 18.900024,5.400002 18.900024,23.199997c-0.000031,12.400002 -6.700012,20.400002 -15.700012,20.400002z" class="st0"/>
+        <path id="l" d="m400.799988,103.699997l0,-60.199997c0,-12.200001 -4.600006,-17.200001 -15.899994,-17.200001l-7.5,0l0,81.600002c0,19.200005 13.299988,26.099998 25.799988,26.099998c4.800018,0 16.100006,-1 16.100006,-10.699997l0,-7.300003l-3.700012,0c-6.399963,0 -14.799988,-1.300003 -14.799988,-12.300003z" class="st0"/>
+        <path fill="black" id="y" d="m483,55l-11.399994,0c-2.100006,15.800003 -8.300018,37.099998 -14.399994,49.5l-2.5,5.099998l-2.200012,-5.199997c-4.5,-10.300003 -10.299988,-26.599998 -13.100006,-39.700005c-1.399994,-6.399994 -7.899994,-9.699997 -13.600006,-9.699997l-11.799988,0c4,21.400002 17.799988,56.099998 29.600006,73.600006l0.799988,1.199997l-0.600006,1.300003c-3.5,8 -8.099976,11.299988 -16.199982,12l-10,0.699997l0,4.5c0,8.599991 7.699982,11.699997 14.299988,11.699997c16.100006,0 21.300018,-3.800003 44.200012,-47.800003c9.300018,-17.799995 16.800018,-41.5 16.800018,-49.299995c-0.300049,-3.300003 -1.300049,-7.900002 -9.900024,-7.900002z" class="st0"/>
+      </g>
+      <text x="50%" y="276">
+        me
+      </text>
+    </svg>
+    </template>
+    <!-- /Component HTML templates -->
+    <div class="main" data-simply-field="page" data-simply-content="template">
+    <!-- Page HTML templates -->
+    <template data-simply-template="delete-account-confirm">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="delete-account-confirm"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="delete-account-done">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="delete-account-done"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="delete-account-sent">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="delete-account-sent"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="delete-account">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="delete-account"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="home">
+      <simply-render rel="header"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="main-form"></simply-render>
+    </main>
+    <footer class="solid-footer">
+      <!-- simply-render rel="footer-form"></simply-render -->
+    </footer>
+    </template>
+    <template data-simply-template="login-done">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="login-done"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="login-password">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="login-password"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="login">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="login"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="logout">
+      <simply-render rel="header"></simply-render>
+    <main class="solid-main">
+      <section>
+        <h1>Je bent uitgelogd.</h1>
+        <p>
+          Je kunt dit venster nu sluiten, of terugkeren naar de <a href="/">homepage</a>
+        </p>
+      </section>
+    </main>
+    
+    </template>
+    <template data-simply-template="register-password">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="register-password"></simply-render>
+    </main>
+    
+    </template>
+    <template data-simply-template="register-thanks">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="register-thanks"></simply-render>
+    </main>
+    
+    </template>
+    <template data-simply-template="register-verify">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="register-verify"></simply-render>
+    </main>
+    
+    </template>
+    <template data-simply-template="register">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="register"></simply-render>
+    </main>
+    
+    </template>
+    <template data-simply-template="change-password">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="change-password"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="reset-password-changed">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="reset-password-changed"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="reset-password-sent">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="reset-password-sent"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="reset-password">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="reset-password"></simply-render>
+    </main>
+    </template>
+    <template data-simply-template="sharing">
+      <simply-render rel="header-clean"></simply-render>
+    <main class="solid-main">
+      <simply-render rel="sharing"></simply-render>
+    </main>
+    </template>
+    <!-- /Page HTML templates -->
+    </div>
+    <script src="https://unpkg.com/simplyview@2.1.1/dist/simply.everything.js"></script>
+    <script src="https://canary.simplyedit.io/1/simply-edit.js" data-simply-storage="none" data-api-key="simply-edit-0011"></script>
+    <script>
+      /* Transformers */
+      editor.transformers = {
+        "appOrigin" : {
+          render : function(data) {
+            this.originalData = data;
+            if (data.match(/dpgmedia\.nl/)) {
+              return "DPG Media";
+            }
+            return data;
+          },
+          extract : function(data) {
+            return this.originalData;
+          }
+        }
+      };
+      /* /Transformers */
+    </script>
+    <script>
+      /* Sorters */
+      editor.sorters = {
+        
+      };
+      /* /Sorters */
+    </script>
+    <script>
+      window.addEventListener("simply-content-loaded", function() {
+        /* Data sources */
+        
+        /* /Data sources */
+      });
+    </script>
+    <!-- Foot HTML -->
+    <!-- password-input -->
+    <script>
+      editor.field.registerType(
+    	"input[type=password]",
+    	function(field) {
+    		return field.value;
+    	},
+    	function(field, data) {
+    		field.value = data;
+    	},
+    	null
+    );
+    </script>
+    <!-- postmessage -->
+    <script>
+      document.addEventListener("simply-data-changed", function(event) {
+        if (
+          (event.data.dataBinding.parentKey == "/") &&
+          (event.data.dataBinding.key == "page")
+        ) {
+          // editor.pageData.page changed
+          parent.postMessage({
+            "event" : "pageChange",
+            "newValue" : event.data.arguments[1],
+            "oldValue" : event.data.arguments[2]
+          });
+        }
+      });
+    </script>          
+    <!-- /Foot HTML -->
+  </body>
+</html>

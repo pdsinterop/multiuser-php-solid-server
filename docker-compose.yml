@@ -1,0 +1,23 @@
+version: '3'
+services:
+    php-apache:
+        build:
+            context: ./docker
+            dockerfile: Dockerfile.php-apache
+        ports:
+            - 443:443
+        volumes:
+            - .:/opt/solid
+    mailpit:
+        image: axllent/mailpit
+        environment:
+            MP_MAX_MESSAGES: 5000
+            MP_DATABASE: /data/mailpit.db
+            MP_SMTP_AUTH_ACCEPT_ANY: 1
+            MP_SMTP_AUTH_ALLOW_INSECURE: 1
+        restart: unless-stopped
+        ports:
+            - 8025:8025
+            - 2525:1025
+        volumes:
+            - ./mailpit-data:/data

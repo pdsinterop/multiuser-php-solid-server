@@ -1,0 +1,50 @@
+--------- IDP ----------
+- [v] Basic routing setup
+- [v] Composer deps for solid-auth, solid-crud, flysystem
+- [v] Keyset generation
+- [v] E-mail templates
+	- [v] account created
+	- [v] delete account
+	- [v] reset password
+	- [v] verify
+
+- [v] Frontend
+	- [v] login
+	- [v] generated.html
+
+- [ ] Solid OIDC
+	- [v] .well-known
+	- [v] authorize
+	- [v] jwks
+	- [v] logout
+	- [v] register
+	- [ ] session
+	- [v] token
+	- [ ] userinfo
+
+- [ ] User account
+	- [ ] idp-api-account
+		- [ ] change-password
+		- [ ] delete-account-confirm
+		- [ ] delete-account-request
+		- [v] new
+		- [ ] reset-password
+		- [v] verify
+	- [v] idp-api
+		- [v] sharing
+
+- [ ] User profile
+- [v] Mail handler for templates
+- [v] CORS for all
+- [v] base64 url decode/encode (include/base64_url_encode.php)
+- [ ] Auto-create-storage
+
+- [ ] Cleanup for expired verify tokens, password, deletion
+----------------------
+
+------- Storage ------
+- [ ] Flysystem adapter for filesystem
+- [ ] WAC-viewer
+- [ ] CORS for all
+- [ ] Initialize storage
+- [ ] API for storage creation
