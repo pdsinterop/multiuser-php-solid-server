@@ -21,7 +21,7 @@
 
 					$user = User::getUserById($userId);
 					if (!isset($user['storage'])) {
-						$user['storage'] = "https://storage-" . $userId . "." . BASEDOMAIN;
+						$user['storage'] = "https://storage-" . $userId . "." . BASEDOMAIN . "/";
 					}
 					if (!isset($user['issuer'])) {
 						$user['issuer'] = BASEURL;
@@ -37,19 +37,19 @@
 @prefix space: <http://www.w3.org/ns/pim/space#>.
 @prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
 @prefix pro: <./>.
-@prefix inbox: <{$user['storage']}/inbox/>.
+@prefix inbox: <{$user['storage']}inbox/>.
 
 <> a foaf:PersonalProfileDocument; foaf:maker :me; foaf:primaryTopic :me.
 
 :me
     a schema:Person, foaf:Person;
     ldp:inbox inbox:;
-    space:preferencesFile </storage/settings/prefs.ttl>;
+    space:preferencesFile <{$user['storage']}settings/prefs.ttl>;
     space:storage <{$user['storage']}>;
     solid:account <{$user['storage']}>;
     solid:oidcIssuer <{$user['issuer']}>;
-    solid:privateTypeIndex <{$user['storage']}/settings/privateTypeIndex.ttl>;
-    solid:publicTypeIndex <{$user['storage']}/settings/publicTypeIndex.ttl>.
+    solid:privateTypeIndex <{$user['storage']}settings/privateTypeIndex.ttl>;
+    solid:publicTypeIndex <{$user['storage']}settings/publicTypeIndex.ttl>.
 EOF;
 					header('Content-Type: text/turtle');
 					echo $profile;
