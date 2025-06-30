@@ -1,5 +1,5 @@
 <?php
-	namespace PdsInterop\PhpSolid;
+	namespace Pdsinterop\PhpSolid;
 	
 	use Pdsinterop\Solid\Auth\Factory\AuthorizationServerFactory;
 	use Laminas\Diactoros\Response;
@@ -11,6 +11,7 @@
 	use Pdsinterop\Solid\Auth\Utils\JtiValidator;
 	use Pdsinterop\Solid\Auth\TokenGenerator;
 	use Pdsinterop\PhpSolid\ClientRegistration;
+	use Pdsinterop\PhpSolid\JtiStore;
 
 	class Server {
 		public static function generateKeySet() {
@@ -84,14 +85,34 @@
 		public static function getDpop() {
 			$replayDetector = new ReplayDetector(
 				function($jti, $targetUri) {
-					// FIXME: check if the JTI exists in our store.
-					// FIXME: store the JTI;
+					if (JtiStore::hasJti($jti)) {
+						return true;
+					} else {
+						JtiStore::saveJti($jti);
+						return false;
+					}
 					return false;
 				}
 			);
 			$jtiValidator = new JtiValidator($replayDetector);
 			return new DPop($jtiValidator);
 	    	}
+
+		public static function getBearer() {
+			$replayDetector = new ReplayDetector(
+				function($jti, $targetUri) {
+					if (JtiStore::hasJti($jti)) {
+						return true;
+					} else {
+						JtiStore::saveJti($jti);
+						return false;
+					}
+					return false;
+				}
+			);
+			$jtiValidator = new JtiValidator($replayDetector);
+			return new Bearer($jtiValidator);
+		}
 		
 		public static function getEndpoints() {
 			return array(
@@ -141,12 +162,4 @@
 			}
 			echo json_encode($body, JSON_PRETTY_PRINT);
 		}
-		
-		public static function getUser() {
-			return [
-				"id" => "1234567", // FIXME: Get the ID of the currently logged in user
-				"allowedClients" => ["93b01f0953b07394bbe59217b3876041", "ebc22eebeecbe0e703647c229e18ddac"]
-			];
-		}
 	}
-	
