@@ -37,15 +37,16 @@
 - [v] Mail handler for templates
 - [v] CORS for all
 - [v] base64 url decode/encode (include/base64_url_encode.php)
-- [ ] Auto-create-storage
+- [?] Auto-create-storage
+- [v] jtiStore
 
 - [ ] Cleanup for expired verify tokens, password, deletion
 
 ----------------------
 
 ------- Storage ------
-- [ ] Flysystem adapter for filesystem
-- [ ] WAC-viewer
-- [ ] CORS for all
-- [ ] Initialize storage
-- [ ] API for storage creation
+- [v] Flysystem adapter for filesystem
+- [v] WAC-viewer
+- [v] CORS for all
+- [v] Initialize storage
+- [?] API for storage creation
