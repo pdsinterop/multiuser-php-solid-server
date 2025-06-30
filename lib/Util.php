@@ -1,5 +1,5 @@
 <?php
-	namespace PdsInterop\PhpSolid;
+	namespace Pdsinterop\PhpSolid;
 	
 	class Util {
 		public static function base64_url_encode($text) {
