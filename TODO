@@ -33,13 +33,14 @@
 	- [v] idp-api
 		- [v] sharing
 
-- [ ] User profile
+- [v] User profile
 - [v] Mail handler for templates
 - [v] CORS for all
 - [v] base64 url decode/encode (include/base64_url_encode.php)
 - [ ] Auto-create-storage
 
 - [ ] Cleanup for expired verify tokens, password, deletion
+
 ----------------------
 
 ------- Storage ------

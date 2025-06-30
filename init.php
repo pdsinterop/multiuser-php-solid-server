@@ -22,6 +22,10 @@
 			userId VARCHAR(255) NOT NULL PRIMARY KEY,
 			clientId VARCHAR(255) NOT NULL
 		    )',
+		    'CREATE TABLE IF NOT EXISTS userStorage (
+			userId VARCHAR(255) NOT NULL PRIMARY KEY,
+			storageUrl VARCHAR(255) NOT NULL
+		    )',
 		    'CREATE TABLE IF NOT EXISTS verify (
 			code VARCHAR(255) NOT NULL PRIMARY KEY,
 			data TEXT NOT NULL
