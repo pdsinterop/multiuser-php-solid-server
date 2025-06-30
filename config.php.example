@@ -16,4 +16,5 @@
 
     const MAILSTYLES = [
     ];
+    const STORAGEBASE = __DIR__ . "/pods/";
     
