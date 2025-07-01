@@ -18,9 +18,9 @@
 	- [v] jwks
 	- [v] logout
 	- [v] register
-	- [v] session
+	- [-] session
 	- [v] token
-	- [v] userinfo
+	- [-] userinfo
 
 - [v] User account
 	- [v] idp-api-account
@@ -51,4 +51,4 @@
 - [v] CORS for all
 - [v] Initialize storage
 - [-] API for storage creation
-- [ ] Notifications
+- [-] Notifications
