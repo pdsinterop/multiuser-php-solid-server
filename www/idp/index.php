@@ -131,6 +131,10 @@
 				case "/login/":
 				case "/register":
 				case "/register/":
+				case "/reset-password":
+				case "/reset-password/":
+				case "/change-password":
+				case "/change-password/":
 					include_once(FRONTENDDIR . "generated.html");
 				break;
 				case "/sharing":
@@ -151,23 +155,11 @@
 			switch ($request) {
 				case "/api/accounts/verify":
 				case "/api/accounts/verify/":
-					$email = $_POST['email'];
 					$verifyData = [
-						'email' => $email
+						'email' => $_POST['email']
 					];
 
-					$digits = 6;
-					$code = rand(0,1000000);
-					$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
-
-					$verifyData['code'] = $code;
-					$expires = new \DateTime();
-					$expires->add(new \DateInterval('PT30M')); // expire after 30 minutes
-					$verifyData['expires'] = $expires->getTimestamp();
-
-					User::saveVerifyToken($verifyData);
-					$verifyToken = User::getVerifyToken($code);
-					
+					$verifyToken = User::saveVerifyToken('verify', $verifyData);
 					Mailer::sendVerify($verifyToken);
 
 					$responseData = "OK";
@@ -177,16 +169,19 @@
 				break;
 				case "/api/accounts/new":
 				case "/api/accounts/new/":
-					if (User::userEmailExists($_POST['email'])) {
-						header("HTTP/1.1 400 Bad Request");
-						exit();
-					}
 					$verifyToken = User::getVerifyToken($_POST['confirm']);
 					if (!$verifyToken) {
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
-
+					if ($verifyToken['email'] !== $_POST['email']) {
+						header("HTTP/1.1 400 Bad Request");
+						exit();
+					}
+					if (User::userEmailExists($_POST['email'])) {
+						header("HTTP/1.1 400 Bad Request");
+						exit();
+					}
 					if (!$_POST['password'] === $_POST['repeat_password']) {
 						header("HTTP/1.1 400 Bad Request");
 						exit();
@@ -206,6 +201,36 @@
 					header("HTTP/1.1 201 Created");
 					header("Content-type: application/json");
 					echo json_encode($responseData, JSON_PRETTY_PRINT);
+				break;
+				case "/api/accounts/reset-password":
+				case "/api/accounts/reset-password/":
+					if (!User::userEmailExists($_POST['email'])) {
+						header("HTTP/1.1 200 OK"); // Return OK even when user is not found;
+						header("Content-type: application/json");
+						echo json_encode("OK");
+						exit();
+					}
+					$verifyData = [
+						'email' => $_POST['email']
+					];
+
+					$verifyToken = User::saveVerifyToken('passwordReset', $verifyData);
+					Mailer::sendResetPassword($verifyToken);
+					header("HTTP/1.1 200 OK");
+					header("Content-type: application/json");
+					echo json_encode("OK");
+				break;
+				case "/api/accounts/change-password":
+				case "/api/accounts/change-password/":
+					$verifyToken = User::getVerifyToken($_POST['token']);
+					if (!$verifyToken) {
+						header("HTTP/1.1 400 Bad Request");
+						exit();
+					}
+					User::setUserPassword($verifyToken['email'], $_POST['newPassword']);
+					header("HTTP/1.1 200 OK");
+					header("Content-type: application/json");
+					echo json_encode("OK");
 				break;
 				case "/login/password":
 				case "/login/password/":
@@ -272,9 +297,6 @@
 						$returnUrl = urldecode($_POST['returnUrl']);
 						header("Location: $returnUrl");
 					}
-					// FIXME: force user to be logged in
-					// FIXME: save the allowed clients in the logged in user;
-					
 				break;
 				case "/token":
 				case "/token/":
