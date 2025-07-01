@@ -334,5 +334,17 @@
 			// FIXME: Delete storage;
 			self::deleteAllowedClients($email);
 			self::deleteUser($email);
-		}		
+		}
+
+		public static function cleanupTokens() {
+			self::connect();
+
+			$now = new \DateTime();
+			$query = self::$pdo->prepare(
+				'DELETE FROM verify WHERE expires < :now'
+			);
+			$query->execute([
+				':now' => $now->getTimestamp()
+			]);
+		}
 	}		

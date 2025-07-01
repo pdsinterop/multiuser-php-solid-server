@@ -5,6 +5,7 @@
     const KEYDIR = __DIR__ . "/keys/";
     const FRONTENDDIR = __DIR__ . "/frontend/";
     const DBPATH = __DIR__ . "/db/solid.db";
+    const CLEANUP_FILE = __DIR__ . "/db/lastcleanup";
 
     const MAILER = [
         "host" => "mailpit",

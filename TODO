@@ -40,8 +40,8 @@
 - [-] Auto-create-storage
 - [v] jtiStore
 
-- [ ] Cleanup for expired verify tokens, password, deletion
-- [ ] Password requirements
+- [v] Cleanup for expired verify tokens, password, deletion
+- [v] Password requirements
 
 ----------------------
 

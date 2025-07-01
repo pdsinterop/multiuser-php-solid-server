@@ -379,6 +379,10 @@
 					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
 				break;
 			}
+			if (!file_exists(CLEANUP_FILE) || (filemtime(CLEANUP_FILE) < time())) {
+				touch(CLEANUP_FILE, time() + 3600);
+				User::cleanupTokens();
+			}
 		break;
 		case "OPTIONS":
 		break;
