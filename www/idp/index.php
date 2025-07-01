@@ -353,20 +353,40 @@
 
 					$requestFactory = new \Laminas\Diactoros\ServerRequestFactory();
 					$request = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+
+					$grantType = isset($requestBody['grant_type']) ? $requestBody['grant_type'] : null;
+					$clientId = isset($requestBody['client_id']) ? $requestBody['client_id'] : null;
+					switch ($grantType) {
+						case "authorization_code":
+							$code = $requestBody['code'];
+							$codeInfo = $this->tokenGenerator->getCodeInfo($code);
+							$userId = $codeInfo['user_id'];
+							if (!$clientId) {
+								$clientId = $codeInfo['client_id'];
+							}
+						break;
+						case "refresh_token":
+							$refreshToken = $requestBody['refresh_token'];
+							$tokenInfo = $this->tokenGenerator->getCodeInfo($refreshToken); // FIXME: getCodeInfo should be named 'decrypt' or 'getInfo'?
+							$userId = $tokenInfo['user_id'];
+							if (!$clientId) {
+								$clientId = $tokenInfo['client_id'];
+							}
+						break;
+						default:
+							$userId = false;
+						break;
+					}
 					
-					$code     = $request->getParsedBody()['code'];
-					$clientId = $request->getParsedBody()['client_id'];
 					$httpDpop = $request->getServerParams()['HTTP_DPOP'];
 
 					$response = $authServer->respondToAccessTokenRequest($request);
 
-					// FIXME: handle refresh token;
-					if (isset($code)) {
-						$codeInfo = $tokenGenerator->getCodeInfo($code);
+					if (isset($userId)) {
 						$response = $tokenGenerator->addIdTokenToResponse(
 							$response,
 							$clientId,
-							$codeInfo['user_id'],
+							$userId,
 							($_SESSION['nonce'] ?? ''),
 							Server::getKeys()['privateKey'],
 							$httpDpop
