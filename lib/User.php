@@ -280,5 +280,39 @@
 				return true;
 			}
 			return false;			
+		}
+
+		private static function deleteUser($email) {
+			self::connect();
+			$query = self::$pdo->prepare(
+				'DELETE FROM users WHERE email=:email'
+			);
+			$query->execute([
+				':email' => $email
+			]);
+		}
+
+		private static function deleteAllowedClients($email) {
+			$user = self::getUser($email);
+			if (!$user) {
+				return;
+			}
+
+			self::connect();
+			$query = self::$pdo->prepare(
+				'DELETE FROM allowedClients WHERE userId=:userId'
+			);
+			$query->execute([
+				':userId' => $user['userId']
+			]);
+		}
+
+		public static function deleteAccount($email) {
+			if (!self::userEmailExists($email)) {
+				return;
+			}
+			// FIXME: Delete storage;
+			self::deleteAllowedClients($email);
+			self::deleteUser($email);
 		}		
 	}		

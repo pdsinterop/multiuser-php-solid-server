@@ -135,6 +135,10 @@
 				case "/reset-password/":
 				case "/change-password":
 				case "/change-password/":
+				case "/account/delete":
+				case "/account/delete/":
+				case "/account/delete/confirm":
+				case "/account/delete/confirm/":
 					include_once(FRONTENDDIR . "generated.html");
 				break;
 				case "/sharing":
@@ -145,6 +149,12 @@
 						exit();
 					}
 					include_once(FRONTENDDIR . "generated.html");
+				break;
+				case '/session':
+				case '/session/':
+				case '/userinfo':
+				case '/userinfo/':
+					header("HTTP/1.1 501 Not implemented");
 				break;
 				default:
 					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
@@ -228,6 +238,36 @@
 						exit();
 					}
 					User::setUserPassword($verifyToken['email'], $_POST['newPassword']);
+					header("HTTP/1.1 200 OK");
+					header("Content-type: application/json");
+					echo json_encode("OK");
+				break;
+				case "/api/accounts/delete":
+				case "/api/accounts/delete/":
+					if (!User::userEmailExists($_POST['email'])) {
+						header("HTTP/1.1 200 OK"); // Return OK even when user is not found;
+						header("Content-type: application/json");
+						echo json_encode("OK");
+						exit();
+					}
+					$verifyData = [
+						'email' => $_POST['email']
+					];
+
+					$verifyToken = User::saveVerifyToken('deleteAccount', $verifyData);
+					Mailer::sendDeleteAccount($verifyToken);
+					header("HTTP/1.1 200 OK");
+					header("Content-type: application/json");
+					echo json_encode("OK");
+				break;
+				case "/api/accounts/delete/confirm":
+				case "/api/accounts/delete/confirm/":
+					$verifyToken = User::getVerifyToken($_POST['token']);
+					if (!$verifyToken) {
+						header("HTTP/1.1 400 Bad Request");
+						exit();
+					}
+					User::deleteAccount($verifyToken['email']);
 					header("HTTP/1.1 200 OK");
 					header("Content-type: application/json");
 					echo json_encode("OK");

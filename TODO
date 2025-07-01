@@ -12,23 +12,23 @@
 	- [v] login
 	- [v] generated.html
 
-- [ ] Solid OIDC
+- [v] Solid OIDC
 	- [v] .well-known
 	- [v] authorize
 	- [v] jwks
 	- [v] logout
 	- [v] register
-	- [ ] session
+	- [v] session
 	- [v] token
-	- [ ] userinfo
+	- [v] userinfo
 
-- [ ] User account
-	- [ ] idp-api-account
-		- [ ] change-password
-		- [ ] delete-account-confirm
-		- [ ] delete-account-request
+- [v] User account
+	- [v] idp-api-account
+		- [v] change-password
+		- [v] delete-account-confirm
+		- [v] delete-account-request
 		- [v] new
-		- [ ] reset-password
+		- [v] reset-password
 		- [v] verify
 	- [v] idp-api
 		- [v] sharing
@@ -41,6 +41,7 @@
 - [v] jtiStore
 
 - [ ] Cleanup for expired verify tokens, password, deletion
+- [ ] Password requirements
 
 ----------------------
 
