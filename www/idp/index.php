@@ -353,13 +353,14 @@
 
 					$requestFactory = new \Laminas\Diactoros\ServerRequestFactory();
 					$request = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			                $requestBody = $request->getParsedBody();
 
 					$grantType = isset($requestBody['grant_type']) ? $requestBody['grant_type'] : null;
 					$clientId = isset($requestBody['client_id']) ? $requestBody['client_id'] : null;
 					switch ($grantType) {
 						case "authorization_code":
 							$code = $requestBody['code'];
-							$codeInfo = $this->tokenGenerator->getCodeInfo($code);
+							$codeInfo = $tokenGenerator->getCodeInfo($code);
 							$userId = $codeInfo['user_id'];
 							if (!$clientId) {
 								$clientId = $codeInfo['client_id'];
@@ -367,7 +368,7 @@
 						break;
 						case "refresh_token":
 							$refreshToken = $requestBody['refresh_token'];
-							$tokenInfo = $this->tokenGenerator->getCodeInfo($refreshToken); // FIXME: getCodeInfo should be named 'decrypt' or 'getInfo'?
+							$tokenInfo = $tokenGenerator->getCodeInfo($refreshToken); // FIXME: getCodeInfo should be named 'decrypt' or 'getInfo'?
 							$userId = $tokenInfo['user_id'];
 							if (!$clientId) {
 								$clientId = $tokenInfo['client_id'];

@@ -125,7 +125,7 @@
 			if (!self::userEmailExists($email)) {
 				return false;
 			}
-			if (!self::validatePasswordStrength($newUser['password'])) {
+			if (!self::validatePasswordStrength($newPassword)) {
 				return false;
 			}
 			self::connect();
