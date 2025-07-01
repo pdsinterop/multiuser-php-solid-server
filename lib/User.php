@@ -9,15 +9,46 @@
                         }
                 }
 
-		public static function saveVerifyToken($token) {
+		private static function generateTokenCode() {
+			$digits = 6;
+			$code = rand(0,1000000);
+			$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
+			return $code;
+		}
+
+		private static function generateTokenHex() {
+			return md5(random_bytes(32));
+		}
+
+		private static function generateExpiresTimestamp($lifetime) {
+			$expires = new \DateTime();
+			$expires->add(new \DateInterval($lifetime));
+			return $expires->getTimestamp();
+		}
+
+		public static function saveVerifyToken($tokenType, $tokenData) {
+			switch ($tokenType) {
+				case "verify":
+					$tokenData['code'] = self::generateTokenCode();
+					$tokenData['expires'] = self::generateExpiresTimestamp('PT30M'); // expires after 30 minutes
+				break;
+				case "passwordReset":
+				case "deleteAccount":
+				default:
+					$tokenData['code'] = self::generateTokenHex();
+					$tokenData['expires'] = self::generateExpiresTimestamp('PT30M'); // expires after 30 minutes
+				break;
+			}
+
 			self::connect();
 			$query = self::$pdo->prepare(
 				'INSERT INTO verify VALUES(:code, :data)'
 			);
 			$query->execute([
-				':code' => $token['code'],
-				':data' => json_encode($token)
+				':code' => $tokenData['code'],
+				':data' => json_encode($tokenData)
 			]);
+			return $tokenData;
 		}
 		
 		public static function getVerifyToken($code) {
@@ -72,6 +103,21 @@
 				"email" => $newUser['email'],
 				"webId" => $newUser['webId']
 			];
+		}
+
+		public static function setUserPassword($email, $newPassword) {
+			if (!self::userEmailExists($email)) {
+				return;
+			}
+			self::connect();
+			$query = self::$pdo->prepare(
+				 'UPDATE users SET password=:passwordHash WHERE email=:email'
+			);
+			$queryParams = [];
+			$queryParams[':email'] = $email;
+			$queryParams[':passwordHash'] = password_hash($newPassword, PASSWORD_BCRYPT);
+
+			$query->execute($queryParams);
 		}
 
 		public static function allowClientForUser($clientId, $userId) {
