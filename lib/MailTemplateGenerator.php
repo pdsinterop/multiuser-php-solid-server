@@ -163,16 +163,16 @@
    <tr>
     <td valign="top" class="pc-w520-padding-30-40-30-40 pc-w620-padding-35-50-35-50" style="padding: 40px 60px 40px 60px; height: unset; background-color: <?php echo $backgroundColor; ?>;" bgcolor="<?php echo $backgroundColor; ?>">
      <?php 
-        self::mailTemplateCallToActionTitle($mailTokens);
-     	if ($mailTokens['buttonText']) {
-	     	if (isset($mailTokens['buttonLink'])) {
-	     		self::mailTemplateCallToActionButton($mailTokens);
-	     	} else {
-	     		self::mailTemplateCallToActionButtonNoLink($mailTokens);
-	     	}
-     	}
-     	self::mailTemplateCallToActionDescription($mailTokens);
-     ?>
+		self::mailTemplateCallToActionTitle($mailTokens);
+	 	if (isset($mailTokens['buttonText'])) {
+			if (isset($mailTokens['buttonLink'])) {
+				self::mailTemplateCallToActionButton($mailTokens);
+			} else {
+				self::mailTemplateCallToActionButtonNoLink($mailTokens);
+			}
+	 	}
+	 	self::mailTemplateCallToActionDescription($mailTokens);
+    ?>
     </td>
    </tr>
   </table>
