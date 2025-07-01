@@ -78,8 +78,24 @@
 			return true;
 		}
 		
+		public static function validatePasswordStrength($password) {
+			// Validate password strength
+			$uppercase = preg_match('@[A-Z]@', $password);
+			$lowercase = preg_match('@[a-z]@', $password);
+			$number    = preg_match('@[0-9]@', $password);
+			$specialChars = preg_match('@[^\w]@', $password);
+
+			if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
+				return false;
+			}
+			return true;
+		}
+
 		public static function createUser($newUser) {
 			self::connect();
+			if (!self::validatePasswordStrength($newUser['password'])) {
+				return false;
+			}
 			$generatedUserId = md5(random_bytes(32));
 			while (self::userIdExists($generatedUserId)) {
 				$generatedUserId = md5(random_bytes(32));
@@ -107,7 +123,10 @@
 
 		public static function setUserPassword($email, $newPassword) {
 			if (!self::userEmailExists($email)) {
-				return;
+				return false;
+			}
+			if (!self::validatePasswordStrength($newUser['password'])) {
+				return false;
 			}
 			self::connect();
 			$query = self::$pdo->prepare(
@@ -118,6 +137,7 @@
 			$queryParams[':passwordHash'] = password_hash($newPassword, PASSWORD_BCRYPT);
 
 			$query->execute($queryParams);
+			return true;
 		}
 
 		public static function allowClientForUser($clientId, $userId) {

@@ -203,6 +203,10 @@
 					];
 
 					$createdUser = User::createUser($newUser);
+					if (!$createdUser) {
+						header("HTTP/1.1 400 Bad Request");
+						exit();
+					}
 					Mailer::sendAccountCreated($createdUser);
 
 					$responseData = array(
@@ -237,7 +241,11 @@
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
-					User::setUserPassword($verifyToken['email'], $_POST['newPassword']);
+					$result = User::setUserPassword($verifyToken['email'], $_POST['newPassword']);
+					if (!$result) {
+						header("HTTP/1.1 400 Bad Request");
+						exit();
+					}
 					header("HTTP/1.1 200 OK");
 					header("Content-type: application/json");
 					echo json_encode("OK");
