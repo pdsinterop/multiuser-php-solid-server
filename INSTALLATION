@@ -1,9 +1,0 @@
-# Installation instructions
-
-Copy config.php.example to config.php and update the values.
-
-Run init.php to generate the keyset and create the database tables.
-```
-sudo -u www-data php init.php
-```
-
