@@ -39,10 +39,10 @@
 			$mailSubject = "Wachtwoordherstel";
 			$mailTokens = array(
 				"title" => "Wachtwoordherstel",
-				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . make_url(currentsite() . "change-password/") . '?token={code}',
+				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . BASEURL . "/change-password/?token={code}",
 				"footer" => "&copy; Muze 2025",
 				"buttonText" => "Herstel wachtwoord",
-				"buttonLink" => make_url(currentsite() . "change-password/") . '?token={code}'
+				"buttonLink" => BASEURL . "/change-password/?token={code}"
 			);
 
 			$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
@@ -72,10 +72,10 @@
 			$mailSubject = "Je account verwijderen";
 			$mailTokens = array(
 				"title" => "Je account verwijderen",
-				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . make_url(currentsite() . "account/delete/confirm/") . '?token={code}',
+				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . BASEURL . "/account/delete/confirm/?token={code}",
 				"footer" => "&copy; Muze 2025",
 				"buttonText" => "Verwijder account",
-				"buttonLink" => make_url(currentsite() . "account/delete/confirm/") . '?token={code}'
+				"buttonLink" => BASEURL . "/account/delete/confirm/?token={code}"
 			);
 
 			$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
