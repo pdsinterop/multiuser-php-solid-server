@@ -104,42 +104,6 @@
 
 					Server::respond($response);
 				break;
-				case "/storage/profile":
-				case "/storage/profile/":
-					$profile = <<<EOF
-@prefix : <#>.
-@prefix acl: <http://www.w3.org/ns/auth/acl#>.
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix ldp: <http://www.w3.org/ns/ldp#>.
-@prefix schema: <http://schema.org/>.
-@prefix solid: <http://www.w3.org/ns/solid/terms#>.
-@prefix space: <http://www.w3.org/ns/pim/space#>.
-@prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
-@prefix pro: <./>.
-@prefix inbox: </inbox/>.
-@prefix yle: </storage/>.
-
-<> a foaf:PersonalProfileDocument; foaf:maker :me; foaf:primaryTopic :me.
-
-:me
-    a schema:Person, foaf:Person;
-    acl:trustedApp
-            [
-                acl:mode acl:Append, acl:Read, acl:Write;
-                acl:origin <http://podpro.dev:443>
-            ];
-    ldp:inbox inbox:;
-    space:preferencesFile </storage/settings/prefs.ttl>;
-    space:storage yle:;
-    solid:account yle:;
-    solid:oidcIssuer <https://solid.local>;
-    solid:privateTypeIndex </storage/settings/privateTypeIndex.ttl>;
-    solid:publicTypeIndex </storage/settings/publicTypeIndex.ttl>;
-    foaf:name "Yvo Brevoort".
-EOF;
-					header('Content-Type: text/turtle');
-					echo $profile;
-				break;
 				case "/dashboard":
 				case "/dashboard/":
 					$user = User::getLoggedInUser();
