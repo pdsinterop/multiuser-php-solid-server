@@ -37,7 +37,7 @@
 - [v] Mail handler for templates
 - [v] CORS for all
 - [v] base64 url decode/encode (include/base64_url_encode.php)
-- [?] Auto-create-storage
+- [-] Auto-create-storage
 - [v] jtiStore
 
 - [ ] Cleanup for expired verify tokens, password, deletion
@@ -49,4 +49,5 @@
 - [v] WAC-viewer
 - [v] CORS for all
 - [v] Initialize storage
-- [?] API for storage creation
+- [-] API for storage creation
+- [ ] Notifications
