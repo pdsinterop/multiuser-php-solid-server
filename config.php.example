@@ -23,6 +23,9 @@
     // won't be locked out after failed login attempts;
     const TRUSTED_IPS = [];
 
+    // Minimum entropy level for a password to be acceptable.
+    const MINIMUM_PASSWORD_ENTROPY = 15;
+
     /**
      * The list is made up of entries from the following sources, and made all lower case:
      *  - https://raw.githubusercontent.com/DavidWittman/wpxmlrpcbrute/master/wordlists/1000-most-common-passwords.txt
@@ -30,7 +33,7 @@
      *  - https://www.safetydetectives.com/blog/the-most-hacked-passwords-in-the-world/
      *  - https://www.forbes.com/sites/daveywinder/2019/12/14/ranked-the-worlds-100-worst-passwords/
      */
-    const BANNEDPASSWORDS = [
+    const BANNED_PASSWORDS = [
         '123456',
         'password',
         '12345678',

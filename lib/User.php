@@ -81,8 +81,8 @@
 		}
 		
 		public static function validatePasswordStrength($password) {
-			$entropy = PasswordValidator::getEntropy($password, BANNEDPASSWORDS);
-			$minimumEntropy = 50;
+			$entropy = PasswordValidator::getEntropy($password, BANNED_PASSWORDS);
+			$minimumEntropy = MINIMUM_PASSWORD_ENTROPY;
 			if ($entropy < $minimumEntropy) {
 				return false;
 			}
