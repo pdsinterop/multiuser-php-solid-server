@@ -11,7 +11,7 @@
 
 		private static function generateTokenCode() {
 			$digits = 6;
-			$code = rand(0,1000000);
+			$code = random_int(0,1000000);
 			$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
 			return $code;
 		}
