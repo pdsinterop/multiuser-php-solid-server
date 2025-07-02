@@ -1,6 +1,8 @@
 <?php
 	namespace Pdsinterop\PhpSolid;
-	
+
+	use Pdsinterop\PhpSolid\PasswordValidator;
+
 	class User {
 		private static $pdo;
                 private static function connect() {
@@ -79,13 +81,9 @@
 		}
 		
 		public static function validatePasswordStrength($password) {
-			// Validate password strength
-			$uppercase = preg_match('@[A-Z]@', $password);
-			$lowercase = preg_match('@[a-z]@', $password);
-			$number    = preg_match('@[0-9]@', $password);
-			$specialChars = preg_match('@[^\w]@', $password);
-
-			if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
+			$entropy = PasswordValidator::getEntropy($password, BANNEDPASSWORDS);
+			$minimumEntropy = 50;
+			if ($entropy < $minimumEntropy) {
 				return false;
 			}
 			return true;
