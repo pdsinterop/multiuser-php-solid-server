@@ -48,7 +48,7 @@ You may also need to add these hosts to /etc/hosts to make them available for th
 
 # This solid server was built op on these releases:
 - pdsinterop/flysystem-rdf (v0.6.0)
-- pdsinterop/php-solid-crud (v0.8.0)
+- pdsinterop/php-solid-crud (v0.8.1)
 - pdsinterop/php-solid-auth (v0.13.0)
 
 # Funding
