@@ -596,6 +596,10 @@
               document.location.hash = "login-password";
               simplyApp.commands.autofocus();
             },
+            "registerCompleted" : function(el) {
+              document.location.hash="#login";
+              simplyApp.commands.autofocus();
+            },
             "registerDone" : function(el) {
               simplyApp.actions.register()
               .then(function(result) {
@@ -605,10 +609,6 @@
             },
             "registerNext" : function(el) {
               document.location.hash="#register-password";
-              simplyApp.commands.autofocus();
-            },
-            "registerDone" : function(el) {
-              document.location.hash="#login";
               simplyApp.commands.autofocus();
             },
             "registerVerify" : function(el) {
@@ -925,7 +925,7 @@
       <h1>Je identiteit is klaar voor gebruik!</h1>
       <p>Je ontvangt ook een e-mailbericht met deze informatie. Je WebID is:</p>
       <h2 data-simply-field="createdWebId"></h2>
-      <form action="#" class="solid-form" data-simply-command="registerDone">
+      <form action="#" class="solid-form" data-simply-command="registerCompleted">
         <button class="solid-button solid-button-primary">Verder</button>
       </form>
     </section>
