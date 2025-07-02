@@ -10,6 +10,10 @@
 		}
 
 		public static function logFailedAttempt($ip, $type, $expires) {
+			if (in_array($ip, TRUSTED_IPS)) {
+				return;
+			}
+
 			self::connect();
 			
 			$query = self::$pdo->prepare(
@@ -18,11 +22,15 @@
 			$query->execute([
 				':ip' => $ip,
 				':type' => $type,
-				':expires' => $expires->getTimestamp()
+				':expires' => $expires
 			]);
 		}
 
 		public static function getAttemptsCount($ip, $type) {
+			if (in_array($ip, TRUSTED_IPS)) {
+				return 0;
+			}
+
 			self::connect();
 
 			$now = new \DateTime();

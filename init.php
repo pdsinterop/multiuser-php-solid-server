@@ -41,7 +41,7 @@
 			data TEXT
 		    )',
 		    'CREATE TABLE IF NOT EXISTS ipAttempts (
-			ip VARCHAR(255) NOT NULL PRIMARY KEY,
+			ip VARCHAR(255) NOT NULL,
 			type VARCHAR(255) NOT NULL,
 			expires NOT NULL
 		    )',
