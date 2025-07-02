@@ -40,6 +40,11 @@
 			password TEXT NOT NULL,
 			data TEXT
 		    )',
+		    'CREATE TABLE IF NOT EXISTS ipAttempts (
+			ip VARCHAR(255) NOT NULL PRIMARY KEY,
+			type VARCHAR(255) NOT NULL,
+			expires NOT NULL
+		    )',
 		];
 		      
 		try {

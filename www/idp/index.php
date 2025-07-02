@@ -9,6 +9,7 @@
 	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\Mailer;
+	use Pdsinterop\PhpSolid\IpAttempts;
 
 	$request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -284,6 +285,11 @@
 				break;
 				case "/login/password":
 				case "/login/password/":
+					$failureCount = IpAttempts::getAttemptsCount($_SERVER['REMOTE_ADDR'], "login");
+					if ($failureCount > 5) {
+						header("HTTP/1.1 400 Bad Request");
+						exit();
+					}
 					if (User::checkPassword($_POST['username'], $_POST['password'])) {
 						if (!isset($_POST['redirect_uri']) || $_POST['redirect_uri'] === '') {
 							header("Location: /dashboard/");
@@ -291,6 +297,7 @@
 						}
 						header("Location: " . urldecode($_POST['redirect_uri'])); // FIXME: Do we need to harden this?
 					} else {
+						IpAttempts::logFailedAttempt($_SERVER['REMOTE_ADDR'], "login", time() + 3600);
 						header("Location: /login/");
 					}
 				break;
@@ -405,6 +412,7 @@
 			if (!file_exists(CLEANUP_FILE) || (filemtime(CLEANUP_FILE) < time())) {
 				touch(CLEANUP_FILE, time() + 3600);
 				User::cleanupTokens();
+				IpAttempts::cleanupAttempts();
 			}
 		break;
 		case "OPTIONS":
