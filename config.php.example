@@ -12,7 +12,7 @@
         "port" => 1025,
         // user
         // pass
-        "from" => "info@muze.nl"
+        "from" => "accounts@example.com"
     ];
 
     const MAILSTYLES = [
