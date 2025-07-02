@@ -339,7 +339,7 @@
 
 			$now = new \DateTime();
 			$query = self::$pdo->prepare(
-				'DELETE FROM verify WHERE expires < :now'
+				'DELETE FROM verify WHERE json_extract(data, \'$.expires\') < :now'
 			);
 			$query->execute([
 				':now' => $now->getTimestamp()
