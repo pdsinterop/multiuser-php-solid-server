@@ -19,6 +19,10 @@
     ];
     const STORAGEBASE = __DIR__ . "/pods/";
 
+    // Array of IPs that can be trusted. If they are in this list, they
+    // won't be locked out after failed login attempts;
+    const TRUSTED_IPS = [];
+
     /**
      * The list is made up of entries from the following sources, and made all lower case:
      *  - https://raw.githubusercontent.com/DavidWittman/wpxmlrpcbrute/master/wordlists/1000-most-common-passwords.txt
