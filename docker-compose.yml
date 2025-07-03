@@ -8,6 +8,15 @@ services:
             - 443:443
         volumes:
             - .:/opt/solid
+    pubsub:
+        build:
+            context: https://github.com/pdsinterop/php-solid-pubsub-server.git#main
+        ports:
+            - 8080:8080
+        expose:
+            - 8080
+        depends_on:
+            - php-apache
     mailpit:
         image: axllent/mailpit
         environment:

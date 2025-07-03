@@ -15,6 +15,7 @@
 	$method = $_SERVER['REQUEST_METHOD'];
 
 	Middleware::cors();
+	Middleware::pubsub();
 
 	switch ($method) {
 		case "OPTIONS":

@@ -24,4 +24,11 @@
 			header( 'Access-Control-Expose-Headers: ' . $corsExposeHeaders);
 			header( 'Accept-Patch: text/n3');
 		}
+
+		public static function pubsub() {
+			$pubsub = PUBSUB_SERVER;
+			if ($pubsub) {
+				header('updates-via: ' . $pubsub);
+			}
+		}
 	}
