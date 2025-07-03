@@ -26,6 +26,9 @@
 		
 		public static function saveClientRegistration($clientData) {
 			self::connect();
+			if (!isset($clientData['client_name'])) {
+				$clientData['client_name'] = $clientData['origin'];
+			}
 			$query = self::$pdo->prepare(
 				'INSERT INTO clients VALUES(:clientId, :origin, :clientData)'
 			);

@@ -62,9 +62,13 @@
 							\Lcobucci\JWT\Signer\Key\InMemory::plainText($keys['privateKey']
 						));
 
-						$token = $jwtConfig->parser()->parse($_GET['request']);
-						$_SESSION['nonce'] = $_GET['nonce'] ?? $token->claims()->get('nonce');
-						
+						if (isset($_GET['nonce'])) {
+							$_SESSION['nonce'] = $_GET['nonce'];
+						} else if (isset($_GET['request'])) {
+							$token = $jwtConfig->parser()->parse($_GET['request']);
+							$_SESSION['nonce'] = $token->claims()->get('nonce');
+						}
+
 						if (!isset($getVars["redirect_uri"])) {
 							$getVars['redirect_uri'] = $token->claims()->get("redirect_uri");
 						}
@@ -75,8 +79,18 @@
 
 					$authServer = Server::getAuthServer();
 					
+					$approval = false;
 					// check clientId approval for the user
-					if (!in_array($clientId, ($user['allowedClients'] ?? []))) {
+					if (in_array($clientId, ($user['allowedClients'] ?? []))) {
+						$approval = true;
+					} else {
+						$clientRegistration = ClientRegistration::getRegistration($clientId);
+						if (in_array($clientRegistration['origin'], TRUSTED_APPS)) {
+							$approval = true;
+						}
+					}
+
+					if (!$approval) {
 						header('Location: ' . BASEURL . '/sharing/' . "?" . http_build_query(
 							array(
 								"returnUrl" => urlencode($_SERVER["REQUEST_URI"]),
@@ -85,10 +99,8 @@
 							)
 						));
 						exit();
-					} else {
-						$approval = true;
 					}
-
+					
 					$webId = "https://id-" . $user['userId'] . "." . BASEDOMAIN . "/#me";
 					$user = new \Pdsinterop\Solid\Auth\Entity\User();
 					$user->setIdentifier($webId);
@@ -329,8 +341,8 @@
 						'client_secret' => $client['client_secret'],
 						'response_types' => array('code'),
 						'grant_types' => array('authorization_code', 'refresh_token'),
-						'application_type' => $client['application_type'],
-						'client_name' => $client['client_name'],
+						'application_type' => $client['application_type'] ?? 'web',
+						'client_name' => $client['client_name'] ?? $client['client_id'],
 						'id_token_signed_response_alg' => 'RS256',
 						'token_endpoint_auth_method' => 'client_secret_basic',
 						'client_id_issued_at' => $client['client_id_issued_at'],
