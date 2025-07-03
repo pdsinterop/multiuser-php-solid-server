@@ -36,7 +36,7 @@
 
 	$wac = new WAC($filesystem);
 	
-	$baseUrl = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . "/";
+	$baseUrl = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'];
 	
 	$resourceServer->setBaseUrl($baseUrl);
 	$wac->setBaseUrl($baseUrl);
