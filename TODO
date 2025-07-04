@@ -52,3 +52,9 @@
 - [v] Initialize storage
 - [-] API for storage creation
 - [-] Notifications
+
+------ Test suites -----
+- [v] webid
+- [v] wac
+- [v] solid-crud
+- [v] CI integration
