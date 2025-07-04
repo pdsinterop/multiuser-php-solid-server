@@ -7,7 +7,9 @@ services:
         ports:
             - 443:443
         volumes:
-            - .:/opt/solid
+            - ./data/keys:/opt/solid/keys
+            - ./data/db:/opt/solid/db
+            - ./data/pods:/opt/solid/pods
     pubsub:
         build:
             context: https://github.com/pdsinterop/php-solid-pubsub-server.git#main
@@ -29,4 +31,4 @@ services:
             - 8025:8025
             - 2525:1025
         volumes:
-            - ./mailpit-data:/data
+            - ./data/mailpit-data:/data
