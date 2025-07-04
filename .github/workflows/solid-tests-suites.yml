@@ -8,7 +8,7 @@ env:
 on:
   push:
     branches:
-      - main
+      - workflow
   pull_request:
     branches: [ main ]
   # Allow manually triggering the workflow.
@@ -52,7 +52,7 @@ jobs:
           docker build \
             --tag "solid-php:${{ env.TAG }}" \
             --tag "ghcr.io/${{ github.repository }}:${{ env.TAG }}" \
-            -f docker\solid.Dockerfile \
+            -f docker/solid.Dockerfile \
           .
           docker push "ghcr.io/${{ github.repository }}:${{ env.TAG }}"
           mkdir -p cache/solid-php
