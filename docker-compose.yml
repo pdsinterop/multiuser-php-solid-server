@@ -1,9 +1,9 @@
 version: '3'
 services:
-    php-apache:
+    solid:
         build:
             context: ./docker
-            dockerfile: Dockerfile.php-apache
+            dockerfile: solid.Dockerfile
         ports:
             - 443:443
         volumes:
@@ -16,7 +16,7 @@ services:
         expose:
             - 8080
         depends_on:
-            - php-apache
+            - solid
     mailpit:
         image: axllent/mailpit
         environment:
