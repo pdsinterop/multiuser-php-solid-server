@@ -8,7 +8,7 @@
 			$mailTokens = array(
 				"title" => "Bevestig je e-mail",
 				"description" => "Je online identiteit is bijna klaar. Vul de code in om je registratie te voltooien.",
-				"footer" => "&copy; Muze 2025",
+				"footer" => "",
 				"buttonText" => "{code}",
 			);
 
@@ -40,7 +40,7 @@
 			$mailTokens = array(
 				"title" => "Wachtwoordherstel",
 				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . BASEURL . "/change-password/?token={code}",
-				"footer" => "&copy; Muze 2025",
+				"footer" => "",
 				"buttonText" => "Herstel wachtwoord",
 				"buttonLink" => BASEURL . "/change-password/?token={code}"
 			);
@@ -73,7 +73,7 @@
 			$mailTokens = array(
 				"title" => "Je account verwijderen",
 				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . BASEURL . "/account/delete/confirm/?token={code}",
-				"footer" => "&copy; Muze 2025",
+				"footer" => "",
 				"buttonText" => "Verwijder account",
 				"buttonLink" => BASEURL . "/account/delete/confirm/?token={code}"
 			);
@@ -105,7 +105,7 @@
 			$mailTokens = array(
 				"title" => "Welkom bij Solid!",
 				"description" => "Je online identiteit is klaar om te gebruiken. Je WebID is: {webId}",
-				"footer" => "&copy; Muze 2025",
+				"footer" => "",
 			);
 
 			$mailSubject = "Welkom bij Solid!";
