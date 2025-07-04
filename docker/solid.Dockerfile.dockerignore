@@ -1,3 +1,4 @@
 keys/
 pods/
 db/
+vendor/
