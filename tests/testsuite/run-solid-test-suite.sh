@@ -90,7 +90,6 @@ function runTests {
     --env SERVER_ROOT_ECSAPED="$ALICE_SERVER_ROOT_ESCAPED" \
     --env SECOND_SERVER_ROOT="$BOB_SERVER_ROOT" \
     --env OIDC_ISSUER="$ALICE_OIDC_ISSUER" \
-#    --env DEBUG=* \
     "$1-tests"
 }
 
