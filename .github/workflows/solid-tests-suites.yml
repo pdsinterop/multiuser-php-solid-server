@@ -23,9 +23,6 @@ concurrency:
 jobs:
   solid-testsuite:
     timeout-minutes: 30
-    needs:
-      - build-docker
-
     runs-on: ubuntu-latest
 
     strategy:
