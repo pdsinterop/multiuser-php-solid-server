@@ -2,8 +2,8 @@ version: '3'
 services:
     solid:
         build:
-            context: ./docker
-            dockerfile: solid.Dockerfile
+            context: .
+            dockerfile: ./docker/solid.Dockerfile
         ports:
             - 443:443
         volumes:
