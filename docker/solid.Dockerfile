@@ -1,7 +1,7 @@
 FROM php:8.3-apache
 LABEL maintainer="yvo@muze.nl"
 RUN apt-get update
-RUN apt-get install -y ssl-cert
+RUN apt-get install -y ssl-cert git unzip
 RUN docker-php-ext-install bcmath
 RUN a2enmod rewrite allowmethods ssl
 
