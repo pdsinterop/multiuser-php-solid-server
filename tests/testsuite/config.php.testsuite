@@ -1,0 +1,28 @@
+<?php
+	const BASEDOMAIN = "solid.local";
+	const BASEURL = "https://" . BASEDOMAIN;
+	const LIBDIR = __DIR__ . "/lib/";
+	const KEYDIR = __DIR__ . "/keys/";
+	const FRONTENDDIR = __DIR__ . "/frontend/";
+	const DBPATH = __DIR__ . "/db/solid.db";
+	const CLEANUP_FILE = __DIR__ . "/db/lastcleanup";
+	
+	const MAILER = [
+		"host" => "mailpit",
+		"port" => 1025,
+		// user
+		// pass
+		"from" => "info@muze.nl"
+	];
+
+	const MAILSTYLES = [
+	];
+
+	const PUBSUB_SERVER = "https://pubsub:8080";
+
+	const STORAGEBASE = __DIR__ . "/pods/";
+	const TRUSTED_IPS = [];
+	const TRUSTED_APPS = ['https://tester', 'http://localhost:3002'];
+
+	const MINIMUM_PASSWORD_ENTROPY = 15;
+	const BANNED_PASSWORDS = [];
