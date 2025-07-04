@@ -23,7 +23,7 @@
             $client->addHeader("Sec-WebSocket-Protocol", "solid-0.1");
             try {
                 $client->text("pub $path\n");
-            } catch (\WebSocket\Exception $exception) {
+            } catch (\Throwable $exception) {
                 throw new \Exception('Could not write to pubsub server', 502, $exception);
             }
         }
