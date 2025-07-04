@@ -15,27 +15,20 @@ Start the docker containers:
 ```
 docker-compose up
 ```
-This will start up two containers: the solid server and a mailpit server. If you have an actual SMTP server running, feel free to remove the mailpit container.
+This will start up three containers: the solid server, pubsub server and a mailpit server. If you have an actual SMTP server running, feel free to remove the mailpit container.
 
-Log into the container (replace 'solid' below with the name of your container). 
+Run the following commands to set up the container (replace 'solid' below with the name of your
+container):
 ```
-docker exec -it solid bash
-```
-
-Run composer install:
-```
-cd /opt/solid/
-composer install
+docker exec -w /opt/solid/ solid mkdir keys pods db
+docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods db
+docker exec -w /opt/solid/ solid cp config.php.example config.php
 ```
 
-Copy config.php.example to config.php and update the values.
+Update the values in the config.php file where needed, then run the
+initialization scrip:
 ```
-cp config.php.example config.php
-```
-
-Run init.php to generate the keyset and create the database tables.
-```
-sudo -u www-data php init.php
+docker exec -u www-data -i -w /opt/solid/ solid php init.php
 ```
 
 ## DNS gotcha and snake oil certificate
