@@ -4,7 +4,7 @@ name: Solid Test Suites
 on:
   push:
     branches:
-      - workflow
+      - main
   pull_request:
     branches: [ main ]
   # Allow manually triggering the workflow.
