@@ -1,0 +1,101 @@
+---
+name: Solid Test Suites
+
+env:
+  # Docker Hub digest (i.e. hash) of the used Docker Images that do not have a version tag.
+  PUBSUB_TAG: latest@sha256:b73a2a5c98d2005bb667dfc69d1c859d704366024298b9caa24ea2e182c456c2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [ main ]
+  # Allow manually triggering the workflow.
+  workflow_dispatch:
+
+# Cancels all previous workflow runs for the same branch that have not yet completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # @TODO: Instead of building the docker image here, take a pre-build image and mount the code?
+  #        (only build when the Dockerfile changes) Or only push when tagged/main?
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create docker tag from git reference
+        # A tag name may only contain lower- and uppercase letters, digits, underscores, periods and dashes.
+        run: |
+          echo "TAG=$(echo -n "${{ github.ref_name }}" \
+            | tr --complement --squeeze-repeats '[:alnum:]._-' '_')" \
+            >> "${GITHUB_ENV}"
+
+      - uses: actions/cache@v4
+        id: cache-solid-php-docker
+        with:
+          path: cache/solid-php
+          key: solid-php-${{ github.sha }}
+
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Solid-PHP
+        run: |
+          docker build \
+            --tag "solid-php:${{ env.TAG }}" \
+            --tag "ghcr.io/${{ github.repository }}:${{ env.TAG }}"
+          .
+          docker push "ghcr.io/${{ github.repository }}:${{ env.TAG }}"
+          mkdir -p cache/solid-php
+          docker image save solid-php:${{ env.TAG }} --output ./cache/solid-php/${{ github.sha }}.tar
+
+  solid-testsuite:
+    timeout-minutes: 30
+    needs:
+      - build-docker
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Create docker tag from git reference
+        # A tag name may only contain lower- and uppercase letters, digits, underscores, periods and dashes.
+        run: |
+          echo "TAG=$(echo -n "${{ github.ref_name }}" \
+            | tr --complement --squeeze-repeats '[:alnum:]._-' '_')" \
+            >> "${GITHUB_ENV}"
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        id: cache-solid-php-docker
+        with:
+          path: cache/solid-php
+          key: solid-php-docker-${{ github.sha }}
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # FIXME: The `docker pull` should be moved to a previous step and cached
+      - name: Pull docker Images
+        run: |
+          docker image load --input ./cache/solid-php/${{ github.sha }}.tar
+          docker pull ${{ matrix.test }}
+          docker pull ghcr.io/pdsinterop/php-solid-pubsub-server:${{ env.PUBSUB_TAG }}
+
+      - name: Start Docker Containers
+        run: |
+          ./tests/testsuite/run-solid-test-suite.sh
