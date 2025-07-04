@@ -1,4 +1,5 @@
 <?php
+	ini_set("log_errors", 1);
 	ini_set('session.cookie_httponly', 1);
 	ini_set('expose_php', 'off');
 

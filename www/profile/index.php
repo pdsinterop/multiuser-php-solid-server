@@ -1,4 +1,5 @@
 <?php
+	ini_set("log_errors", 1);
 	ini_set('expose_php', 'off');
 
 	require_once(__DIR__ . "/../../config.php");
