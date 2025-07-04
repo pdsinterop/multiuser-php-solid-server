@@ -17,16 +17,14 @@ docker-compose up
 ```
 This will start up three containers: the solid server, pubsub server and a mailpit server. If you have an actual SMTP server running, feel free to remove the mailpit container.
 
-Run the following commands to set up the container (replace 'solid' below with the name of your
-container):
+Run the following commands to set up the container (replace 'solid' below with the name of your container):
 ```
 docker exec -w /opt/solid/ solid mkdir keys pods db
 docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods db
 docker exec -w /opt/solid/ solid cp config.php.example config.php
 ```
 
-Update the values in the config.php file where needed, then run the
-initialization scrip:
+Update the values in the config.php file where needed, then run the initialization script:
 ```
 docker exec -u www-data -i -w /opt/solid/ solid php init.php
 ```
