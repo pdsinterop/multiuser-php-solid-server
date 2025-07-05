@@ -29,8 +29,9 @@
 	// the test suite :)
 	const TRUSTED_APPS = [];
 
-	// Minimum entropy level for a password to be acceptable.
-	const MINIMUM_PASSWORD_ENTROPY = 15;
+	// Minimum entropy level for a password to be acceptable. Make sure
+	// to update the minimum in the frontend as well!
+	const MINIMUM_PASSWORD_ENTROPY = 30;
 
 	/**
 	 * The list is made up of entries from the following sources, and made all lower case:

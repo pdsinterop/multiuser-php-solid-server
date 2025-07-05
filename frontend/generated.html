@@ -536,6 +536,81 @@
               let result = await simplyDataApi.deleteAccount(deleteAccountParams);
               return result;
             },
+            "getPasswordEntropy" : function(password) {
+              let base = simplyApp.actions.getPasswordEntropyBase(password);
+              let length = simplyApp.actions.getPasswordEntropyLength(password);
+              let decimalPlaces = 2;
+              return Math.log(Math.pow(base, length)).toFixed(decimalPlaces);
+            },
+            "getPasswordEntropyBase" : function(password) {
+              /**
+                * Get the base amount of characters from the characters used in the password.
+                * This is the number of possible characters to pick from in the used character sets
+                *   i.e. 26 for only lower case passwords
+                */
+              let specialCharacters = ' !"#$%&\'()*+,-./:;<=>?@[\]^_{|}~';
+              let lowerCharacters = 'abcdefghijklmnopqrstuvwxyz';
+              let upperCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+              let digitCharacters = '0123456789';
+            
+              let hasSpecial = false;
+              let hasLower = false;
+              let hasUpper = false;
+              let hasDigits = false;
+            
+              let base = 0;
+              for (let i=0; i<password.length; i++) {
+                if (!hasSpecial && (specialCharacters.indexOf(password[i]) !== -1)) {
+                  hasSpecial = true;
+                  base += specialCharacters.length;
+                }
+                if (!hasLower && (lowerCharacters.indexOf(password[i]) !== -1)) {
+                  hasLower = true;
+                  base += lowerCharacters.length;
+                }
+                if (!hasUpper && (upperCharacters.indexOf(password[i]) !== -1)) {
+                  hasUpper = true;
+                  base += upperCharacters.length;
+                }
+                if (!hasDigits && (digitCharacters.indexOf(password[i]) !== -1)) {
+                  hasDigits = true;
+                  base += digitCharacters.length;
+                }
+                if (
+                  (specialCharacters.indexOf(password[i]) === -1) &&
+                  (lowerCharacters.indexOf(password[i]) === -1) &&
+                  (upperCharacters.indexOf(password[i]) === -1) &&
+                  (digitCharacters.indexOf(password[i]) === -1)
+                ) {
+                  base++;
+                }
+              }
+              return base;
+            },
+            "getPasswordEntropyLength" : function (password) {
+              /**
+                * Check the length of the password based on known rules
+                *  Characters will only be counted a maximum of 2 times e.g. aaa has length 2
+                */
+              let maxOccurances = 2;
+              let usedCharacters = {};
+              let length = 0;
+            
+              for (let i=0; i<password.length; i++) {
+                if (typeof (usedCharacters[password[i]]) === 'undefined') {
+                  length++;
+                  usedCharacters[password[i]] = 1;
+                } else if (usedCharacters[password[i]] < maxOccurances) {
+                  length++;
+                  usedCharacters[password[i]]++;
+                }
+              }
+              return length;
+            },
+            "validatePasswordEntropy" : function(password) {
+              let minimumEntropy = 30;
+              return simplyApp.actions.getPasswordEntropy(password) > minimumEntropy;
+            },
             "register" : async function() {
               let registerParams = editor.pageData.register;
               registerParams['repeat_password'] = registerParams['password'];
@@ -612,6 +687,11 @@
               simplyApp.commands.autofocus();
             },
             "registerVerify" : function(el) {
+              let password = el.querySelector("input[type=password]");
+              let entropyValid = simplyApp.actions.validatePasswordEntropy(password.value);
+              if (!entropyValid) {
+                return;
+              }
               simplyApp.actions.verifyEmail()
               .then(function() {
                 document.location.hash="#register-verify";
@@ -915,7 +995,7 @@
       <form class="solid-form" data-simply-command="registerVerify" action="#">
         <p>Kies je wachtwoord</p>
         <input type="hidden" data-simply-field="register.email">
-        <input autofocus class="solid-input" data-simply-field="register.password" type="password" placeholder="Wachtwoord" required>
+        <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="register.password" type="password" placeholder="Wachtwoord" required>
         <button class="solid-button solid-button-primary">Opslaan</button>
       </form>
     </section>
@@ -1190,6 +1270,24 @@
     <script>
       /* Transformers */
       editor.transformers = {
+        "validateEntropy" : {
+          render : function(data) {
+            if (!this.entropyChecker) {
+              this.entropyChecker = this.addEventListener("input", function() {
+                let entropyValid = simplyApp.actions.validatePasswordEntropy(this.value);
+                if (!entropyValid) {
+                  this.setCustomValidity("Maak een sterk wachtwoord. Gebruik meer verschillende en speciale tekens.");
+                } else {
+                  this.setCustomValidity("");
+                }
+              });
+            }
+            return data;
+          },
+          extract : function(data) {
+            return data;
+          }
+        },
         "appOrigin" : {
           render : function(data) {
             this.originalData = data;
