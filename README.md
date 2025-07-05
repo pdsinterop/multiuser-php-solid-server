@@ -16,10 +16,10 @@ Start the docker containers:
 docker-compose up
 ```
 This will start up three containers: the solid server, pubsub server and a mailpit server. If you have an actual SMTP server running, feel free to remove the mailpit container.
+The persisted data will be stored in the data/ directory. This contains the keys, pods, db and mailpit data.
 
 Run the following commands to set up the container (replace 'solid' below with the name of your container):
 ```
-docker exec -w /opt/solid/ solid mkdir keys pods db
 docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods db
 docker exec -w /opt/solid/ solid cp config.php.example config.php
 ```
