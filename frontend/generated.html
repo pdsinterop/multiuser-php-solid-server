@@ -687,8 +687,7 @@
               simplyApp.commands.autofocus();
             },
             "registerVerify" : function(el) {
-              let password = el.querySelector("input[type=password]");
-              let entropyValid = simplyApp.actions.validatePasswordEntropy(password.value);
+              let entropyValid = simplyApp.actions.validatePasswordEntropy(editor.pageData.register.password);
               if (!entropyValid) {
                 return;
               }
@@ -699,6 +698,10 @@
               })
             },
             "changePassword" : function(el) {
+              let entropyValid = simplyApp.actions.validatePasswordEntropy(editor.pageData.reset.password);
+              if (!entropyValid) {
+                return;
+              }
               simplyApp.actions.changePassword()
               .then(function() {
                 document.location.hash = "reset-password-changed";
@@ -1038,7 +1041,7 @@
       <form class="solid-form" data-simply-command="changePassword" action="#">
         <p>Voer je nieuwe wachtwoord in</p>
         <div class="solid-form-group">
-          <input autofocus class="solid-input" data-simply-field="reset.password" type="password" placeholder="Wachtwoord" required>
+          <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="reset.password" type="password" placeholder="Wachtwoord" required>
         </div>
         <button class="solid-button solid-button-primary">Volgende</button>
       </form>
