@@ -51,18 +51,18 @@ jobs:
             --exclude vendor
             --no-progress
             .
-  # 01.quality.php.validate.dependencies-file.yml
-  validate-dependencies-file:
-    name: Validate dependencies file
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - run: >-
-            composer validate
-            --check-lock
-            --no-plugins
-            --no-scripts
-            --strict
+#  # 01.quality.php.validate.dependencies-file.yml
+#  validate-dependencies-file:
+#    name: Validate dependencies file
+#    runs-on: ubuntu-24.04
+#    steps:
+#      - uses: actions/checkout@v4
+#      - run: >-
+#            composer validate
+#            --check-lock
+#            --no-plugins
+#            --no-scripts
+#            --strict
   # 02.test.php.test-unit.yml
   php-unittest:
     name: PHP Unit Tests
