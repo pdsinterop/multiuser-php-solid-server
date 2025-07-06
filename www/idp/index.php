@@ -12,6 +12,7 @@
 	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\Mailer;
 	use Pdsinterop\PhpSolid\IpAttempts;
+	use Pdsinterop\PhpSolid\JtiStore;
 
 	$request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 	$method = $_SERVER['REQUEST_METHOD'];
