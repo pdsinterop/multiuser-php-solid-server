@@ -52,23 +52,23 @@ jobs:
             --no-progress
             .
 #  # 01.quality.php.validate.dependencies-file.yml
-#  validate-dependencies-file:
-#    name: Validate dependencies file
-#    runs-on: ubuntu-24.04
-#    steps:
-#      - uses: actions/checkout@v4
-#      - run: >-
-#            composer validate
-#            --check-lock
-#            --no-plugins
-#            --no-scripts
-#            --strict
+  validate-dependencies-file:
+    name: Validate dependencies file
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: >-
+            composer validate
+            --check-lock
+            --no-plugins
+            --no-scripts
+            --strict
   # 02.test.php.test-unit.yml
   php-unittest:
     name: PHP Unit Tests
     needs:
       - lint-php-syntax
-#      - validate-dependencies-file
+      - validate-dependencies-file
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -90,23 +90,23 @@ jobs:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GITHUB_TOKEN }}"}}'
       - run: vendor/bin/phpunit --configuration tests/phpunit/phpunit.xml
   # 03.quality.php.scan.dependencies-vulnerabilities.yml
-#  scan-dependencies-vulnerabilities:
-#    name: Scan Dependencies Vulnerabilities
-#    needs:
-#      - validate-dependencies-file
-#    runs-on: ubuntu-24.04
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Install and Cache Composer dependencies
-#        uses: "ramsey/composer-install@v2"
-#        env:
-#          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GITHUB_TOKEN }}"}}'
-#      - run: >-
-#          composer audit
-#          --abandoned=report
-#          --no-dev
-#          --no-plugins
-#          --no-scripts
+  scan-dependencies-vulnerabilities:
+    name: Scan Dependencies Vulnerabilities
+    needs:
+      - validate-dependencies-file
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and Cache Composer dependencies
+        uses: "ramsey/composer-install@v2"
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GITHUB_TOKEN }}"}}'
+      - run: >-
+          composer audit
+          --abandoned=report
+          --no-dev
+          --no-plugins
+          --no-scripts
   # 03.quality.php.lint-version-compatibility.yml
   php-check-version-compatibility:
     name: PHP Version Compatibility
