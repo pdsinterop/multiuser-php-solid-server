@@ -1,17 +1,12 @@
 <?php
 	namespace Pdsinterop\PhpSolid;
-	
+
+	use Pdsinterop\PhpSolid\Db;
+
 	class ClientRegistration {
-		private static $pdo;
-		private static function connect() {
-			if (!isset(self::$pdo)) {
-				self::$pdo = new \PDO("sqlite:" . DBPATH);
-			}
-		}
-			
 		public static function getRegistration($clientId) {
-			self::connect();
-			$query = self::$pdo->prepare(
+			Db::connect();
+			$query = Db::$pdo->prepare(
 				'SELECT clientData FROM clients WHERE clientId=:clientId'
 			);
 			$query->execute([
@@ -25,11 +20,11 @@
 		}
 		
 		public static function saveClientRegistration($clientData) {
-			self::connect();
+			Db::connect();
 			if (!isset($clientData['client_name'])) {
 				$clientData['client_name'] = $clientData['origin'];
 			}
-			$query = self::$pdo->prepare(
+			$query = Db::$pdo->prepare(
 				'INSERT INTO clients VALUES(:clientId, :origin, :clientData)'
 			);
 			$query->execute([
@@ -40,8 +35,8 @@
 		}
 		
 		public static function getClientByOrigin($origin) {
-			self::connect();
-			$query = self::$pdo->prepare(
+			Db::connect();
+			$query = Db::$pdo->prepare(
 				'SELECT clientData FROM clients WHERE origin=:origin'
 			);
 			$query->execute([

@@ -12,6 +12,7 @@
 	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\Mailer;
 	use Pdsinterop\PhpSolid\IpAttempts;
+	use Pdsinterop\PhpSolid\JtiStore;
 
 	$request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -198,18 +199,22 @@
 				case "/api/accounts/new/":
 					$verifyToken = User::getVerifyToken($_POST['confirm']);
 					if (!$verifyToken) {
+						error_log("No verify token sent");
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
 					if ($verifyToken['email'] !== $_POST['email']) {
+						error_log("Verify token does not match email");
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
 					if (User::userEmailExists($_POST['email'])) {
+						error_log("Account already exists");
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
 					if (!$_POST['password'] === $_POST['repeat_password']) {
+						error_log("Password repeat does not match");
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
@@ -221,6 +226,7 @@
 
 					$createdUser = User::createUser($newUser);
 					if (!$createdUser) {
+						error_log("Failed to create user");
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
@@ -427,6 +433,7 @@
 				touch(CLEANUP_FILE, time() + 3600);
 				User::cleanupTokens();
 				IpAttempts::cleanupAttempts();
+				JtiStore::cleanupJti();
 			}
 		break;
 		case "OPTIONS":
