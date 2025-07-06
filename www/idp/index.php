@@ -427,6 +427,7 @@
 				touch(CLEANUP_FILE, time() + 3600);
 				User::cleanupTokens();
 				IpAttempts::cleanupAttempts();
+				JtiStore::cleanupJti();
 			}
 		break;
 		case "OPTIONS":
