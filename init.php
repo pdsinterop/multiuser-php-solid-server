@@ -32,7 +32,7 @@
 		    )',
 		    'CREATE TABLE IF NOT EXISTS jti (
 			jti VARCHAR(255) NOT NULL PRIMARY KEY,
-			expires TEXT
+			expires TEXT NOT NULL
 		    )',
 		    'CREATE TABLE IF NOT EXISTS users (
 			user_id VARCHAR(255) NOT NULL PRIMARY KEY,
@@ -43,7 +43,7 @@
 		    'CREATE TABLE IF NOT EXISTS ipAttempts (
 			ip VARCHAR(255) NOT NULL,
 			type VARCHAR(255) NOT NULL,
-			expires NOT NULL
+			expires TEXT NOT NULL
 		    )',
 		];
 		      
