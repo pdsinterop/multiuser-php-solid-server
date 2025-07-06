@@ -1,19 +1,12 @@
 <?php
 	namespace Pdsinterop\PhpSolid;
-	
+
+	use Pdsinterop\PhpSolid\Db;
 	class JtiStore {
-		private static $pdo;
-		private static function connect() {
-			if (!isset(self::$pdo)) {
-				self::$pdo = new \PDO("sqlite:" . DBPATH);
-			}
-		}
-			
 		public static function hasJti($jti) {
-			self::connect();
+			Db::connect();
 			$now = new \DateTime();
-			
-			$query = self::$pdo->prepare(
+			$query = Db::$pdo->prepare(
 				'SELECT jti FROM jti WHERE jti=:jti AND expires>:now'
 			);
 			$query->execute([
@@ -28,8 +21,8 @@
 		}
 		
 		public static function saveJti($jti) {
-			self::connect();
-			$query = self::$pdo->prepare(
+			Db::connect();
+			$query = Db::$pdo->prepare(
 				'INSERT INTO jti VALUES(:jti, :expires)'
 			);
 			$expires = new \DateTime();
@@ -37,6 +30,17 @@
 			$query->execute([
 				':jti' => $jti,
 				':expires' => $expires->getTimestamp()
+			]);
+		}
+
+		public static function cleanupJti() {
+			Db::connect();
+			$now = new \DateTime();
+			$query = Db::$pdo->prepare(
+				'DELETE FROM jti WHERE expires < :now'
+			);
+			$query->execute([
+				':now' => $now->getTimestamp()
 			]);
 		}
 	}
