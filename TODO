@@ -65,13 +65,14 @@
 - [v] IpAttempts
 - [v] Util
 - [v] PasswordValidator
+- [v] User
 - [ ] Mailer
 - [ ] MailTemplateGenerator
 - [ ] MailTemplates
 - [ ] Server
-- [ ] SolidNotifications
-- [ ] SolidPubSub
 - [ ] StorageServer
-- [ ] User
+- [-] Session
+- [-] SolidNotifications
+- [-] SolidPubSub
 - [-] Middleware
 - [-] Db
