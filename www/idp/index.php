@@ -74,7 +74,9 @@
 						}
 
 						if (!isset($getVars["redirect_uri"])) {
-							$getVars['redirect_uri'] = $token->claims()->get("redirect_uri");
+							if (isset($token)) {
+								$getVars['redirect_uri'] = $token->claims()->get("redirect_uri");
+							}
 						}
 					}
 
