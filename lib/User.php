@@ -178,7 +178,7 @@
 		public static function setStorage($userId, $storageUrl) {
 			Db::connect();
 			$query = Db::$pdo->prepare(
-				'INSERT OR REPLACE INTO storage VALUES(:userId, :storageUrl)'
+				'INSERT OR REPLACE INTO userStorage VALUES(:userId, :storageUrl)'
 			);
 			$query->execute([
 				':userId' => $userId,
@@ -187,6 +187,9 @@
 		}
 
 		public static function getUser($email) {
+			if (!isset($email)) {
+				return false;
+			}
 			Db::connect();
 			$query = Db::$pdo->prepare(
 				'SELECT user_id, data FROM users WHERE email=:email'
@@ -247,22 +250,10 @@
 			$result = $query->fetchAll();
 			if (sizeof($result) === 1) {
 				if (password_verify($password, $result[0]['password'])) {
-					session_start([
-						'cookie_lifetime' => 24*60*60 // 1 day
-					]);
-					$_SESSION['username'] = $email;
 					return true;
 				}
 			}
 			return false;
-		}
-
-		public static function getLoggedInUser() {
-			session_start();
-			if (!isset($_SESSION['username'])) {
-				return false;
-			}
-			return self::getUser($_SESSION['username']);
 		}
 
 		public static function userIdExists($userId) {

@@ -23,8 +23,11 @@
 					$userId = preg_replace("/^id-/", "", $idPart);
 
 					$user = User::getUserById($userId);
-					if (!isset($user['storage'])) {
+					if (!isset($user['storage']) || !$user['storage']) {
 						$user['storage'] = "https://storage-" . $userId . "." . BASEDOMAIN . "/";
+					}
+					if (is_array($user['storage'])) { // empty array is already handled
+						$user['storage'] = array_values($user['storage'])[0]; // FIXME: Handle multiple storage pods
 					}
 					if (!isset($user['issuer'])) {
 						$user['issuer'] = BASEURL;
