@@ -66,10 +66,10 @@
 							\Lcobucci\JWT\Signer\Key\InMemory::plainText($keys['privateKey']
 						));
 
-						$token = $jwtConfig->parser()->parse($_GET['request']);
 						if (isset($_GET['nonce'])) {
 							$_SESSION['nonce'] = $_GET['nonce'];
 						} else if (isset($_GET['request'])) {
+							$token = $jwtConfig->parser()->parse($_GET['request']);
 							$_SESSION['nonce'] = $token->claims()->get('nonce');
 						}
 
