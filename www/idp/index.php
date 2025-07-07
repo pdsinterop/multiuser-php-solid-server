@@ -325,6 +325,10 @@
 				case "/register/":
 					$postData = file_get_contents("php://input");
 					$clientData = json_decode($postData, true);
+					if (!isset($clientData)) {
+						header("HTTP/1.1 400 Bad request");
+						return;
+					}
 					$parsedOrigin = parse_url($clientData['redirect_uris'][0]);
 					$origin = $parsedOrigin['scheme'] . '://' . $parsedOrigin['host'];
 					if (isset($parsedOrigin['port'])) {
@@ -382,7 +386,7 @@
 
 					$requestFactory = new \Laminas\Diactoros\ServerRequestFactory();
 					$request = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-			                $requestBody = $request->getParsedBody();
+					$requestBody = $request->getParsedBody();
 
 					$grantType = isset($requestBody['grant_type']) ? $requestBody['grant_type'] : null;
 					$clientId = isset($requestBody['client_id']) ? $requestBody['client_id'] : null;
