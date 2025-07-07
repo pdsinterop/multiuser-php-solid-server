@@ -247,22 +247,10 @@
 			$result = $query->fetchAll();
 			if (sizeof($result) === 1) {
 				if (password_verify($password, $result[0]['password'])) {
-					session_start([
-						'cookie_lifetime' => 24*60*60 // 1 day
-					]);
-					$_SESSION['username'] = $email;
 					return true;
 				}
 			}
 			return false;
-		}
-
-		public static function getLoggedInUser() {
-			session_start();
-			if (!isset($_SESSION['username'])) {
-				return false;
-			}
-			return self::getUser($_SESSION['username']);
 		}
 
 		public static function userIdExists($userId) {

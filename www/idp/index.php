@@ -10,6 +10,7 @@
 	use Pdsinterop\PhpSolid\Server;
 	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\User;
+	use Pdsinterop\PhpSolid\Session;
 	use Pdsinterop\PhpSolid\Mailer;
 	use Pdsinterop\PhpSolid\IpAttempts;
 	use Pdsinterop\PhpSolid\JtiStore;
@@ -36,7 +37,7 @@
 				break;
 				case "/authorize":
 				case "/authorize/":
-					$user = User::getLoggedInUser();
+					$user = Session::getLoggedInUser();
 					if (!$user) {
 						header("Location: /login/?redirect_uri=" . urlencode($_SERVER['REQUEST_URI']));
 						exit();
@@ -124,7 +125,7 @@
 				break;
 				case "/dashboard":
 				case "/dashboard/":
-					$user = User::getLoggedInUser();
+					$user = Session::getLoggedInUser();
 					if (!$user) {
 						header("Location: /login/");
 						exit();
@@ -133,7 +134,7 @@
 				break;
 				case "/logout":
 				case "/logout/":
-					$user = User::getLoggedInUser();
+					$user = Session::getLoggedInUser();
 					if ($user) {
 						session_destroy();
 					}
@@ -161,7 +162,7 @@
 				break;
 				case "/sharing":
 				case "/sharing/":
-					$user = User::getLoggedInUser();
+					$user = Session::getLoggedInUser();
 					if (!$user) {
 						header("Location: /login/");
 						exit();
@@ -311,6 +312,7 @@
 						exit();
 					}
 					if (User::checkPassword($_POST['username'], $_POST['password'])) {
+						Session::start($_POST['username']);
 						if (!isset($_POST['redirect_uri']) || $_POST['redirect_uri'] === '') {
 							header("Location: /dashboard/");
 							exit();
@@ -366,7 +368,7 @@
 				break;
 				case "/api/sharing":
 				case "/api/sharing/":
-					$user = User::getLoggedInUser();
+					$user = Session::getLoggedInUser();
 					if (!$user) {
 						header("HTTP/1.1 400 Bad request");
 					} else {
