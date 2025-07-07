@@ -16,7 +16,27 @@
 	];
 
 	const MAILSTYLES = [
+		'container' => [
+			'backgroundColor' => '#eeeeee'
+		],
+		'header' => [
+			'backgroundColor' => '#3b3b3b'
+		],
+		'call-to-action' => [
+			'backgroundColor' => '#ffffff',
+			'color' => '#181818',
+			'colorMuted' => '#333333',
+			'fontFamily' => 'Arial, Helvetica, sans-serif',
+			'buttonTextColor' => '#ffffff',
+			'buttonBackgroundColor' => '#3c6a87'
+		],
+		'footer' => [
+			'backgroundColor' => '#3b3b3b',
+			'color' => '#e8ecf0',
+			'fontFamily' => 'Arial, Helvetica, sans-serif',
+		]
 	];
+
 	const STORAGEBASE = __DIR__ . "/pods/";
 
 	const PUBSUB_SERVER = "wss://pubsub:8080";
