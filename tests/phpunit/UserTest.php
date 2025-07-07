@@ -248,9 +248,41 @@ class UserTest extends \PHPUnit\Framework\TestCase
 		$this->assertTrue(in_array($storageUrl, $user['storage']));
 	}
 
+	public function testUserExistsById() {
+		$newUser = [
+			"password" => "hello123!@#ABC",
+			"email" => "user10@example.com",
+			"hello" => "world"
+		];
+		$createdUser = User::createUser($newUser);
+		
+		$userExists = User::userIdExists($createdUser['userId']);
+		$this->assertTrue($userExists);
+	}
+
+	public function testUserDoesNotExistsById() {
+		$userExists = User::userIdExists("foo");
+		$this->assertFalse($userExists);
+	}
+
+	public function testUserExistsByEmail() {
+		$newUser = [
+			"password" => "hello123!@#ABC",
+			"email" => "user11@example.com",
+			"hello" => "world"
+		];
+		$createdUser = User::createUser($newUser);
+		
+		$userExists = User::userEmailExists($newUser['email']);
+		$this->assertTrue($userExists);
+	}
+
+	public function testUserDoesNotExistsByEmail() {
+		$userExists = User::userIdExists("foo@example.com");
+		$this->assertFalse($userExists);
+	}
+		
 	// @TODO Write tests for these functions:
-	// userIdExists
-	// userEmailExists
 	// deleteAccount
 	// cleanupTokens
 }
