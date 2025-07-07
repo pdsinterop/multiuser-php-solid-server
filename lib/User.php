@@ -187,6 +187,9 @@
 		}
 
 		public static function getUser($email) {
+			if (!isset($email)) {
+				return false;
+			}
 			Db::connect();
 			$query = Db::$pdo->prepare(
 				'SELECT user_id, data FROM users WHERE email=:email'

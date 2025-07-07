@@ -37,7 +37,7 @@
 				break;
 				case "/authorize":
 				case "/authorize/":
-					$user = Session::getLoggedInUser();
+					$user = User::getUser(Session::getLoggedInUser());
 					if (!$user) {
 						header("Location: /login/?redirect_uri=" . urlencode($_SERVER['REQUEST_URI']));
 						exit();
@@ -125,7 +125,7 @@
 				break;
 				case "/dashboard":
 				case "/dashboard/":
-					$user = Session::getLoggedInUser();
+					$user = User::getUser(Session::getLoggedInUser());
 					if (!$user) {
 						header("Location: /login/");
 						exit();
@@ -134,7 +134,7 @@
 				break;
 				case "/logout":
 				case "/logout/":
-					$user = Session::getLoggedInUser();
+					$user = User::getUser(Session::getLoggedInUser());
 					if ($user) {
 						session_destroy();
 					}
@@ -162,7 +162,7 @@
 				break;
 				case "/sharing":
 				case "/sharing/":
-					$user = Session::getLoggedInUser();
+					$user = User::getUser(Session::getLoggedInUser());
 					if (!$user) {
 						header("Location: /login/");
 						exit();
@@ -368,7 +368,7 @@
 				break;
 				case "/api/sharing":
 				case "/api/sharing/":
-					$user = Session::getLoggedInUser();
+					$user = User::getUser(Session::getLoggedInUser());
 					if (!$user) {
 						header("HTTP/1.1 400 Bad request");
 					} else {

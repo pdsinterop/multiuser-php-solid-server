@@ -7,7 +7,7 @@
 			session_start([
 				'cookie_lifetime' => 24*60*60 // 1 day
 			]);
-			$_SESSION['username'] = $email;
+			$_SESSION['username'] = $username;
 		}
 		
 		public static function getLoggedInUser() {
@@ -15,6 +15,6 @@
 			if (!isset($_SESSION['username'])) {
 				return false;
 			}
-			return self::getUser($_SESSION['username']);
+			return $_SESSION['username'];
 		}
 	}
