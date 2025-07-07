@@ -19,14 +19,12 @@ This will start up three containers: the solid server, pubsub server and a mailp
 The persisted data will be stored in the data/ directory. This contains the keys, pods, db and mailpit data.
 
 Run the following commands to set up the container (replace 'solid' below with the name of your container):
-```
-docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods db
-docker exec -w /opt/solid/ solid cp config.php.example config.php
-```
+Note: Update the values in the config.php file where needed befure running the init script.
 
-Update the values in the config.php file where needed, then run the initialization script:
 ```
+docker exec -w /opt/solid/ solid cp config.php.example config.php
 docker exec -u www-data -i -w /opt/solid/ solid php init.php
+docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods db
 ```
 
 ## DNS gotcha and snake oil certificate
