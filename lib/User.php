@@ -178,7 +178,7 @@
 		public static function setStorage($userId, $storageUrl) {
 			Db::connect();
 			$query = Db::$pdo->prepare(
-				'INSERT OR REPLACE INTO storage VALUES(:userId, :storageUrl)'
+				'INSERT OR REPLACE INTO userStorage VALUES(:userId, :storageUrl)'
 			);
 			$query->execute([
 				':userId' => $userId,
