@@ -278,11 +278,77 @@ class UserTest extends \PHPUnit\Framework\TestCase
 	}
 
 	public function testUserDoesNotExistsByEmail() {
-		$userExists = User::userIdExists("foo@example.com");
+		$userExists = User::userEmailExists("foo@example.com");
 		$this->assertFalse($userExists);
 	}
+
+	public function testAllowClientForUser() {
+		$newUser = [
+			"password" => "hello123!@#ABC",
+			"email" => "user11@example.com",
+			"hello" => "world"
+		];
+		$createdUser = User::createUser($newUser);
+
+		$clientId = "12345";
+		$result = User::allowClientForUser($clientId, $createdUser['userId']);
+		$this->assertTrue($result);
+
+		$allowedClients = User::getAllowedClients($createdUser['userId']);
+		$this->assertTrue(in_array($clientId, $allowedClients));
+
+		$user = User::getUser($newUser['email']);
+		$this->assertTrue(in_array($clientId, $user['allowedClients']));
+	}
+
+	public function testDeleteAccount() {
+		$newUser = [
+			"password" => "hello123!@#ABC",
+			"email" => "user11@example.com",
+			"hello" => "world"
+		];
+		$createdUser = User::createUser($newUser);
+		$clientId = "12345";
+		$result = User::allowClientForUser($clientId, $createdUser['userId']);
+
+		$this->assertTrue(User::userIdExists($createdUser['userId']));
+		$this->assertTrue(User::userEmailExists($newUser['email']));
+		$allowedClients = User::getAllowedClients($createdUser['userId']);
+		$this->assertTrue(in_array($clientId, $allowedClients));
+
+		User::deleteAccount($newUser['email']);
+
+		$this->assertFalse(User::userIdExists($createdUser['userId']));
+		$this->assertFalse(User::userEmailExists($newUser['email']));
+		$allowedClients = User::getAllowedClients($createdUser['userId']);
+		$this->assertEmpty($allowedClients);
+	}
+
+	public function testCleanup() {
+		// empty the verify table first so we have dependable numbers
+		$query = Db::$pdo->prepare('DELETE FROM verify WHERE NOT code=""');
+		$query->execute();
+
+		$token1 = User::saveVerifyToken("verify", [
+			"hello" => "world",
+			"expires" => time() - 10
+		]);
+		$token2 = User::saveVerifyToken("verify", [
+			"hello" => "world",
+			"expires" => time() - 10
+		]);
+		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM verify');
+		$query->execute();
+		$result = $query->fetchAll();
+		$beforeCleanup = $result[0]['count'];
+		$this->assertEquals(2, $beforeCleanup);
 		
-	// @TODO Write tests for these functions:
-	// deleteAccount
-	// cleanupTokens
+		User::cleanupTokens();
+		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM verify');
+		$query->execute();
+		$result = $query->fetchAll();
+		$afterCleanup = $result[0]['count'];
+
+		$this->assertEquals(0, $afterCleanup);
+	}
 }
