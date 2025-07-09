@@ -73,6 +73,6 @@
 - [v] MailTemplateGenerator
 - [v] MailTemplates
 - [v] Server
-- [ ] StorageServer
+- [v] StorageServer
 - [-] SolidNotifications
 - [-] SolidPubSub
