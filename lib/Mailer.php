@@ -5,7 +5,11 @@
 	use PHPMailer\PHPMailer\PHPMailer;
 
 	class Mailer {
-		private static function getMailer() {
+		public static $mailer = null;
+		public static function getMailer() {
+			if (self::$mailer) {
+				return self::$mailer;
+			}
 			$mailer = new PHPMailer();
 			// Settings
 			$mailer->IsSMTP();
