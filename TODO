@@ -50,8 +50,8 @@
 - [v] WAC-viewer
 - [v] CORS for all
 - [v] Initialize storage
+- [v] Notifications
 - [-] API for storage creation
-- [-] Notifications
 
 ------ Test suites -----
 - [v] webid
