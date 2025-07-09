@@ -4,7 +4,6 @@
     use Pdsinterop\PhpSolid\Middleware;
 
     const PUBSUB_SERVER = "https://localhost:1234";
-    $headers = [];
     function header($header) {
         MiddleWareTest::$headers[] = $header;
     }
