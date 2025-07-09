@@ -68,6 +68,7 @@
 - [v] User
 - [v] Middleware
 - [v] Session
+- [v] Db
 - [ ] Mailer
 - [ ] MailTemplateGenerator
 - [ ] MailTemplates
@@ -75,4 +76,3 @@
 - [ ] StorageServer
 - [-] SolidNotifications
 - [-] SolidPubSub
-- [-] Db
