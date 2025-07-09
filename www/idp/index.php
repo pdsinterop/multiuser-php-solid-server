@@ -202,7 +202,7 @@
 				case "/api/accounts/new/":
 					$verifyToken = User::getVerifyToken($_POST['confirm']);
 					if (!$verifyToken) {
-						error_log("No verify token sent");
+						error_log("Could not read verify token");
 						header("HTTP/1.1 400 Bad Request");
 						exit();
 					}
@@ -240,6 +240,7 @@
 					);
 					header("HTTP/1.1 201 Created");
 					header("Content-type: application/json");
+					Session::start($_POST['email']);
 					echo json_encode($responseData, JSON_PRETTY_PRINT);
 				break;
 				case "/api/accounts/reset-password":
