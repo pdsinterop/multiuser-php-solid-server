@@ -1,12 +1,9 @@
 <?php
     namespace Pdsinterop\PhpSolid;
 
-    use Pdsinterop\PhpSolid\Middleware;
+    require_once(__DIR__ . "/test-config.php");
 
-    const PUBSUB_SERVER = "https://localhost:1234";
-    function header($header) {
-        MiddleWareTest::$headers[] = $header;
-    }
+    use Pdsinterop\PhpSolid\Middleware;
 
     class MiddlewareTest extends \PHPUnit\Framework\TestCase
     {

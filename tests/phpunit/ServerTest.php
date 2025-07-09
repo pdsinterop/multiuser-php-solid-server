@@ -1,55 +1,10 @@
 <?php
     namespace Pdsinterop\PhpSolid;
 
+    require_once(__DIR__ . "/test-config.php");
+
     use Pdsinterop\PhpSolid\Server;
 
-    const PUBSUB_SERVER = "https://localhost:1234";
-    const KEYDIR = "php://memory/";
-    const BASEURL = "https://example.com";
-    const DBPATH = ":memory:";
-
-    function header($header) {
-        ServerTest::$headers[] = $header;
-    }
-
-    function file_get_contents($file) {
-        if(!isset(ServerTest::$keys)) {
-            ServerTest::$keys = Server::generateKeySet();
-        }
-        if (preg_match("/encryption/", $file)) {
-            return ServerTest::$keys['encryptionKey'];
-        }
-        if (preg_match("/public/", $file)) {
-            return ServerTest::$keys['publicKey'];
-        }
-        if (preg_match("/private/", $file)) {
-            return ServerTest::$keys['privateKey'];
-        }
-    }
-
-    class MockBody {
-        public function rewind() {
-            return true;
-        }
-        public function getContents() {
-            return json_encode(["Hello" => "world"]);
-        }
-    }
-    
-    class MockResponse {
-        public function getStatusCode() {
-            return 200;
-        }
-        public function getBody() {
-            return new MockBody();
-        }
-        public function getHeaders() {
-            return [
-                "Foo" => ["Bar", "Blah"]
-            ];
-        }
-    }
-    
     class ServerTest extends \PHPUnit\Framework\TestCase
     {
         public static $headers = [];
@@ -130,14 +85,14 @@
         }
         public function testGetEndpoints() {
             $endpoints = Server::getEndpoints();
-            $this->assertEquals($endpoints["issuer"], "https://example.com");
-            $this->assertEquals($endpoints["jwks_uri"], "https://example.com/jwks/");
-            $this->assertEquals($endpoints["check_session_iframe"], "https://example.com/session/");
-            $this->assertEquals($endpoints["end_session_endpoint"], "https://example.com/logout/");
-            $this->assertEquals($endpoints["authorization_endpoint"], "https://example.com/authorize/");
-            $this->assertEquals($endpoints["token_endpoint"], "https://example.com/token/");
-            $this->assertEquals($endpoints["userinfo_endpoint"], "https://example.com/userinfo/");
-            $this->assertEquals($endpoints["registration_endpoint"], "https://example.com/register/");
+            $this->assertEquals($endpoints["issuer"], "https://solid.example.com");
+            $this->assertEquals($endpoints["jwks_uri"], "https://solid.example.com/jwks/");
+            $this->assertEquals($endpoints["check_session_iframe"], "https://solid.example.com/session/");
+            $this->assertEquals($endpoints["end_session_endpoint"], "https://solid.example.com/logout/");
+            $this->assertEquals($endpoints["authorization_endpoint"], "https://solid.example.com/authorize/");
+            $this->assertEquals($endpoints["token_endpoint"], "https://solid.example.com/token/");
+            $this->assertEquals($endpoints["userinfo_endpoint"], "https://solid.example.com/userinfo/");
+            $this->assertEquals($endpoints["registration_endpoint"], "https://solid.example.com/register/");
         }
 
         public function testGetKeys() {

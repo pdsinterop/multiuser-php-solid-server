@@ -1,42 +1,9 @@
 <?php
     namespace Pdsinterop\PhpSolid;
 
+    require_once(__DIR__ . "/test-config.php");
+
     use Pdsinterop\PhpSolid\StorageServer;
-
-    const STORAGEBASE = ".";
-    const DBPATH = ":memory:";
-    const BANNED_PASSWORDS = [];
-    const MINIMUM_PASSWORD_ENTROPY = 0;
-    const BASEDOMAIN = "example.com";
-    const BASEURL = "https://example.com";
-
-
-    function header($header) {
-        StorageServerTest::$headers[] = $header;
-    }
-
-    class MockBody {
-        public function rewind() {
-            return true;
-        }
-        public function getContents() {
-            return json_encode(["Hello" => "world"]);
-        }
-    }
-    
-    class MockResponse {
-        public function getStatusCode() {
-            return 200;
-        }
-        public function getBody() {
-            return new MockBody();
-        }
-        public function getHeaders() {
-            return [
-                "Foo" => ["Bar", "Blah"]
-            ];
-        }
-    }
     
     class StorageServerTest extends \PHPUnit\Framework\TestCase
     {
