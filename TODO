@@ -59,20 +59,20 @@
 - [v] solid-crud
 - [v] CI integration
 
------- Unit tests -----
+------ Unit/Integration tests -----
 - [v] ClientRegistration
 - [v] JtiStore
 - [v] IpAttempts
 - [v] Util
 - [v] PasswordValidator
 - [v] User
-- [ ] Mailer
-- [ ] MailTemplateGenerator
-- [ ] MailTemplates
+- [v] Middleware
+- [v] Session
+- [v] Db
+- [v] Mailer
+- [v] MailTemplateGenerator
+- [v] MailTemplates
 - [ ] Server
 - [ ] StorageServer
-- [-] Session
 - [-] SolidNotifications
 - [-] SolidPubSub
-- [-] Middleware
-- [-] Db

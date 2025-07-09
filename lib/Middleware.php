@@ -18,7 +18,6 @@
 			header( 'Access-Control-Allow-Origin: ' . $corsAllowOrigin );
 			header( 'Access-Control-Allow-Headers: ' . $corsAllowedHeaders );
 			header( 'Access-Control-Allow-Methods: ' . $corsMethods);
-			header( 'Access-Control-Allow-Headers: ' . $corsAllowedHeaders);
 			header( 'Access-Control-Max-Age: ' . $corsMaxAge);
 			header( 'Access-Control-Allow-Credentials: ' . $corsAllowCredentials);
 			header( 'Access-Control-Expose-Headers: ' . $corsExposeHeaders);
