@@ -66,13 +66,13 @@
 - [v] Util
 - [v] PasswordValidator
 - [v] User
+- [v] Middleware
+- [v] Session
 - [ ] Mailer
 - [ ] MailTemplateGenerator
 - [ ] MailTemplates
 - [ ] Server
 - [ ] StorageServer
-- [-] Session
 - [-] SolidNotifications
 - [-] SolidPubSub
-- [-] Middleware
 - [-] Db
