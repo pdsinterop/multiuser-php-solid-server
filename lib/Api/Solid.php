@@ -4,6 +4,7 @@
         use Pdsinterop\PhpSolid\Server;
         use Pdsinterop\PhpSolid\ClientRegistration;
         use Pdsinterop\PhpSolid\User;
+        use Pdsinterop\PhpSolid\Session;
 	
 	class Solid {
 		public static function respondToJwks() {
@@ -19,6 +20,8 @@
 		}
 
 		public static function respondToAuthorize() {
+			$user = User::getUser(Session::getLoggedInUser());
+
 			$clientId = $_GET['client_id'];
 			$getVars = $_GET;
 			
@@ -146,6 +149,7 @@
 		}
 		
 		public static function respondToSharing() {
+			$user = User::getUser(Session::getLoggedInUser());
 			$clientId = $_POST['client_id'];
 			$userId = $user['userId'];
 			if ($_POST['consent'] === 'true') {
