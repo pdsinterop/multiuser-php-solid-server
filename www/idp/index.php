@@ -30,7 +30,6 @@
 					Server::respond($response);
 				break;
 				case "/.well-known/openid-configuration":
-					header("Content-type: application/json");
 					$authServer = Server::getAuthServer();
 					$response = $authServer->respondToOpenIdMetadataRequest();
 					Server::respond($response);
