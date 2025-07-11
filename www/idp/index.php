@@ -10,6 +10,10 @@
 	use Pdsinterop\PhpSolid\Api\Account;
 	use Pdsinterop\PhpSolid\Api\Solid;
 
+	use Pdsinterip\PhpSolid\User;
+	use Pdsinterip\PhpSolid\IpAttempts;
+	use Pdsinterip\PhpSolid\JtiStore;
+
 	$request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 	$method = $_SERVER['REQUEST_METHOD'];
 
