@@ -94,7 +94,7 @@
 				break;
 				case "/api/accounts/change-password":
 				case "/api/accounts/change-password/":
-					Account::respondToChangePassword();
+					Account::respondToAccountChangePassword();
 				break;
 				case "/api/accounts/delete":
 				case "/api/accounts/delete/":

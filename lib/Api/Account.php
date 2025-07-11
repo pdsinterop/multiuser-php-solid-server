@@ -8,7 +8,7 @@
         use Pdsinterop\PhpSolid\Mailer;
         use Pdsinterop\PhpSolid\IpAttempts;
 	
-	class Accounts {
+	class Account {
 		public static function requireLoggedInUser() {
 			$user = User::getUser(Session::getLoggedInUser());
 			if (!$user) {
