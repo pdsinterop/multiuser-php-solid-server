@@ -7,8 +7,8 @@
 	require_once(__DIR__ . "/../../vendor/autoload.php");
 
 	use Pdsinterop\PhpSolid\Middleware;
-	use Pdsinterop\PhpSolid\Api\Account;
-	use Pdsinterop\PhpSolid\Api\SolidIdp;
+	use Pdsinterop\PhpSolid\Routes\Account;
+	use Pdsinterop\PhpSolid\Routes\SolidIdp;
 
 	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\IpAttempts;

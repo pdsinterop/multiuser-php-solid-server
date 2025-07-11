@@ -6,7 +6,7 @@
 	require_once(__DIR__ . "/../../vendor/autoload.php");
 
 	use Pdsinterop\PhpSolid\Middleware;
-	use Pdsinterop\PhpSolid\Api\SolidUserProfile;
+	use Pdsinterop\PhpSolid\Routes\SolidUserProfile;
 
 	$request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 	$method = $_SERVER['REQUEST_METHOD'];

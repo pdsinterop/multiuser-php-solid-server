@@ -1,5 +1,5 @@
 <?php
-	namespace Pdsinterop\PhpSolid\Api;
+	namespace Pdsinterop\PhpSolid\Routes;
 
         use Pdsinterop\PhpSolid\Server;
         use Pdsinterop\PhpSolid\ClientRegistration;

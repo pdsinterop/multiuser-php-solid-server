@@ -6,7 +6,7 @@
 	require_once(__DIR__ . "/../../vendor/autoload.php");
 
 	use Pdsinterop\PhpSolid\Middleware;
-	use Pdsinterop\PhpSolid\Api\SolidStorage;
+	use Pdsinterop\PhpSolid\Routes\SolidStorage;
 	
 	$method = $_SERVER['REQUEST_METHOD'];
 
