@@ -8,7 +8,7 @@
 
 	use Pdsinterop\PhpSolid\Middleware;
 	use Pdsinterop\PhpSolid\Api\Account;
-	use Pdsinterop\PhpSolid\Api\Solid;
+	use Pdsinterop\PhpSolid\Api\SolidIdp;
 
 	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\IpAttempts;
@@ -24,15 +24,15 @@
 			switch ($request) {
 				case "/jwks":
 				case "/jwks/":
-					Solid::respondToJwks();
+					SolidIdp::respondToJwks();
 				break;
 				case "/.well-known/openid-configuration":
-					Solid::respondToWellKnownOpenIdConfiguration();
+					SolidIdp::respondToWellKnownOpenIdConfiguration();
 				break;
 				case "/authorize":
 				case "/authorize/":
 					Account::requireLoggedInUser();
-					Solid::respondToAuthorize();
+					SolidIdp::respondToAuthorize();
 				break;
 				case "/dashboard":
 				case "/dashboard/":
@@ -110,15 +110,15 @@
 				break;
 				case "/register":
 				case "/register/":
-					Solid::respondToRegister();
+					SolidIdp::respondToRegister();
 				break;
 				case "/api/sharing":
 				case "/api/sharing/":
-					Solid::respondToSharing();
+					SolidIdp::respondToSharing();
 				break;
 				case "/token":
 				case "/token/":
-					Solid::respondToToken();
+					SolidIdp::respondToToken();
 				break;
 				default:
 					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");

@@ -6,7 +6,7 @@
         use Pdsinterop\PhpSolid\User;
         use Pdsinterop\PhpSolid\Session;
 	
-	class Solid {
+	class SolidIdp {
 		public static function respondToJwks() {
 			$authServer = Server::getAuthServer();
 			$response = $authServer->respondToJwksMetadataRequest();
