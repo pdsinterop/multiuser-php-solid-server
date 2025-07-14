@@ -110,7 +110,7 @@
 				header("HTTP/1.1 400 Bad request");
 				return;
 			}
-			$parsedOrigin = parse_url($clientData['redirect_uris'][0]);
+			$parsedOrigin = parse_url($clientData['redirect_uris'][0]); // FIXME: Should we have multiple origins?
 			$origin = $parsedOrigin['scheme'] . '://' . $parsedOrigin['host'];
 			if (isset($parsedOrigin['port'])) {
 				$origin .= ":" . $parsedOrigin['port'];
