@@ -23,7 +23,7 @@
 
 			$wac = new WAC($filesystem);
 			
-			$baseUrl = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'];
+			$baseUrl = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME']; // FIXME: get this from the rawRequest instead?
 			
 			$resourceServer->setBaseUrl($baseUrl);
 			$wac->setBaseUrl($baseUrl);
