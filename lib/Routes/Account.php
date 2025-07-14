@@ -50,7 +50,7 @@
 			$responseData = "OK";
 			header("HTTP/1.1 201 Created");
 			header("Content-type: application/json");
-			echo json_encode($responseData, JSON_PRETTY_PRINT);
+			echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 		}
 
 		public static function respondToAccountNew() {
@@ -95,7 +95,7 @@
 			header("HTTP/1.1 201 Created");
 			header("Content-type: application/json");
 			Session::start($_POST['email']);
-			echo json_encode($responseData, JSON_PRETTY_PRINT);
+			echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 		}
 		
 		public static function respondToAccountResetPassword() {
@@ -221,7 +221,7 @@
 			);
 			header("HTTP/1.1 201 Created");
 			header("Content-type: application/json");
-			echo json_encode($responseData, JSON_PRETTY_PRINT);
+			echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 		}
 		
 		public static function respondToSharing() {
