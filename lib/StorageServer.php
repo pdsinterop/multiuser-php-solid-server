@@ -10,8 +10,8 @@
 
 			// The internal adapter
 			$adapter = new \League\Flysystem\Adapter\Local(
-			    // Determine root directory
-			    STORAGEBASE . "$storageId/"
+				// Determine root directory
+				STORAGEBASE . "$storageId/"
 			);
 
 			$graph = new \EasyRdf\Graph();

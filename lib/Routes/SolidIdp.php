@@ -1,10 +1,10 @@
 <?php
 	namespace Pdsinterop\PhpSolid\Routes;
 
-        use Pdsinterop\PhpSolid\Server;
-        use Pdsinterop\PhpSolid\ClientRegistration;
-        use Pdsinterop\PhpSolid\User;
-        use Pdsinterop\PhpSolid\Session;
+	use Pdsinterop\PhpSolid\Server;
+	use Pdsinterop\PhpSolid\ClientRegistration;
+	use Pdsinterop\PhpSolid\User;
+	use Pdsinterop\PhpSolid\Session;
 	
 	class SolidIdp {
 		public static function respondToJwks() {

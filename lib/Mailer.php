@@ -14,13 +14,13 @@
 			// Settings
 			$mailer->IsSMTP();
 			$mailer->CharSet = 'UTF-8';
-			$mailer->Host       = MAILER['host'];
-			$mailer->SMTPDebug  = 0;
-			$mailer->Port       = MAILER['port'];
+			$mailer->Host = MAILER['host'];
+			$mailer->SMTPDebug = 0;
+			$mailer->Port = MAILER['port'];
 			if (isset(MAILER['user'])) {
-				$mailer->SMTPAuth   = true;
-				$mailer->Username   = MAILER['user'];
-				$mailer->Password   = MAILER['password'];
+				$mailer->SMTPAuth = true;
+				$mailer->Username = MAILER['user'];
+				$mailer->Password = MAILER['password'];
 			}
 			$mailer->isHTML(true);
 			$mailer->setFrom(MAILER['from']);
@@ -50,7 +50,7 @@
 			$mailer->addAddress($mailTo);
 			
 			$mailer->Subject = $mailSubject;
-			$mailer->Body    = $mailHtmlBody;
+			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
 			$mailer->send();
@@ -79,7 +79,7 @@
 			$mailer->addAddress($mailTo);
 			
 			$mailer->Subject = $mailSubject;
-			$mailer->Body    = $mailHtmlBody;
+			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
 			$mailer->send();
@@ -107,7 +107,7 @@
 			$mailer->addAddress($mailTo);
 			
 			$mailer->Subject = $mailSubject;
-			$mailer->Body    = $mailHtmlBody;
+			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
 			$mailer->send();
@@ -135,7 +135,7 @@
 			$mailer->addAddress($mailTo);
 			
 			$mailer->Subject = $mailSubject;
-			$mailer->Body    = $mailHtmlBody;
+			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
 			$mailer->send();
