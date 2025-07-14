@@ -2,10 +2,11 @@
 	namespace Pdsinterop\PhpSolid\Routes;
 
 	use Pdsinterop\PhpSolid\User;
+	use Pdsinterop\PhpSolid\Util;
 
 	class SolidUserProfile {
 		public static function respondToProfile() {
-			$serverName = $_SERVER['SERVER_NAME'];
+			$serverName = Util::getServerName();
 			[$idPart, $rest] = explode(".", $serverName, 2);
 			$userId = preg_replace("/^id-/", "", $idPart);
 

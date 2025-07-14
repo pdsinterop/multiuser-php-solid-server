@@ -4,6 +4,7 @@
 	use Pdsinterop\PhpSolid\StorageServer;
 	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\SolidNotifications;
+	use Pdsinterop\PhpSolid\Util
 	use Pdsinterop\Solid\Auth\WAC;
 	use Pdsinterop\Solid\Resources\Server as ResourceServer;
 	use Laminas\Diactoros\ServerRequestFactory;
@@ -23,8 +24,7 @@
 
 			$wac = new WAC($filesystem);
 			
-			$baseUrl = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME']; // FIXME: get this from the rawRequest instead?
-			
+			$baseUrl = Util::getServerBaseUrl();
 			$resourceServer->setBaseUrl($baseUrl);
 			$wac->setBaseUrl($baseUrl);
 
