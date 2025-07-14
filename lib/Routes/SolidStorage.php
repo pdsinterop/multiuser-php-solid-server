@@ -13,12 +13,11 @@
 		public static function respondToStorage() {
 			$requestFactory = new ServerRequestFactory();
 			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-			$response = new Response();
 
 			StorageServer::initializeStorage();
 			$filesystem = StorageServer::getFileSystem();
 
-			$resourceServer = new ResourceServer($filesystem, $response, null);
+			$resourceServer = new ResourceServer($filesystem, new Response(), null);
 			$solidNotifications = new SolidNotifications();
 			$resourceServer->setNotifications($solidNotifications);
 
