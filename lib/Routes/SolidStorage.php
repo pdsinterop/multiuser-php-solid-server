@@ -4,7 +4,7 @@
 	use Pdsinterop\PhpSolid\StorageServer;
 	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\SolidNotifications;
-	use Pdsinterop\PhpSolid\Util
+	use Pdsinterop\PhpSolid\Util;
 	use Pdsinterop\Solid\Auth\WAC;
 	use Pdsinterop\Solid\Resources\Server as ResourceServer;
 	use Laminas\Diactoros\ServerRequestFactory;
