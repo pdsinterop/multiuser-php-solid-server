@@ -54,7 +54,7 @@
 					$allowedOrigins[] = $clientRegistration['origin'];
 				}
 			}
-			if ($origin =="") {
+			if (!isset($origin) || ($origin === "")) {
 				$allowedOrigins[] = "app://unset"; // FIXME: this should not be here.
 				$origin = "app://unset";
 			}
