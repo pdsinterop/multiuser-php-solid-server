@@ -32,10 +32,8 @@
 			$getVars['response_type'] = "token";
 			
 			$requestedResponseTypes = explode(" ", ($_GET['response_type'] ?? ''));
-			foreach ($requestedResponseTypes as $responseType) {
-				if ($responseType == "code") {
-					$getVars['response_type'] = "code";
-				}
+			if (in_array("code", $requestedResponseTypes)) {
+				$getVars['response_type'] = "code";
 			}
 
 			$keys = Server::getKeys();
