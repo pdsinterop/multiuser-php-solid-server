@@ -225,6 +225,7 @@
 		}
 		
 		public static function respondToSharing() {
+			$user = User::getUser(Session::getLoggedInUser());
 			$clientId = $_POST['client_id'];
 			$userId = $user['userId'];
 			if ($_POST['consent'] === 'true') {
