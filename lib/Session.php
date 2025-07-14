@@ -2,7 +2,6 @@
 	namespace Pdsinterop\PhpSolid;
 
 	class Session {
-		private $cookieLifetime = 24*60*60;
 		public static function start($username) {
 			if (session_status() === PHP_SESSION_NONE) {
 				session_start([
