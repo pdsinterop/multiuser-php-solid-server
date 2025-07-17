@@ -53,7 +53,7 @@
 			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
-			$mailer->send();
+			return $mailer->send();
 		}
 
 		public static function sendVerify($data) {
@@ -82,7 +82,7 @@
 			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
-			$mailer->send();
+			return $mailer->send();
 		}
 
 		public static function sendResetPassword($data) {
@@ -110,7 +110,7 @@
 			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
-			$mailer->send();
+			return $mailer->send();
 		}
 
 		public static function sendDeleteAccount($data) {
@@ -138,6 +138,6 @@
 			$mailer->Body = $mailHtmlBody;
 			$mailer->AltBody = $mailPlainBody;
 
-			$mailer->send();
+			return $mailer->send();
 		}
 	}
