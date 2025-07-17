@@ -13,7 +13,7 @@
 		}
 
 		private static function generateTokenHex() {
-			return md5(random_bytes(32));
+			return bin2hex(random_bytes(16));
 		}
 
 		private static function generateExpiresTimestamp($lifetime) {
@@ -89,9 +89,9 @@
 			if (!self::validatePasswordStrength($newUser['password'])) {
 				return false;
 			}
-			$generatedUserId = md5(random_bytes(32));
+			$generatedUserId = bin2hex(random_bytes(16));
 			while (self::userIdExists($generatedUserId)) {
-				$generatedUserId = md5(random_bytes(32));
+				$generatedUserId = bin2hex(random_bytes(16));
 			}
 			$query = Db::$pdo->prepare(
 				 'INSERT INTO users VALUES (:userId, :email, :passwordHash, :data)'
