@@ -117,8 +117,8 @@
 			}
 
 
-			$generatedClientId = md5(random_bytes(32));
-			$generatedClientSecret = md5(random_bytes(32));
+			$generatedClientId = bin2hex(random_bytes(16)); // 32 chars for the client Id
+			$generatedClientSecret = bin2hex(random_bytes(32)); // and 64 chars for the client secret
 
 			$clientData['client_id_issued_at'] = time();
 			$clientData['client_id'] = $generatedClientId;
