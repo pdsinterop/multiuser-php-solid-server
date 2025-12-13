@@ -341,13 +341,12 @@
 			]);
 		}
 
-		 public static getExistingVerifyTokens() {
-			  Db::connect();
-			  $query = Db::$pdo->prepare(
-				   'SELECT code FROM verify'
-			  );
-			  $existingTokens = $query->execute();
-			  return $existingTokens;
-		 }
-
+		public static function getExistingVerifyTokens() {
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'SELECT code FROM verify'
+			);
+			$existingTokens = $query->execute();
+			return $existingTokens;
+		}
 	}		
