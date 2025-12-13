@@ -3,6 +3,7 @@
 	
 	use Pdsinterop\PhpSolid\Server;
 	use Pdsinterop\PhpSolid\User;
+	use Pdsinterop\PhpSolid\Util;
 
 	class StorageServer extends Server {
 		public static function getFileSystem() {
@@ -10,18 +11,14 @@
 
 			// The internal adapter
 			$adapter = new \League\Flysystem\Adapter\Local(
-			    // Determine root directory
-			    STORAGEBASE . "$storageId/"
+				// Determine root directory
+				STORAGEBASE . "$storageId/"
 			);
 
 			$graph = new \EasyRdf\Graph();
 			// Create Formats objects
 			$formats = new \Pdsinterop\Rdf\Formats();
-
-			$scheme = $_SERVER['REQUEST_SCHEME'];
-			$domain = $_SERVER['SERVER_NAME'];
-			$path = $_SERVER['REQUEST_URI'];
-			$serverUri = "{$scheme}://{$domain}{$path}"; // FIXME: doublecheck that this is the correct url;
+			$serverUri = Util::getServerUri();
 
 			// Create the RDF Adapter
 			$rdfAdapter = new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
@@ -62,7 +59,7 @@
 		}
 
 		private static function getStorageId() {
-			$serverName = $_SERVER['SERVER_NAME'];
+			$serverName = Util::getServerName();
 			$idParts = explode(".", $serverName, 2);
 			$storageId = preg_replace("/^storage-/", "", $idParts[0]);
 			return $storageId;

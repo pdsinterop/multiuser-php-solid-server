@@ -161,6 +161,6 @@
 					header($header . ":" . $value);
 				}
 			}
-			echo json_encode($body, JSON_PRETTY_PRINT);
+			echo json_encode($body, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 		}
 	}
