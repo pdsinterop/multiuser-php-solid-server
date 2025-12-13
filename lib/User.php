@@ -11,13 +11,14 @@
 			self::cleanupTokens();
 			$existingTokens = self::getExistingVerifyTokens();
 
+			$code = random_int(0,1000000);
+			$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
+
 			while (in_array($code, $existingTokens)) { // make sure we have no collissions;
 				$code = random_int(0,1000000);
 				$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
 			}
 
-			$code = random_int(0,1000000);
-			$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
 			return $code;
 		}
 
@@ -346,7 +347,8 @@
 			$query = Db::$pdo->prepare(
 				'SELECT code FROM verify'
 			);
-			$existingTokens = $query->execute();
+			$query->execute();
+			$existingTokens = $query->fetchAll();
 			return $existingTokens;
 		}
 	}		
