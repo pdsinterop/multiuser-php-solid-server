@@ -47,11 +47,12 @@ class RefreshToken implements RefreshTokenRepositoryInterface
 		$query = Db::$pdo->prepare(
 			'INSERT INTO oauth2Repository VALUES(:type, :key, :value, :expiry)'
 		);
+		// FIXME: value should not be the identifier of the refresh token, but the refresh token itself?
 		$query->execute([
 			':type' => 'refreshToken',
 			':key' => $refreshTokenEntity->getIdentifier(),
-			':value' => $refreshTokenEntity,
-			':expires' => $refreshTokenEntit->getExpiryDateTime()
+			':value' => $refreshTokenEntity->getAccessToken()->getIdentifier(),
+			':expiry' => $refreshTokenEntity->getExpiryDateTime()->getTimestamp()
 		]);
 	}
 
@@ -70,7 +71,7 @@ class RefreshToken implements RefreshTokenRepositoryInterface
 		Db::connect();
 		$now = new \DateTime();
 		$query = Db::$pdo->prepare(
-			'DELETE FROM oauth2Repository WHERE type=:type AND key = :key'
+			'DELETE FROM oauth2Repository WHERE type = :type AND key = :key'
 		);
 		$query->execute([
 			':type' => 'refreshToken',
@@ -100,7 +101,7 @@ class RefreshToken implements RefreshTokenRepositoryInterface
 		Db::connect();
 		$now = new \DateTime();
 		$query = Db::$pdo->prepare(
-			'DELETE FROM oauth2Repository WHERE type=:type AND expires < :now'
+			'DELETE FROM oauth2Repository WHERE type = :type AND expires < :now'
 		);
 		$query->execute([
 			':type' => 'refreshToken',

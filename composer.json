@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "pdsinterop/solid-auth": "v0.13.0",
+        "pdsinterop/solid-auth": "dev-feature/configurable-repositoryFactory",
         "pdsinterop/solid-crud": "v0.8.1",
         "phpmailer/phpmailer": "^6.10",
         "sweetrdf/easyrdf": "~1.15.0",

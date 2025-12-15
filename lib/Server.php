@@ -43,8 +43,7 @@
 		public static function getAuthServer() {
 			$authServerConfig = self::getAuthServerConfig();
 			$authServerFactory = new AuthorizationServerFactory($authServerConfig);
-			$repositoryFactory = self::getAuthServerRepositoryFactory();
-			$authServerFactory->setRepositoryFactory($repositoryFactory);
+			$authServerFactory->setRepository(Repository::REFRESH_TOKEN, new RefreshTokenRepository());
 			$authServer = $authServerFactory->create();
 			$response = new Response();
 			$server = new SolidAuthServer($authServer, $authServerConfig, $response);
@@ -64,12 +63,6 @@
 			);
 			$authServerConfig = $authServerConfigFactory->create();
 			return $authServerConfig;
-		}
-
-		public static function getAuthServerRepositoryFactory() {
-			return new RepositoryFactory([
-				Repository::REFRESH_TOKEN => new RefreshTokenRepository()
-			]);
 		}
 
 		public static function getConfigClient() {
