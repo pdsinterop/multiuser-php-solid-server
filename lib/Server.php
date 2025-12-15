@@ -2,6 +2,7 @@
 	namespace Pdsinterop\PhpSolid;
 	
 	use Pdsinterop\Solid\Auth\Factory\AuthorizationServerFactory;
+	use Pdsinterop\Solid\Auth\Factory\RepositoryFactory;
 	use Laminas\Diactoros\Response;
 	use Pdsinterop\Solid\Auth\Server as SolidAuthServer;
 	use Pdsinterop\Solid\Auth\Factory\ConfigFactory;
@@ -13,6 +14,7 @@
 	use Pdsinterop\Solid\Auth\TokenGenerator;
 	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\JtiStore;
+	use Pdsinterop\Solid\Auth\Enum\Repository;
 
 	class Server {
 		public static function generateKeySet() {
@@ -40,6 +42,8 @@
 		public static function getAuthServer() {
 			$authServerConfig = self::getAuthServerConfig();
 			$authServerFactory = new AuthorizationServerFactory($authServerConfig);
+			$repositoryFactory = self::getAuthServerRepositoryFactory();
+			$authServerFactory->setRepositoryFactory($repositoryFactory);
 			$authServer = $authServerFactory->create();
 			$response = new Response();
 			$server = new SolidAuthServer($authServer, $authServerConfig, $response);
@@ -60,7 +64,13 @@
 			$authServerConfig = $authServerConfigFactory->create();
 			return $authServerConfig;
 		}
-		
+
+		public static function getAuthServerRepositoryFactory() {
+			return new RepositoryFactory([
+				Repository::REFRESH_TOKEN => new RefreshTokenRepository()
+			]);
+		}
+
 		public static function getConfigClient() {
 			$clientId = $_GET['client_id'] ?? $_POST['client_id'] ?? null;
 			if ($clientId) { 

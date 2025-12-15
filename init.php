@@ -45,6 +45,12 @@
 			type VARCHAR(255) NOT NULL,
 			expires TEXT NOT NULL
 		    )',
+		    'CREATE TABLE IF NOT EXISTS oauth2Repository (
+			type VARCHAR(255) NOT NULL,
+			key VARCHAR(255) NOT NULL,
+			value TEXT NOT NULL,
+			expires TEXT NOT NULL
+		    )',
 		];
 		      
 		try {
