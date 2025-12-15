@@ -15,6 +15,7 @@
 	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\JtiStore;
 	use Pdsinterop\Solid\Auth\Enum\Repository;
+	use Pdsinterop\PhpSolid\Repository\RefreshToken as RefreshTokenRepository;
 
 	class Server {
 		public static function generateKeySet() {
