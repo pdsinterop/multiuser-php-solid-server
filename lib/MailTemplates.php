@@ -6,13 +6,13 @@
 	class MailTemplates {
 		public static function verify() {
 			$mailTokens = array(
-				"title" => "Bevestig je e-mail",
-				"description" => "Je online identiteit is bijna klaar. Vul de code in om je registratie te voltooien.",
+				"title" => "Confirm your e-mail",
+				"description" => "Your online identity is almost ready. Enter to code to complete your registration",
 				"footer" => "",
 				"buttonText" => "{code}",
 			);
 
-			$mailSubject = "Bevestig je e-mail: {code}";
+			$mailSubject = "Confirm your e-mail: {code}";
 			$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
 
 			$mailPlainBody = implode("\n\n", array(
@@ -36,12 +36,12 @@
 		}
 		
 		public static function resetPassword() {
-			$mailSubject = "Wachtwoordherstel";
+			$mailSubject = "Password reset";
 			$mailTokens = array(
-				"title" => "Wachtwoordherstel",
-				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . BASEURL . "/change-password/?token={code}",
+				"title" => "Password reset",
+				"description" => "If the link does not work, copy and paste this in your browser: " . BASEURL . "/change-password/?token={code}",
 				"footer" => "",
-				"buttonText" => "Herstel wachtwoord",
+				"buttonText" => "Reset password",
 				"buttonLink" => BASEURL . "/change-password/?token={code}"
 			);
 
@@ -69,12 +69,12 @@
 		}
 
 		public static function deleteAccount() {
-			$mailSubject = "Je account verwijderen";
+			$mailSubject = "Delete your account";
 			$mailTokens = array(
-				"title" => "Je account verwijderen",
-				"description" => "Werkt de link niet? Knip en plak dan deze in je browser: " . BASEURL . "/account/delete/confirm/?token={code}",
+				"title" => "Delete your account",
+				"description" => "If the link does not work, copy and paste this in your browser: " . BASEURL . "/account/delete/confirm/?token={code}",
 				"footer" => "",
-				"buttonText" => "Verwijder account",
+				"buttonText" => "Delete account",
 				"buttonLink" => BASEURL . "/account/delete/confirm/?token={code}"
 			);
 
@@ -103,12 +103,12 @@
 		
 		public static function accountCreated() {
 			$mailTokens = array(
-				"title" => "Welkom bij Solid!",
-				"description" => "Je online identiteit is klaar om te gebruiken. Je WebID is: {webId}",
+				"title" => "Welcome to Solid!",
+				"description" => "Your online identity is ready to use. Your WebID is: {webId}",
 				"footer" => "",
 			);
 
-			$mailSubject = "Welkom bij Solid!";
+			$mailSubject = "Welcome to Solid!";
 
 			$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
 			
