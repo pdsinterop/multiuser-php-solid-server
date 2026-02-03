@@ -110,13 +110,13 @@
 			$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
 			$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
 			$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
-			$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "#ffffff";
-			$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#3c6a87";
+			$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "##eeeeee";
+			$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#262c2f";
 ?>
      <table width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
        <th valign="top" align="center" style="padding: 0px 0px 30px 0px; text-align: center; font-weight: normal;">
-        <a href="{buttonLink}" style="display: inline-block; box-sizing: border-box; border-radius: 8px; background-color: <?php echo $buttonBackgroundColor; ?>; padding: 14px 18px 14px 18px; vertical-align: top; text-align: center; text-decoration: none;" target="_blank"><span style="font-size: 20px;line-height: 30px;color:<?php echo $buttonTextColor; ?>;font-weight:500;font-style:normal;display:inline-block;vertical-align: top;"><span style="display:inline-block;"><span style="font-family: <?php echo $fontFamily; ?>;line-height: 150%;">{buttonText}</span></span></span></a>
+        <a href="{buttonLink}" style="display: inline-block; box-sizing: border-box; background-color: <?php echo $buttonBackgroundColor; ?>; padding: 14px 18px 14px 18px; vertical-align: top; text-align: center; text-decoration: none;" target="_blank"><span style="font-size: 20px;line-height: 30px;color:<?php echo $buttonTextColor; ?>;font-weight:500;font-style:normal;display:inline-block;vertical-align: top;"><span style="display:inline-block;"><span style="font-family: <?php echo $fontFamily; ?>;line-height: 150%;">{buttonText}</span></span></span></a>
        </th>
       </tr>
      </table>
@@ -128,13 +128,13 @@
 			$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
 			$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
 			$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
-			$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "#ffffff";
-			$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#3c6a87";
+			$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "##eeeeee";
+			$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#262c2f";
 ?>
      <table width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
        <th valign="top" align="center" style="padding: 0px 0px 30px 0px; text-align: center; font-weight: normal;">
-        <span style="display: inline-block; box-sizing: border-box; border-radius: 8px; background-color: <?php echo $buttonBackgroundColor; ?>; padding: 14px 18px 14px 18px; vertical-align: top; text-align: center; text-decoration: none;" target="_blank"><span style="font-size: 20px;line-height: 30px;color:<?php echo $buttonTextColor; ?>;font-weight:500;font-style:normal;display:inline-block;vertical-align: top;"><span style="display:inline-block;"><span style="font-family: <?php echo $fontFamily; ?>;line-height: 150%;">{buttonText}</span></span></span></span>
+        <span style="display: inline-block; box-sizing: border-box; background-color: <?php echo $buttonBackgroundColor; ?>; padding: 14px 18px 14px 18px; vertical-align: top; text-align: center; text-decoration: none;" target="_blank"><span style="font-size: 20px;line-height: 30px;color:<?php echo $buttonTextColor; ?>;font-weight:500;font-style:normal;display:inline-block;vertical-align: top;"><span style="display:inline-block;"><span style="font-family: <?php echo $fontFamily; ?>;line-height: 150%;">{buttonText}</span></span></span></span>
        </th>
       </tr>
      </table>
