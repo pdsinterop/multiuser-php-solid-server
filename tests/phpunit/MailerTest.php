@@ -64,7 +64,7 @@
             $this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
             $doc = new \DOMDocument();
             $doc->loadHTML(Mailer::$mailer->Body);
-            $this->assertEquals("Welkom bij Solid!", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
+            $this->assertEquals("Welcome to Solid!", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
         }
 
         public function testVerify() {
@@ -85,7 +85,7 @@
             $this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
             $doc = new \DOMDocument();
             $doc->loadHTML(Mailer::$mailer->Body);
-            $this->assertEquals("Bevestig je e-mail", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
+            $this->assertEquals("Confirm your e-mail", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
         }
 
         public function testResetPassword() {
@@ -106,7 +106,7 @@
             $this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
             $doc = new \DOMDocument();
             $doc->loadHTML(Mailer::$mailer->Body);
-            $this->assertEquals("Wachtwoordherstel", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
+            $this->assertEquals("Password reset", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
         }
 
         public function testDeleteAccount() {
@@ -127,6 +127,6 @@
             $this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
             $doc = new \DOMDocument();
             $doc->loadHTML(Mailer::$mailer->Body);
-            $this->assertEquals("Je account verwijderen", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
+            $this->assertEquals("Delete your account", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
         }
     }

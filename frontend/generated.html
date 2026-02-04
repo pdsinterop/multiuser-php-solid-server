@@ -5,167 +5,968 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Component CSS -->
     <style>
-      /* solid-base-styles */
-      html,body {
+      /* extra (component/0-ds-styling) */
+      @import url('https://fonts.googleapis.com/css?family=Alegreya+Sans:400,400i,700,700i');
+      /* style (component/0-ds-styling) */
+      /* ds-alert-root */
+      :root {
+        --ds-alert-text-color: var(--ds-black);
+        --ds-alert-error-color: var(--ds-error-color);
+        --ds-alert-warning-color: var(--ds-warning-color);
+        --ds-alert-info-color: var(--ds-info-color);
+      }
+      /* ds-alert */
+      .ds-alert {
+        padding: 0.05px; /* contain child margins */
+        color: var(--ds-alert-text-color);
+      }
+      @supports (display: flow-root) {
+        .ds-alert {
+          display: flow-root;
+          padding: 0;
+        }
+      }
+      .ds-alert-error {
+        background-color: var(--ds-alert-error-color);
+      }
+      .ds-alert-warning {
+        background-color: var(--ds-alert-warning-color);
+      }
+      .ds-alert-info {
+        background-color: var(--ds-alert-info-color);
+      }
+      /* ds-align */
+      .ds-align-center {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .ds-align-center-middle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ds-align-right {
+        float: right;
+      }
+      .ds-align-left {
+        float: left;
+      }
+      /* ds-background-root */
+      :root {
+        --ds-background-dark-text-color: white;
+        --ds-background-dark-shadow-color: var(--ds-black);
+        --ds-background-dark-shadox-size: 2px;
+        --ds-background-dark-shadow-offset: 0 0;
+      
+        --ds-background-light-text-color: var(--ds-color);
+        --ds-background-light-shadow-color: white;
+        --ds-background-light-shadox-size: 3px;
+        --ds-background-light-shadow-offset: 0 0;
+      }
+      
+      :root {
+        --ds-background-dark-text-shadow: var(--ds-background-dark-shadow-offset) var(--ds-background-dark-shadow-size) var(--ds-background-dark-shadow-color);
+        --ds-background-light-text-shadow: var(--ds-background-light-shadow-offset) var(--ds-background-light-shadow-size) var(--ds-background-light-shadow-color);
+      }
+      
+      /* ds-background */
+      .ds-background-dark {
+        color: var(--ds-background-dark-text-color);
+        text-shadow: var(--ds-background-dark-text-shadow);
+      }
+      .ds-background-light {
+        color: var(--ds-background-light-text-color);
+        text-shadow: var(--ds-background-light-text-shadow);
+      }
+      /* ds-background-image */
+      .ds-background-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+      /* ds-box-root */
+      :root {
+        --ds-box-radius: 3px;
+        --ds-box-shadow: var(--ds-shadow-small);
+      }
+      /* ds-box */
+      .ds-box {
+        border-radius: var(--ds-box-radius);
+        box-shadow: var(--ds-box-shadow);
+        position: relative;
+        break-inside: avoid;
+      }
+      @supports (display: flow-root) {
+        .ds-box {
+          display: flow-root;
+          padding: 0;
+        }
+      }
+      .ds-box-top {
+        border-top-left-radius: var(--ds-box-radius);
+        border-top-right-radius: var(--ds-box-radius);
+      }
+      .ds-box-bottom {
+        border-bottom-left-radius: var(--ds-box-radius);
+        border-bottom-right-radius: var(--ds-box-radius);
+      }
+      
+      /* ds-button-root */
+      :root {
+        --ds-button-spacing: calc(0.5 * var(--ds-input-spacing));
+        --ds-button-bg-color: var(--ds-grey-light);
+        --ds-button-default-bg-color: var(--ds-white);
+        --ds-button-border-color: var(--ds-grey-light);
+        --ds-button-disabled-color: var(--ds-grey-medium);
+        --ds-button-disabled-bg-color: var(--ds-white);
+        --ds-button-primary-bg-color: var(--ds-primary);
+        --ds-button-primary-color: var(--ds-primary-contrast);
+        --ds-button-primary-border-color: var(--ds-primary);
+        --ds-button-line-height: calc(var(--ds-line-height) * 1.5);
+        --ds-button-shadow: var(--ds-shadow-tiny);
+        --ds-button-shadow-hover: var(--ds-shadow-small);
+        --ds-button-radius: 3px;
+      }
+      /* ds-button */
+      :root .ds-button {
+        line-height: var(--ds-button-line-height);
+        min-height: var(--ds-button-line-height);
+      }
+      .ds-button {
+        margin: 0 var(--ds-button-spacing) var(--ds-button-spacing) 0;
+        overflow: visible;
+        font: inherit;
+        color: inherit;
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0 calc(0.5 * var(--ds-line-height));
+        vertical-align: middle;
+        font-size: calc(0.875 * var(--ds-font-size));
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        background-color: var(--ds-button-bg-color);
+        outline: 1px solid var(--ds-button-border-color);
+        border: 0;
+        white-space: nowrap;
+        box-shadow: var(--ds-button-shadow);
+        border-radius: var(--ds-button-radius);
+      }
+      .ds-button::-moz-focus-inner {
+        border: 0;
+      }
+      .ds-button:hover,
+      .ds-button:focus {
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        box-shadow: var(--ds-button-shadow-hover);
+      }
+      a.ds-button,
+      a.ds-button:hover,
+      a.ds-button:active,
+      a.ds-button:visited {
+        color: inherit;
+      }
+      .ds-button-default {
+        background-color: var(--ds-button-default-bg-color);
+      }
+      a.ds-button-primary, a.ds-button-primary:hover,
+      a.ds-button-primary:active, a.ds-button-primary:visited,
+      .ds-button-primary, .ds-button-primary:hover {
+        background-color: var(--ds-button-primary-bg-color);
+        color: var(--ds-button-primary-color);
+        border-color: var(--ds-button-primary-border-color);
+      }
+      a.ds-button-support, a.ds-button-support:hover,
+      a.ds-button-support:active, a.ds-button-support:visited,
+      .ds-button-support, .ds-button-support:hover {
+        background-color: var(--ds-button-support-bg-color);
+        color: var(--ds-button-support-color);
+        border-color: var(--ds-button-support-border-color);
+      }
+      .ds-button:disabled {
+        background-color: var(--ds-button-disabled-bg-color);
+        color: var(--ds-button-disabled-color);
+      }
+      .ds-button:disabled:hover {
+        cursor: not-allowed;
+        box-shadow: 0 0 0;
+      }
+      .ds-button-group {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .ds-button-light {
+        background: none;
+        outline: 0;
         padding: 0;
+      }
+      .ds-button-naked {
+        background: none;
+        outline: 0;
+      }
+      .ds-button-close {
+        position: absolute;
+        right: var(--ds-spacing);
         margin: 0;
-        font-family: var(--solid-font-family);
-        background: var(--solid-light-background);
-        color: var(--solid-light-text-color);
+      }
+      
+      .ds-button-grow {
+        display: block;
+        width: 100%;
+      }
+      /* ds-bg */
+      .ds-bg-primary {
+        background: var(--ds-primary);
+        color: var(--ds-primary-contrast);
+        --ds-contrast: var(--ds-primary-contrast);
+      }
+      .ds-bg-primary-gradient {
+        background: var(--ds-primary-gradient);
+        color: var(--ds-primary-contrast);
+        --ds-contrast: var(--ds-primary-contrast);
+      }
+      .ds-bg-support {
+        background: var(--ds-support);
+        color: var(--ds-support-contrast);
+        --ds-contrast: var(--ds-support-contrast);
+      }
+      .ds-bg-support-gradient {
+        background: var(--ds-support-gradient);
+        color: var(--ds-support-contrast);
+        --ds-contrast: var(--ds-support-contrast);
+      }
+      .ds-bg-grey-dark {
+        background: var(--ds-grey-dark);
+        color: var(--ds-white);
+        --ds-contrast: var(--ds-white);
+      }
+      .ds-bg-grey-medium {
+        background: var(--ds-grey-medium);
+        color: var(--ds-white);
+        --ds-contrast: var(--ds-white);
+      }
+      .ds-bg-grey-light {
+        background: var(--ds-grey-light);
+        color: var(--ds-black);
+        --ds-contrast: var(--ds-black);
+      }
+      /* ds-color */
+      .ds-color {
+        display: flex;
+        text-align: center;
+        font-size: 0.8em;
+        align-items: center;
+        justify-content: center;
+      }
+      .ds-color-primary {
+        color: var(--ds-primary);
+      }
+      .ds-color-support {
+        color: var(--ds-support);
+      }
+      /* ds-contain */
+      .ds-contain {
+        padding: 0.05px; /* IE fallback */
+      }
+      @supports (display: flow-root) {
+        .ds-contain {
+          padding: 0;
+          display: flow-root;
+        }
+      }
+      /* ds-core-colors */
+      :root {
+        --ds-black: #000;
+        --ds-white: #FFF;
+      
+        --ds-primary: #ae47ff;
+        --ds-primary-light: #c880ff;
+        --ds-primary-dark: #8d00f8;
+        --ds-primary-bump: #b65cfc;
+        --ds-primary-contrast: var(--ds-white);
+        --ds-primary-gradient: linear-gradient( 180deg, var(--ds-primary), var(--ds-primary-dark) );
+        --ds-primary-gradient-bump: linear-gradient( 180deg, var(--ds-primary-bump), var(--ds-primary-light) 95%, var(--ds-primary-dark) 100%);
+      
+        --ds-support: #06CC06;
+        --ds-support-dark: #05BB05;
+        --ds-support-light: #07DE07;
+        --ds-support-contrast: #FFF;
+        --ds-support-gradient: linear-gradient( to left, var(--ds-support-light), var(--ds-support-dark) );
+        /* http://www.colorbox.io/#steps=11#hue_start=198#hue_end=198#hue_curve=linear#sat_start=15#sat_end=15#sat_curve=linear#sat_rate=130#lum_start=98#lum_end=0#lum_curve=easeOutQuad#lock_hex=eef1f8#minor_steps_map=0 */
+        --ds-grey-0: #eef1f8;
+        --ds-grey-5: #e9edf6;
+        --ds-grey-10: #e4eaf4;
+        --ds-grey-20: #dae2ed;
+        --ds-grey-30: #cdd7e3;
+        --ds-grey-40: #bdc8d4;
+        --ds-grey-50: #a8b4c0;
+        --ds-grey-60: #8f9ba6;
+        --ds-grey-70: #707c84;
+        --ds-grey-80: #4d565c;
+        --ds-grey-90: #262c2f;
+        --ds-grey-100: #000000;
+        --ds-grey-dark: var(--ds-grey-90);
+        --ds-grey-medium: var(--ds-grey-60);
+        --ds-grey-light: var(--ds-grey-0);
+      
+        --ds-error-color: rgb(253, 143, 143);
+        --ds-warning-color: #FFFFCC;
+        --ds-info-color: rgb(140, 180, 250);
+      }
+      /* ds-core-reset */
+      body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,p,blockquote,th,td {
+        margin:0; 
+        padding:0; 
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      /* ds-core-shadows */
+      :root {
+        --ds-shadow-light: rgba(0,0,0,0.07);
+        --ds-shadow-middle: rgba(0,0,0,0.09);
+        --ds-shadow-dark: rgba(0,0,0,0.11);
+        --ds-shadow-tiny: 
+          0 1px 1px var(--ds-shadow-dark)
+          ;
+        --ds-shadow-small: 
+          0 1px 1px var(--ds-shadow-dark),
+          0 2px 2px var(--ds-shadow-middle),
+          0 4px 4px var(--ds-shadow-light)
+          ;
+        --ds-shadow-medium: 
+          0 1px 1px var(--ds-shadow-middle),
+          0 2px 2px var(--ds-shadow-middle),
+          0 4px 4px var(--ds-shadow-middle),
+          0 6px 8px var(--ds-shadow-middle),
+          0 8px 16px var(--ds-shadow-middle)
+          ;
+        --ds-shadow-large: 
+          0 2px 1px var(--ds-shadow-light),
+          0 4px 2px var(--ds-shadow-light),
+          0 8px 4px var(--ds-shadow-light),
+          0 16px 8px var(--ds-shadow-light),
+          0 32px 16px var(--ds-shadow-light) 
+          ;
+      }
+      /* ds-core-typography */
+      @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,300&family=Roboto+Condensed:ital@0;1&display=swap');
+      :root {
+        --ds-body-font: 'Lato', sans-serif;
+        --ds-heading-font: 'Roboto Condensed', Helvetica, sans-serif;
+      }
+      :root {
+        --ds-font-size: 1rem;
+        --ds-font-weight: 300;
+        --ds-line-height: calc(1.6 * var(--ds-font-size));
+        --ds-color: var(--ds-black);
+        --ds-color-transparent: rgba(0,0,0,0);
+        --ds-contrast: var(--ds-grey-dark);
+        --ds-background: var(--ds-white);
+        --ds-background-transparent: rgba(255,255,255,0);
+        --ds-heading-weight: 400;
+        --ds-heading-multiplier: 1.27201965;
+        --ds-spacing: var(--ds-line-height);
+      }
+      /* ds-hidden */
+      .ds-hidden {
+        max-height: 0;
+        overflow: hidden;
+      }
+      /* ds-icon */
+      .ds-icon {
+        display: inline-block;
+        height: var(--ds-line-height);
+        width: 1em;
+        vertical-align: bottom;
+      }
+      
+      .ds-icon-feather {
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: square;
+        stroke-linejoin: square;
+        fill: none;
+      }
+      /* ds-screen-size */
+      :root {
+        --ds-screen-size: tiny;
+      }
+      @media (min-width: 480px)  {
+        :root {
+          --ds-screen-size: small;
+        }
+      }
+      @media (min-width: 640px) {
+        :root {
+          --ds-screen-size: tablet;
+        }
+      }
+      @media (min-width: 992px) {
+        :root {
+          --ds-screen-size: medium;
+        }
+      }
+      @media (min-width: 1200px) {
+        :root {
+          --ds-screen-size: large;
+        }
+      }
+      @media (min-width: 1800px) {
+        :root {
+          --ds-screen-size: extra-large;
+        }
+      }
+      /* ds-shadow */
+      .ds-shadow-tiny {
+        box-shadow: var(--ds-shadow-tiny);
+      }
+      .ds-shadow-small {
+        box-shadow: var(--ds-shadow-small);
+      }
+      .ds-shadow-medium {
+        box-shadow: var(--ds-shadow-medium);
+      }
+      .ds-shadow-large {
+        box-shadow: var(--ds-shadow-large);
+      }
+      /* ds-space */
+      .ds-space-margin-up {
+        margin-top: calc(-1 * var(--ds-spacing));
+      }
+      .ds-space-none {
+        margin: 0;
+      }
+      .ds-space {
+        margin: var(--ds-line-height);
+      }
+      .ds-space-vertical {
+        margin: var(--ds-line-height) 0;
+      }
+      .ds-space-horizontal {
+        margin-left: var(--ds-spacing);
+        margin-right: var(--ds-spacing);
+      }
+      .ds-space-left {
+        margin-left: var(--ds-spacing);
+      }
+      .ds-space-right {
+        margin-right: var(--ds-spacing);
+      }
+      .ds-space-top {
+        margin-top: var(--ds-spacing);
+      }
+      .ds-space-bottom {
+        margin-bottom: var(--ds-spacing);
+      }
+      
+      .ds-space-inside {
+        padding: 0 var(--ds-spacing);
+      }
+      .ds-space-inside::before,
+      .ds-space-inside::after {
+        content: "";
+        display: block;
+        height: 0;
+      }
+      .ds-space-inside::before {
+        margin-bottom: var(--ds-spacing);
+      }
+      .ds-space-inside::after {
+        margin-top: var(--ds-spacing);
+      }
+      
+      /* extra (component/1-styling) */
+      @import url('https://fonts.googleapis.com/css?family=Alegreya+Sans:400,400i,700,700i');
+      
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
         min-height: 100vh;
       }
-      body:has(main.solid-dark) {
-        background: var(--solid-dark-background);
-        color: var(--solid-dark-text-color);  
+      [data-simply-command] {
+        cursor: pointer; /* Dear iOS, why don't you have a click event when the cursor is not a pointer? */
+      }
+      textarea {
+        width: 100%;
+        height: 120px;
+        color: #e0e0e0;
+        background-color: #151515;
+        border: 0;
+        padding: 10px;
+      }
+      input:not([type]),
+      input[type=text],
+      input[type=password] {
+        color: #e0e0e0;
+        background-color: #151515;
+        border: 0;
+        padding: 15px 10px;
+        font-size: 1.6em;
       }
       
-      h1,h2,h3,h4,h5,h6 {
-        padding-top: 0;
-        margin-top: 0;
-        font-family: var(--solid-heading-font-family);
-        font-weight: var(--solid-heading-font-weight);
+      div.main,
+      main {
+        min-height: 100%;
       }
-      button {
-        cursor: pointer;
+      .simply-toolbar.simply-toolbar-main {
+        z-index: 10;
       }
-      section.solid-dark {
-        background: var(--solid-dark-background);
-        color: var(--solid-dark-text-color);
+      /* main-grid (component/1-styling) */
+      main {
+        display: grid;
+        grid-template-areas:
+          "header header"
+          "left right"
+          ;
+        grid-template-columns: 320px auto;
+        grid-template-rows: 65px auto;
+        min-height: 100vh;
       }
-      header,
-      section {
-        padding: 0 calc((100vw - var(--solid-page-width)) / 2);
-        box-sizing: content-box;
-        max-width: var(--solid-page-width);;
+      @media (max-width: 480px) {
+        main {
+          display: grid;
+          grid-template-areas:
+            "header"
+            "content"
+            ;
+        	grid-template-columns: auto;
+          grid-template-rows: 65px auto;
+          min-height: 100vh;
+        }
       }
-      section.solid-section-main {
-        padding: var(--solid-section-gap) calc((100vw - var(--solid-page-width)) / 2);
-      }
-      @media (max-width: 1106px) {
-        header,
-        section,
-        section.solid-section-main {
-          padding-left: 20px;
-          padding-right: 20px;
-        }  
-      }
-      a {
-        color: var(--solid-blue);
+      main > .simply-toolbar {
+        grid-area: header;
       }
       
-      
-      /* solid-root-styles */
+      /* simply-toast (component/1-styling) */
       :root {
-        --solid-blue: #d7ebff;
-        --solid-pink-active: #518488;
-        --solid-pink-inactive: #444444;
-        --solid-white-rose: #222222;
-      
-        --solid-page-width: 1056px;
-        --solid-font-family: Arial, sans-serif;
-        
-        --solid-section-gap: 80px;
-        --solid-heading-font-family: Arial, serif;
-        --solid-heading-font-weight: 700;
-      
-        --solid-content-gutter: 20px;
-        
-        --solid-light-background: var(--solid-white-rose);
-        --solid-light-text-color: var(--solid-blue);
-        
-        --solid-dark-background: var(--solid-blue);
-        --solid-dark-text-color: var(--solid-white-rose);
-        
-        --solid-form-width: 516px;
-        --solid-form-gap: 20px;
-        
-        --solid-button-border-size: 1px;
-        --solid-button-border-radius: 6px;
-        --solid-button-padding: 16px 20px 16px 20px;
-        --solid-button-width: 336px;
-        --solid-button-height: 56px;
-        --solid-button-font-size: 16px;
-        --solid-button-font-weight: 700;
-      
-        --solid-input-border-size: 1px;
-        --solid-input-border-radius: 6px;
-        --solid-input-padding: 16px 20px 16px 20px;
-        --solid-input-width: 336px;
-        --solid-input-height: 56px;
-        --solid-input-font-size: 16px;
-        --solid-input-font-weight: 700;
-        --solid-input-border-color: #888;
-        --solid-input-border: 0; /* var(--solid-input-border-size) solid var(--solid-input-border-color); */
-        --solid-input-box-shadow: 0px 0px 9px #0F0F0F1A;
-      
-        --solid-hint-background: transparent;
-        --solid-hint-text-color: var(--solid-blue);
-        --solid-hint-border-size: 0px;
-        --solid-hint-border-radius: 0px;
-        --solid-hint-padding: 0px;
-      
-        --solid-light-button-primary-background: var(--solid-pink-active);  
-        --solid-light-button-primary-text-color: var(--solid-blue);
-        --solid-light-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-active);
-      
-        --solid-light-button-secondary-background: var(--solid-white-rose);
-        --solid-light-button-secondary-text-color: var(--solid-blue);
-        --solid-light-button-secondary-border: var(--solid-button-border-size) solid var(--solid-pink-active);
-        
-        --solid-dark-button-primary-background: var(--solid-pink-active);  
-        --solid-dark-button-primary-text-color: var(--solid-blue);
-        --solid-dark-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-active);
-      
-        --solid-dark-button-secondary-background: var(--solid-blue);
-        --solid-dark-button-secondary-text-color: var(--solid-white-rose);
-        --solid-dark-button-secondary-border: var(--solid-button-border-size) solid var(--solid-white-rose);
-        
-        --solid-main-form-buttons-gap: 15px;
-      
-        --solid-checkbox-border-color: var(--solid-pink-active);
-        --solid-form-control-disabled-color: #959495;
-        --solid-checkbox-size: 1.3em;
-        --solid-checkbox-border-size: 1.5px;
+        --simply-toast-height: 60px;
+        --simply-toast-hide-delay: 3s;
+        --simply-toast-show-duration: 0.3s;
+        --simply-toast-hide-duration: 0.5s;
+        --simply-toast-margin: 20px;
+        --simply-toast-error-color: rgb(253, 143, 143);
+        --simply-toast-warning-color: #FFFFCC;
+        --simply-toast-info-color: rgb(140, 180, 250);
+        --simply-toast-white: #FFF;
+        --simply-toast-grey-50: #a8b4c0;
+        --simply-toast-grey-80: #4d565c;
+        --simply-toast-font-size: calc(1.1 * 1rem);
+        --simply-toast-font-weight: 300;
+        --simply-toast-line-height: calc(1.5 * var(--simply-toast-font-size));
+        --simply-toast-color: var(--simplycode-grey-medium);
+        --simply-toast-contrast: var(--simplycode-grey-medium);
+        --simply-toast-background:var(--simplycode-white);
+        --simply-toast-heading-weight: 900;
+        --simply-toast-heading-multiplier: 1.1;
       }
-      /* footer-nav */
-      .solid-footer-nav {
-        grid-area: nav;
-      }
-      :root {
-        --solid-footer-nav-gap: 32px;
-      }
-      .solid-footer-nav ul {
+      
+      ul.simply-toasts,
+      ol.simply-toasts,
+      .simply-toasts {
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 101;
+        display: block;
         list-style: none;
-        display: flex;
-        gap: var(--solid-footer-nav-gap);
-        justify-content: start;
+        margin: 0;
         padding: 0;
+        max-width: 50%;
+        min-width: 300px;
+      }
+      .simply-toast,
+      li.simply-toast {
+        min-width: 300px;
+        float: right;
+        clear: both;
+        margin-right: 0;
+        margin-top: 60px;
+        background-color: var(--simply-toast-grey-80);
+        color: var(--simply-toast-white);
+        display: block;
+        border-left: 10px solid var(--simply-toast-grey-50);
+        padding: 20px;
+        border-radius: 2px;
+      }
+      .simply-toast-error,
+      li.simply-toast-error {
+        border-color: var(--simply-toast-error-color);
+      }
+      .simply-toast-info,
+      li.simply-toast-info {
+        border-color: var(--simply-toast-info-color);
+      }
+      .simply-toast-warning,
+      li.simply-toast-warning {
+        border-color: var(--simply-toast-warning-color);
+      }
+      
+      @keyframes simply-toast-show {
+        0% {
+          transform: scaleX(0);
+          transform-origin: right;
+          opacity: 0;
+        }
+        50% {
+          transform: scaleX(0);
+          transform-origin: right;
+          opacity: 0;
+        }
+        75% {
+          opacity: 1;
+        }
+        100% {
+          transform: scaleX(1);
+          transform-origin: right;
+          opacity: 1;
+        }
+      }
+      @keyframes simply-toast-hide {
+        0% {
+          transform: scaleX(1);
+          transform-origin: right;
+          opacity: 1;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: scaleX(0);
+          transform-origin: right;
+          opacity: 0;
+        }
+      }
+      @keyframes simply-toast-move {
+        0% {
+          transform: translateY(-80px); /* toast-height + toast-margin */
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+      .simply-toast[data-state="new"] {
+        animation: simply-toast-show var(--simply-toast-show-duration) forwards;
+      }
+      .simply-toast-autohide[data-state="new"] {
+        animation: simply-toast-show var(--simply-toast-show-duration);
+        animation-delay: 0s;
+      }
+      .simply-toast-autohide.simply-toast-animated[data-state="shown"] {
+        animation: simply-toast-hide var(--simply-toast-hide-duration) forwards;
+        animation-delay: calc(var(--simply-toast-hide-delay) - var(--simply-toast-show-duration));
+      }
+      .simply-toast-autohide:not(.simply-toast-animated)[data-state="shown"] {
+        animation: simply-toast-move var(--simply-toast-show-duration), simply-toast-hide var(--simply-toast-hide-duration) forwards;
+        animation-delay: 0s, var(--simply-toast-hide-delay);
+      }
+      
+      /* simplycode-ds-mapping (component/1-styling) */
+      /* simplycode-ds-core-colors */
+      :root {
+        --ds-primary: var(--simplycode-highlight-light);
+        --ds-primary-dark: var(--simplycode-highlight-dark);
+        --ds-primary-contrast: var(--simplycode-highlight-color);
+        --ds-primary-light: var(--simplycode-highlight-light);
+        --ds-primary-gradient: var(--simplycode-highlight-gradient);
+        --ds-primary-bump: #b65cfc;
+        --ds-primary-gradient-bump: linear-gradient( 180deg, var(--ds-primary-bump), var(--simplycode-highlight-light) 95%, var(--simplycode-highlight-dark) 100%);
+      
+        --ds-support: #06CC06;
+        --ds-support-dark: #05BB05;
+        --ds-support-light: #07DE07;
+        --ds-support-contrast: #FFF;
+        --ds-support-gradient: linear-gradient( to left, var(--ds-support-light), var(--ds-support-dark) );
+      
+        --ds-heading-font: var(--simplycode-font-family);
+      }
+      
+      /* style (component/1-styling) */
+      :root {
+        --simplycode-highlight-dark: #f16623;
+        --simplycode-highlight-light: #ff8003;
+        --simplycode-highlight-color: #fff;
+        --simplycode-highlight-background: linear-gradient( to left, var(--simplycode-highlight-light), var(--simplycode-highlight-dark) );
+      
+        --simplycode-support-dark: #444;
+        --simplycode-support-light: #484848;
+        --simplycode-support-color: #eee;
+        --simplycode-support-background: linear-gradient( to left, var(--simplycode-support-light), var(--simplycode-support-dark) );
+      
+        --simplycode-grey-dark: #38393c;
+        --simplycode-grey-medium: #7f8185;
+        --simplycode-grey-light: #e9ebec;
+        --simplycode-grey-dark: #38393c;
+        --simplycode-black: #000;
+        --simplycode-white: #fff;
+        --simplycode-grey-background: var(--simplycode-grey-dark);
+      
+        --simplycode-font-family: 'Alegreya Sans', sans-serif;
+        --simplycode-font-size: 14px;
+        --simplycode-line-height: 1.5em;
+        --simplycode-color: #7f8185;
+        --simplycode-background: #333;
+      }
+      
+      /* general styling on default elements */
+      
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--simplycode-font-family);
+        font-size: var(--simplycode-font-size);
+        line-height: var(--simplycode-line-height);
+        color: var(--simplycode-color); 
+        background-color: var(--simplycode-background);
+      }
+      h1 {
+        font-size: 2em;
+        font-weight: 300;
+        line-height: 1.1em;
+        margin: 0;
+        margin-bottom: 0.5em;
+      }
+      
+      h2 {
+        font-size: 1.6em;
+        font-weight: 400;
+        line-height: 1.1em;
+        margin: 0;
+        margin-bottom: 0.5em;
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      
+      a {
+        color: var(--simplycode-highlight-dark);
+      }
+      a:visited {
+        color: var(--simplycode-highlight-dark);
+      }
+      
+      /* custom styling for custom elements */
+      
+      .simply-button,
+      a.simply-button {
+        background: var(--simply-support-background);
+        color: var(--simply-support-color);
+        padding: 0.3em 0.5em;
+        margin: 0 0.3em;
+        border: 1px solid #ccc;
+        text-decoration: none;
+      }
+      
+      .simply-button:first-child {
+        margin-left: 0;
+      }
+      .simply-button:last-child {
+        margin-right: 0;
+      }
+      .simply-button.highlight {
+        background: var(--simply-highlight-background);
+        color: var(--simply-highlight-color);
+      }
+      
+      .text-content {
+        padding: 2.2375em;
+        max-width: 50em;
+      }
+      .text-content *:first-child {
+        margin-top: 0;
+      }
+      
+      header {
+        position: fixed;
+        padding: 8px 10px 6px 10px;
+        left: 0;
+        right: 0;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        background-color: #404040;
+        border-bottom: 2px solid #2222;
+        vertical-align: middle;
+        z-index: 200;
+      }
+      header h1 {
         margin: 0;
       }
-      .solid-footer-nav li {
-        list-style: none;
+      header .simply-controls {
+        padding-top: 5px;
+        padding-right: 5px;
+        text-align: right;
       }
-      .solid-footer-nav a {
-        text-decoration: none;
-        color: var(--solid-white-rose);
+      /* simply-logo (component/simply-logo) */
+      :root {
+        --simply-logo-color-primary: var(--simplycode-highlight-dark);
+        --simply-logo-color-secondary: white;
       }
-      /* footer */
-      .solid-footer-form {
-        display: grid;
-        grid-template-areas: "explainer buttons" "nav nav";
-        grid-template-columns: 1fr 1fr;
+      /* simply-toolbar-button (component/simply-toolbar) */
+      .simply-toolbar-button {
+        height: var(--simply-toolbar-button-height);
+        border-top: 1px solid transparent;
+        border-bottom: 2px solid transparent;
+        transition: background 0.2s ease;
+        font-size: var(--simply-toolbar-button-font-size);
+        letter-spacing: 0;
+        font-family: var(--simply-toolbar-button-font);
+        white-space: nowrap;
+        user-select: none;
+        vertical-align: top;
+        min-width: var(--simply-toolbar-button-width);
+        text-align: center;
+        cursor: pointer;
+        padding: 0 4px;
+        text-transform: none;
+        background: transparent;
+        outline: none;
+        box-shadow: none;
+        border-radius: 0;
+        color: var(--simply-toolbar-button-color);
+        margin: 0;
       }
-      .solid-footer-form-explainer {
-        grid-area: explainer;
+      .simply-toolbar-button:hover {
+        border-bottom: 2px solid var(--simply-toolbar-button-primary);
+        box-shadow: none;
       }
-      .solid-footer-form-buttons {
-        grid-area: buttons;
-        display: grid;
-        gap: var(--solid-main-form-buttons-gap);
-        justify-content: right;
-        align-content: center;
+      .simply-toolbar-button .ds-icon {
+        height: 26px;
+        font-size: 26px;
+        padding: 0 4px;
+        display: block;
+        margin: 6px auto -14px;
+        position: relative;
       }
-      /* buttons */
+      .simply-toolbar-button-expands:not(:focus)::after,
+      .simply-toolbar-button-expands:not(.ds-selected)::after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 6px;
+        left: 50%;
+        margin-left: -3px;
+        width: 0;
+        border-top: 3px solid #888;
+        border-bottom: 0;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+      }
+      .simply-toolbar-button:focus,
+      .simply-toolbar-button.ds-selected {
+        background-color: var(--ds-grey-80);
+        border-left-color: var(--ds-black);
+        border-top-color: var(--ds-black);
+        border-right-color: var(--ds-grey-60);
+      }
+      .simply-toolbar-button[disabled] {
+        background-color: transparent;
+        color: var(--ds-grey-60);
+      }
+      /* simply-toolbar (component/simply-toolbar) */
+      :root {
+        --simply-toolbar-height: 60px;
+        --simply-toolbar-primary: var(--simplycode-highlight-dark);
+        --simply-toolbar-button-font: arial, helvetica, sans-serif;
+        --simply-toolbar-button-font-size: 11px;
+        --simply-toolbar-button-width: 60px;
+        --simply-toolbar-button-height: var(--simply-toolbar-height);
+        --simply-toolbar-button-color: var(--ds-white);
+        --simply-toolbar-button-primary: var(--simply-toolbar-primary);
+        --simply-toolbar-title-width: 70px;
+        --simply-toolbar-title-height: var(--simply-toolbar-height);
+      }
+      .simply-toolbar {
+        border-top: 1px solid var(--simply-toolbar-button-primary);
+        background: linear-gradient(180deg, var(--ds-white) 0, var(--ds-white) 95%, var(--ds-grey-40) 100%);
+        white-space: nowrap;
+        min-width: 100%;
+        min-height: var(--simply-toolbar-height);
+        display: flex;
+      }
+      .simply-toolbar-title {
+        padding: 0 10px;
+        font-size: 16px;
+        width: var(--simply-toolbar-title-width);
+        font-family: sans-serif;
+        text-transform: none;
+        border: 0;
+        height: var(--simply-toolbar-button-height);
+        cursor: default;
+        border-radius: 0;
+        box-shadow: 0;
+        outline: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .simply-toolbar-highlight {
+        background: var(--ds-primary-gradient-bump);
+        color: var(--ds-primary-contrast);
+      }
+      .simply-toolbar .simply-toolbar-title {
+        margin-top: 0;
+      }
+      .simply-toolbar-spacer {
+        border-left: 1px solid #ccc;
+        height: var(--simply-toolbar-height);
+        position: absolute;
+        display: inline-block;
+      }
+      .simply-toolbar-button-expands:not(.ds-selected)::after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 6px;
+        left: 50%;
+        margin-left: -3px;
+        width: 0;
+        border-top: 3px solid #888;
+        border-bottom: 0;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+      }
+      .simply-toolbar-push-right {
+        margin-left: auto;
+      }
+      .simply-toolbar-title img {
+        height: 30px;
+      }
+      .simply-toolbar input[type="text"] {
+        margin-right:0;
+        margin-bottom: 0;
+        margin-top: 10px;
+        font-size: small;
+        line-height: 1.2em;
+        height: 35px;
+      }
+      .simply-toolbar.simply-toolbar-main {
+        border-top-width: 5px;
+      }
+      
+      .simply-toolbar {
+        background: linear-gradient(var(--ds-grey-90) 0%, var(--ds-grey-90) 95%, black 100%);
+        color: var(--ds-white);
+      }
+      /* buttons (component/form-elements) */
       .solid-button {
         padding: var(--solid-button-padding);
         border-radius: var(--solid-button-border-radius);
@@ -195,7 +996,7 @@
         color: var(--solid-dark-button-secondary-text-color);
         border: var(--solid-dark-button-secondary-border);
       }
-      /* checkbox */
+      /* checkbox (component/form-elements) */
       .solid-form *:before,
       .solid-form *:after {
         box-sizing: border-box;
@@ -215,13 +1016,14 @@
         margin: 0;
       
         font: inherit;
-        color: currentColor;
+        color: var(--simplycode-highlight-dark);
         width: var(--solid-checkbox-size);
         height: var(--solid-checkbox-size);
         border: var(--solid-checkbox-border-size) solid var(--solid-checkbox-border-color);
         border-radius: var(--solid-checkbox-size);
         display: grid;
         place-content: center;
+        margin-right: 10px;
       }
       
       .solid-form input[type="checkbox"]::before {
@@ -244,7 +1046,7 @@
         color: var(--solid-form-control-disabled-color);
         cursor: not-allowed;
       }
-      /* form */
+      /* form (component/form-elements) */
       .solid-form {
         display: flex;
         flex-direction: column;
@@ -262,7 +1064,7 @@
         --solid-light-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-inactive);
         --solid-dark-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-inactive);
       }
-      /* hint */
+      /* hint (component/form-elements) */
       .solid-hint  {
         box-sizing: border-box;
         border-radius: var(--solid-hint-border-radius);
@@ -271,7 +1073,7 @@
         background: var(--solid-hint-background);
         color: var(--solid-hint-text-color);
       }
-      /* inputs */
+      /* inputs (component/form-elements) */
       .solid-input  {
         width: var(--solid-input-width);
         box-sizing: border-box;
@@ -280,89 +1082,40 @@
         padding: var(--solid-input-padding);
         box-shadow: var(--solid-input-box-shadow);
       }
-      /* header-logo */
-      :root {
-        --solid-logo-height: 40px;
+      /* main (component/main-form) */
+      section.solid-form {
+        margin: 10px;
       }
-      
-      .solid-header .solid-header-logo svg {
-        height: var(--solid-logo-height);
-      }
-      body:has(main.solid-dark) .solid-header-logo svg .text-color {
-        fill: var(--solid-white-rose);
-      }
-      /* header-nav */
-      :root {
-        --solid-header-nav-gap: 32px;
-      }
-      .solid-header-nav ul {
-        list-style: none;
+      div.solid-form,
+      form.solid-form {
         display: flex;
-        gap: var(--solid-header-nav-gap);
-        justify-content: end;
-        line-height: var(--solid-header-line-height);
-        font-family: var(--solid-heading-font-family);
-        font-weight: var(--solid-heading-font-weight);
-        padding: 0;
-        margin: 0;
+        flex-direction: vertical;
+        gap: 10px;
       }
-      .solid-header-nav li {
-        list-style: none;
-      }
-      .solid-header-nav a {
-        text-decoration: none;
-        color: var(--solid-blue);
-      }
-      /* header */
-      :root {
-        --solid-header-height: 120px;
-        --solid-header-line-height: 40px;
-      }
-      .solid-header {
-        --solid-button-height: 39px;
-        --solid-button-width: auto;
-        --solid-button-padding: 0 20px;
-      }
-      .solid-header {
-        display: grid;
-        grid-template-areas: "logo nav";
-        height: var(--solid-header-height);
-        align-content: center;
-      }
-      .solid-header .solid-header-logo {
-        grid-area: logo;
-      }
-      
-      .solid-header .solid-header-nav {
-        grid-area: nav;
-      }
-      
-      /* main */
       .solid-main-form-buttons {
         display: grid;
         gap: var(--solid-main-form-buttons-gap);
         justify-content: left;
         align-content: center;
       }
-      /* register */
-      .solid-register-info {
-        float: right;
-        border: 1px solid #888;
-        border-radius: 3px;
-        display: inline-block;
-        height: 1.2em;
-        width: 1.2em;
-        text-align: center;
-        line-height: 1.2em;
-        vertical-align: middle;
-        cursor: pointer;
-        font-family: var(--solid-heading-font-family);
-        font-weight: var(--solid-heading-font-weight);
+      .solid-button {
+        background-color: var(--ds-grey-90);
+        padding: 10px;
       }
-      /* simply-logo */
+      .solid-button:focus,
+      .solid-button:hover {
+        background-color: var(--ds-grey-80);
+      }
+      .solid-button h1 {
+        margin: 0;
+        padding: 0;  
+      }
+      
+      /* checkbox (component/sharing) */
       :root {
-        --simply-logo-color-primary: var(--solid-pink-active);
-        --simply-logo-color-secondary: white;
+        --solid-checkbox-size: 1.4em;
+        --solid-checkbox-border-size: 2px;
+        --solid-checkbox-border-color: var(--simplycode-highlight-dark);
       }
     </style>
     <!-- /Component CSS -->
@@ -372,7 +1125,7 @@
     </style>
     <!-- /Page CSS -->
     <!-- Head HTML -->
-    <!-- cocon -->
+    <!-- cocon (baseComponent/font-cocon) -->
     <style>
       @font-face {
         font-family: 'Cocon';
@@ -389,6 +1142,7 @@
         simply.bind = false;
         /* Raw API */
         var simplyRawApi = {
+          // baseComponent/raw-api
           "delete" : function(endpoint, params={}) {
             return fetch(simplyRawApi.url + endpoint + "/" + simplyRawApi.encodeGetParams(params), {
               mode : 'cors',
@@ -397,25 +1151,30 @@
               method: "DELETE"
             });
           },
+          // baseComponent/raw-api
           "encodeBodyParams" : function(params) {
             return new URLSearchParams(params);
           },
+          // baseComponent/raw-api
           "encodeGetParams" : function(params) {
             if (!params) {
               return "";
             }
             return "?" + new URLSearchParams(params);
           },
+          // baseComponent/raw-api
           "get" : function(endpoint, params={}) {
             return fetch(simplyRawApi.url + endpoint + "/" + simplyRawApi.encodeGetParams(params), {
               mode : 'cors',
               headers: this.headers
             });
           },
+          // baseComponent/raw-api
           "headers" : {
           	'Accept': 'application/json',
           	'Content-Type': 'application/x-www-form-urlencoded'
           },
+          // baseComponent/raw-api
           "post" : function(endpoint, params={}) {
             return fetch(simplyRawApi.url + endpoint + "/", {
           //    mode : 'cors',
@@ -425,6 +1184,7 @@
               body: simplyRawApi.encodeBodyParams(params)
             });
           },
+          // baseComponent/raw-api
           "postRaw" : function(endpoint, params={}, body) {
             return fetch(simplyRawApi.url + endpoint + "/", {
               mode : 'cors',
@@ -434,6 +1194,7 @@
               body: body
             });
           },
+          // baseComponent/raw-api
           "put" : function(endpoint, params={}) {
             return fetch(simplyRawApi.url + endpoint + "/", {
               mode: 'cors',
@@ -443,6 +1204,7 @@
               body: simplyRawApi.encodeBodyParams(params)
             });
           },
+          // baseComponent/raw-api
           "putRaw" : function(endpoint, params={}, body) {
             return fetch(simplyRawApi.url + endpoint + "/", {
               mode: 'cors',
@@ -452,11 +1214,13 @@
               body: body
             });
           },
+          // baseComponent/raw-api
           "url" : "/"
         };
         /* End of Raw API */
         /* Data API */
         simplyDataApi = {
+          // component/delete-account
           "confirmDeleteAccount" : function(deleteAccountParams) {
             return simplyRawApi.post("api/accounts/delete/confirm", deleteAccountParams)
             .then(function(response) {
@@ -467,6 +1231,7 @@
               }
             });
           },
+          // component/delete-account
           "deleteAccount" : function(deleteAccountParams) {
             return simplyRawApi.post("api/accounts/delete", deleteAccountParams)
             .then(function(response) {
@@ -477,6 +1242,7 @@
               }
             });
           },
+          // component/register
           "register" : function(registerParams) {
             return simplyRawApi.post("api/accounts/new", registerParams)
             .then(function(response) {
@@ -487,6 +1253,7 @@
               }
             });
           },
+          // component/register
           "verifyEmail" : function(verifyParams) {
             return simplyRawApi.post("api/accounts/verify", verifyParams)
             .then(function(response) {
@@ -497,6 +1264,7 @@
               }
             });
           },
+          // component/reset-password
           "changePassword" : function(changeParams) {
             return simplyRawApi.post("api/accounts/change-password", changeParams)
             .then(function(response) {
@@ -507,6 +1275,7 @@
               }
             });
           },
+          // component/reset-password
           "sendPasswordReset" : function(resetParams) {
             return simplyRawApi.post("api/accounts/reset-password", resetParams)
             .then(function(response) {
@@ -522,6 +1291,7 @@
         simplyApp = simply.app({
           /* Actions */
           actions: {
+            // component/delete-account
             "confirmDeleteAccount" : async function() {
               let deleteAccountParams = {
                 "token" : editor.pageData.deleteAccountToken,
@@ -529,6 +1299,7 @@
               let result = await simplyDataApi.confirmDeleteAccount(deleteAccountParams);
               return result;
             },
+            // component/delete-account
             "deleteAccount" : async function() {
               let deleteAccountParams = {
                 "email" : editor.pageData.deleteAccount.email
@@ -536,12 +1307,14 @@
               let result = await simplyDataApi.deleteAccount(deleteAccountParams);
               return result;
             },
+            // component/password-entropy
             "getPasswordEntropy" : function(password) {
               let base = simplyApp.actions.getPasswordEntropyBase(password);
               let length = simplyApp.actions.getPasswordEntropyLength(password);
               let decimalPlaces = 2;
               return Math.log(Math.pow(base, length)).toFixed(decimalPlaces);
             },
+            // component/password-entropy
             "getPasswordEntropyBase" : function(password) {
               /**
                 * Get the base amount of characters from the characters used in the password.
@@ -587,6 +1360,7 @@
               }
               return base;
             },
+            // component/password-entropy
             "getPasswordEntropyLength" : function (password) {
               /**
                 * Check the length of the password based on known rules
@@ -607,16 +1381,19 @@
               }
               return length;
             },
+            // component/password-entropy
             "validatePasswordEntropy" : function(password) {
               let minimumEntropy = 30;
               return simplyApp.actions.getPasswordEntropy(password) > minimumEntropy;
             },
+            // component/register
             "register" : async function() {
               let registerParams = editor.pageData.register;
               registerParams['repeat_password'] = registerParams['password'];
               let result = await simplyDataApi.register(registerParams);
               return result;
             },
+            // component/register
             "verifyEmail" : async function() {
               let verifyParams = {
                 "email" : editor.pageData.register.email
@@ -624,6 +1401,7 @@
               let result = await simplyDataApi.verifyEmail(verifyParams);
               return result;
             },
+            // component/reset-password
             "changePassword" : async function() {
               let changeParams = {
                 "token" : editor.pageData.resetToken,
@@ -632,6 +1410,7 @@
               let result = await simplyDataApi.changePassword(changeParams);
               return result;
             },
+            // component/reset-password
             "sendPasswordReset" : async function() {
               let resetParams = {
                 "email" : editor.pageData.reset.email
@@ -643,38 +1422,57 @@
           /* /Actions */
           /* Commands */
           commands: {
+            // component/simply-toolbar
+            "home" : function(el) {
+              document.location.hash="";
+            },
+            // component/delete-account
             "confirmDeleteAccount" : function(el) {
               simplyApp.actions.confirmDeleteAccount()
               .then(function() {
                 document.location.hash = "delete-account-done";
               })
             },
+            // component/delete-account
             "deleteAccount" : function(el) {
               simplyApp.actions.deleteAccount()
               .then(function() {
                 document.location.hash = "delete-account-sent";
               })
             },
+            // component/form-elements
             "autofocus" : function() {
               let autofocus = document.querySelector("[autofocus]");
               if (autofocus) {
                 autofocus.focus();
               }
             },
+            // component/header-toolbar
+            "login" : function(params) {
+                document.location.hash="login";
+            },
+            // component/header-toolbar
+            "register" : function(params) {
+                document.location.hash="register";
+            },
+            // component/login
             "loginDone" : function(el) {
               el.setAttribute("action", "/login/password");
               el.setAttribute("method", "POST");
               el.submit();
             //  document.location.hash = "login-done";
             },
+            // component/login
             "loginPassword" : function(el) {
               document.location.hash = "login-password";
               simplyApp.commands.autofocus();
             },
+            // component/register
             "registerCompleted" : function(el) {
-              document.location.href="/dashboard/";
+              document.location.href="/login/";
               simplyApp.commands.autofocus();
             },
+            // component/register
             "registerDone" : function(el) {
               simplyApp.actions.register()
               .then(function(result) {
@@ -682,10 +1480,12 @@
                 document.location.hash="#register-thanks";
               });
             },
+            // component/register
             "registerNext" : function(el) {
               document.location.hash="#register-password";
               simplyApp.commands.autofocus();
             },
+            // component/register
             "registerVerify" : function(el) {
               let entropyValid = simplyApp.actions.validatePasswordEntropy(editor.pageData.register.password);
               if (!entropyValid) {
@@ -697,6 +1497,7 @@
                 simplyApp.commands.autofocus();
               })
             },
+            // component/reset-password
             "changePassword" : function(el) {
               let entropyValid = simplyApp.actions.validatePasswordEntropy(editor.pageData.reset.password);
               if (!entropyValid) {
@@ -707,64 +1508,89 @@
                 document.location.hash = "reset-password-changed";
               })
             },
+            // component/reset-password
             "resetPassword" : function(el) {
               simplyApp.actions.sendPasswordReset()
               .then(function() {
                 document.location.hash = "reset-password-sent";
               })
             },
+            // component/sharing
             "cancel" : function(el) {
               document.location.href="#";
             },
+            // component/sharing
             "sharing" : function(el) {
               el.setAttribute("action", "/api/sharing");
               el.setAttribute("method", "POST");
               el.submit();
             },
-            "login" : function(el) {
+            // page/home
+            "navigateDeleteAccount" : function(el) {
+              document.location.pathname = "/account/delete/";
+            },
+            // page/home
+            "navigateLogin" : function(el) {
               document.location.pathname = "/login/";
             },
-            "register" : function(el) {
+            // page/home
+            "navigateRegister" : function(el) {
               document.location.pathname = "/register/";
+            },
+            // page/home
+            "navigateResetPassword" : function(el) {
+              document.location.pathname = "/reset-password/";
             }
           },
           /* /Commands */
           /* Routes */
           routes: {
+            // page/delete-account
             "/account/delete/confirm/#delete-account-done" : function(params) {
               editor.pageData.page = "delete-account-done";
             },
+            // page/delete-account
             "/account/delete/confirm/" : function(params) {
               editor.pageData.deleteAccountToken = new URL(document.location.href).searchParams.get('token');
               editor.pageData.page = "delete-account-confirm";
             },
+            // page/delete-account
             "/account/delete/#delete-account-sent" : function(params) {
               editor.pageData.page = "delete-account-sent";
             },
+            // page/delete-account
             "/account/delete/" : function(params) {
               editor.pageData.page = "delete-account";
             },
+            // page/login
             "/login/#login-done" : function(params) {
               editor.pageData.page = "login-done";
             },
+            // page/login
             "/login/#login-password" : function(params) {
               editor.pageData.page = "login-password";
             },
+            // page/register
             "/register/#register-password" : function(params) {
               editor.pageData.page = "register-password";
             },
+            // page/register
             "/register/#register-thanks" : function(params) {
               editor.pageData.page = "register-thanks";
             },
+            // page/register
             "/register/#register-verify" : function(params) {
               editor.pageData.page = "register-verify";
             },
+            // page/reset-password
             "/change-password/#reset-password-changed" : function(params) {
               editor.pageData.page = "reset-password-changed";
             },
+            // page/reset-password
             "/reset-password/#reset-password-sent" : function(params) {
               editor.pageData.page = "reset-password-sent";
             },
+            // page/login
             "/login/" : function(params) {
               editor.pageData.loginParams = {};
               let loginParams = ['response_type', 'display', 'scope', 'client_id', 'redirect_uri', 'state', 'nonce', 'request'];
@@ -773,22 +1599,28 @@
               });
               editor.pageData.page = "login";
             },
+            // page/logout
             "/goodbye" : function(params) {
               editor.pageData.page = "logout";
             },
+            // page/logout
             "/logout" : function(params) {
               editor.pageData.page = "logout";
             },
+            // page/register
             "/register/" : function(params) {
               editor.pageData.page = "register";
             },
+            // page/reset-password
             "/change-password/" : function(params) {
               editor.pageData.resetToken = new URL(document.location.href).searchParams.get('token');
               editor.pageData.page = "change-password";
             },
+            // page/reset-password
             "/reset-password/" : function(params) {
               editor.pageData.page = "reset-password";
             },
+            // page/sharing
             "/sharing" : function(params) {
               editor.pageData.sharingParams = {};
               let sharingParams = ['response_type', 'display', 'scope', 'client_id', 'redirect_uri', 'state', 'nonce', 'request', 'returnUrl'];
@@ -798,6 +1630,7 @@
               editor.pageData.appOrigin = new URL(document.location.href).searchParams.get("redirect_uri");
               editor.pageData.page = "sharing";
             },
+            // page/home
             "/" : function(params) {
               editor.pageData.page = "home";
             }
@@ -821,297 +1654,11 @@
     
     <!-- /Body HTML -->
     <!-- Component HTML templates -->
-    <template id="delete-account-confirm">
-      <section>
-      <h1>Verwijder je account</h1>
-      <form class="solid-form" data-simply-command="confirmDeleteAccount" action="#">
-        <p>Verwijder je account</p>
-        <p class="solid-hint">Wij verwijderen je account en alle informatie. Dit kan daarna niet ongedaan worden gemaakt.</p>
-        <button class="solid-button solid-button-primary">Verwijder mijn account</button>
-      </form>
-    </section>
-    </template>
-    <template id="delete-account-done">
-      <section>
-      <h1>Verwijder je account</h1>
-      <form class="solid-form">
-        <p class="solid-hint">Je account is verwijderd.</p>
-      </form>
-    </section>
-    </template>
-    <template id="delete-account-sent">
-      <section>
-      <h1>Verwijder je account</h1>
-      <form class="solid-form">
-        <p class="solid-hint">Volg de instructies in het e-mailbericht om je account te verwijderen.</p>
-      </form>
-    </section>
-    </template>
-    <template id="delete-account">
-      <section>
-      <h1>Verwijder je account</h1>
-      <form class="solid-form" data-simply-command="deleteAccount" action="#">
-        <p>Wat is je e-mail?</p>
-        <p class="solid-hint">Je ontvangt een link op je e-mailadres. Met die link kun je je account verwijderen.</p>
-        <div class="solid-form-group">
-          <input autofocus class="solid-input" data-simply-field="deleteAccount.email" type="text" placeholder="E-mailadres" required>
-        </div>
-        <button class="solid-button solid-button-primary">Volgende</button>
-      </form>
-    </section>
-    </template>
-    <template id="footer-form-buttons">
-      <div class="solid-footer-form-buttons">
-      <button class="solid-button solid-button-primary" data-simply-command="register">Gratis aanmelden</button>
-      <button class="solid-button solid-button-secondary" data-simply-command="login">Inloggen</button>
-    </div>
-    </template>
-    <template id="footer-form-explainer">
-      <div class="solid-footer-form-explainer">
-      <h1>Aanmelden of inloggen</h1>
-    </div>
-    </template>
-    <template id="footer-form">
-      <section class="solid-dark solid-section-main solid-footer-form">
-      <simply-render rel="footer-form-explainer"></simply-render>
-      <simply-render rel="footer-form-buttons"></simply-render>
-      <simply-render rel="footer-nav"></simply-render>
-    </section>
-    </template>
-    <template id="footer-nav">
-      <nav class="solid-footer-nav">
-      <ul>
-        <li>
-          &copy; 2024
-        </li>
-        <li>
-          <a href="#privacy">Privacybeleid</a>
-        </li>
-        <li>
-          <a href="#algemene-voorwaarden">Algemene voorwaarden</a>
-        </li>
-      </ul>
-    </nav>
-    
-    </template>
-    <template id="hint">
-      <form class="solid-form">
-      <p class="solid-hint">Hello world</p>
-    </form>
-    </template>
-    <template id="primary-button-dark">
-      <div class="solid-dark">
-      <button class="solid-button solid-button-primary">Button</button>
-    </div>
-    </template>
-    <template id="primary-button-light">
-      <div class="solid-light">
-      <button class="solid-button solid-button-primary">Button</button>
-    </div>
-    </template>
-    <template id="secondary-button-dark">
-      <div class="solid-dark">
-      <button class="solid-button id-button-secondary">Button</button>
-    </div>
-    </template>
-    <template id="secondary-button-light">
-      <div class="solid-light">
-      <button class="solid-button solid-button-secondary">Button</button>
-    </div>
-    </template>
-    <template id="header-clean">
-      <header class="solid-header">
-      <simply-render rel="header-logo"></simply-render>
-    </header>
-    </template>
-    <template id="header-logo">
-      <div class="solid-header-logo">
-      <a href="/"><simply-render rel="logo"></simply-render></a>
-    </div>
-    </template>
-    <template id="header-nav">
-      <nav class="solid-header-nav">
-      <ul>
-        <!-- li>
-          <a href="#faq">Veelgestelde vragen</a>
-        </li -->
-        <li>
-          <button class="solid-button solid-button-secondary" data-simply-command="login">Inloggen</button>
-        </li>
-      </ul>
-    </nav>
-    
-    </template>
+    <!-- component/header-->
     <template id="header">
-      <header class="solid-header">
-      <simply-render rel="header-logo"></simply-render>
-      <simply-render rel="header-nav"></simply-render>
-    </header>
+      <simply-render rel="simply-toolbar"></simply-render>
     </template>
-    <template id="login-password">
-      <section>
-      <h1>Inloggen</h1>
-      <form class="solid-form" data-simply-command="loginDone" action="#">
-        <input autofocus class="solid-input" name="password" data-simply-field="login.password" type="password" placeholder="Wachtwoord" required>
-        <input type="hidden" name="username" data-simply-field="login.email">
-        <input type="hidden" name="response_type" data-simply-field="loginParams.response_type">
-        <input type="hidden" name="display" data-simply-field="loginParams.display">
-        <input type="hidden" name="scope" data-simply-field="loginParams.scope">
-        <input type="hidden" name="client_id" data-simply-field="loginParams.client_id">
-        <input type="hidden" name="redirect_uri" data-simply-field="loginParams.redirect_uri">
-        <input type="hidden" name="state" data-simply-field="loginParams.state">
-        <input type="hidden" name="nonce" data-simply-field="loginParams.nonce">
-        <input type="hidden" name="request" data-simply-field="loginParams.request">
-        <button class="solid-button solid-button-primary">Inloggen</button>
-      </form>
-    </section>
-    </template>
-    <template id="login">
-      <section>
-      <h1>Inloggen</h1>
-      <form class="solid-form" data-simply-command="loginPassword" action="#">
-        <input autofocus class="solid-input" data-simply-field="login.email" type="text" placeholder="E-mailadres" required>
-        <button class="solid-button solid-button-primary">Volgende</button>
-      </form>
-    </section>
-    </template>
-    <template id="main-form-buttons">
-      <div class="solid-form">
-      <button class="solid-button solid-button-primary" data-simply-command="register">Registeren</button>
-      <button class="solid-button solid-button-secondary" data-simply-command="login">Inloggen</button>
-    </div>
-    </template>
-    <template id="main-form-explainer">
-      <h1>Maak je eigen online identiteit</h1>
-    <p>Met je eigen Solid Identity log je gemakkelijk in op diverse sites.</p>
-    </template>
-    <template id="main-form">
-      <section class="solid-form">
-      <simply-render rel="main-form-explainer"></simply-render>
-      <simply-render rel="main-form-buttons"></simply-render>
-    </section>
-    
-    </template>
-    <template id="register-password">
-      <section>
-      <h1>Registreren</h1>
-      <form class="solid-form" data-simply-command="registerVerify" action="#">
-        <p>Kies je wachtwoord</p>
-        <input type="hidden" data-simply-field="register.email">
-        <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="register.password" type="password" placeholder="Wachtwoord" required>
-        <button class="solid-button solid-button-primary">Opslaan</button>
-      </form>
-    </section>
-    </template>
-    <template id="register-thanks">
-      <section>
-      <h1>Je identiteit is klaar voor gebruik!</h1>
-      <p>Je ontvangt ook een e-mailbericht met deze informatie. Je WebID is:</p>
-      <h2 data-simply-field="createdWebId"></h2>
-      <form action="#" class="solid-form" data-simply-command="registerCompleted">
-        <button class="solid-button solid-button-primary">Verder</button>
-      </form>
-    </section>
-    </template>
-    <template id="register-verify">
-      <section>
-      <h1>Voer je code in</h1>
-      <form class="solid-form" data-simply-command="registerDone" action="#">
-        <p>We hebben je een code gemailed. Voer deze code in om je registratie af te ronden.</p>
-        <input autofocus class="solid-input" data-simply-field="register.confirm" type="text" placeholder="xxxxxx" required>
-        <button class="solid-button solid-button-primary">Verifieer</button>
-      </form>
-    </section>
-    </template>
-    <template id="register">
-      <section>
-      <h1>Registreren</h1>
-      <form class="solid-form" data-simply-command="registerNext" action="#">
-        <p>Wat is je e-mail?</p>
-        <div class="solid-form-group">
-          <input autofocus class="solid-input" data-simply-field="register.email" type="text" placeholder="E-mailadres" required>
-        </div>
-        <button class="solid-button solid-button-primary">Volgende</button>
-      </form>
-    </section>
-    </template>
-    <template id="change-password">
-      <section>
-      <h1>Wachtwoordherstel</h1>
-      <form class="solid-form" data-simply-command="changePassword" action="#">
-        <p>Voer je nieuwe wachtwoord in</p>
-        <div class="solid-form-group">
-          <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="reset.password" type="password" placeholder="Wachtwoord" required>
-        </div>
-        <button class="solid-button solid-button-primary">Volgende</button>
-      </form>
-    </section>
-    </template>
-    <template id="reset-password-changed">
-      <section>
-      <h1>Wachtwoordherstel</h1>
-      <form class="solid-form" action="#">
-        <p class="solid-hint">Je wachtwoord is aangepast!</p>
-      </form>
-    </section>
-    </template>
-    <template id="reset-password-sent">
-      <section>
-      <h1>Wachtwoordherstel</h1>
-      <form class="solid-form">
-        <p class="solid-hint">Volg de instructies in het e-mailbericht om je wachtwoord te herstellen.</p>
-      </form>
-    </section>
-    </template>
-    <template id="reset-password">
-      <section>
-      <h1>Wachtwoordherstel</h1>
-      <form class="solid-form" data-simply-command="resetPassword" action="#">
-        <p class="solid-hint">Je ontvangt een link op je e-mailadres. Met die link kun je een nieuw wachtwoord invoeren.</p>
-        <div class="solid-form-group">
-          <input autofocus class="solid-input" data-simply-field="reset.email" type="text" placeholder="E-mailadres" required>
-        </div>
-        <button class="solid-button solid-button-primary">Volgende</button>
-      </form>
-    </section>
-    </template>
-    <template id="sharing">
-      <section>
-      <h1>Toegang tot je pod verlenen voor <span data-simply-field="appOrigin" data-simply-transformer="appOrigin"></span>?</h1>
-      <form class="solid-form" data-simply-command="sharing" action="#">
-      <p>Bepaal welke toegang anderen hebben op jouw data</p>
-        <p><strong data-simply-field="appOrigin" data-simply-transformer="appOrigin"></strong> krijgt toestemming in jouw pod:</p>
-        <label>
-          <input type="checkbox" name="access_mode" value="Read" checked>
-          Lezen van alle gegevens
-        </label>
-        <label>
-          <input type="checkbox" name="access_mode" value="Append" checked>
-          Gegevens toevoegen
-        </label>
-    	<label>    
-          <input type="checkbox" name="access_mode" value="Write" checked>
-          Bestaande gegevens wijzigen of verwijdren
-        </label>
-        <label>
-            <input type="checkbox" name="access_mode" value="Control">
-            Anderen toegang geven of ontzeggen op mijn pod
-        </label>
-        <input type="hidden" name="response_type" data-simply-field="sharingParams.response_type">
-        <input type="hidden" name="display" data-simply-field="sharingParams.display">
-        <input type="hidden" name="scope" data-simply-field="sharingParams.scope">
-        <input type="hidden" name="client_id" data-simply-field="sharingParams.client_id">
-        <input type="hidden" name="redirect_uri" data-simply-field="sharingParams.redirect_uri">
-        <input type="hidden" name="state" data-simply-field="sharingParams.state">
-        <input type="hidden" name="nonce" data-simply-field="sharingParams.nonce">
-        <input type="hidden" name="request" data-simply-field="sharingParams.request">
-        <input type="hidden" name="returnUrl" data-simply-field="sharingParams.returnUrl">
-        <input type="hidden" name="consent" value="true">
-        <button class="solid-button solid-button-primary">Toegang verlenen</button>
-        <button data-simply-command="cancel" class="solid-button solid-button-secondary">Annuleren</button>
-      </form>
-    </section>
-    </template>
+    <!-- component/simply-logo-->
     <template id="logo">
       <svg viewbox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
       <style type="text/css">
@@ -1128,6 +1675,16 @@
           fill: var(--simply-logo-color-primary);
           text-anchor: middle;
         }
+        .simply-logo-text {
+          font-family: Cocon;
+          font-size: 143px;
+          letter-spacing: -7px;
+          color: var(--simply-logo-color-primary);
+          text-align: center;
+          vertical-align: middle;
+          height: 200px;
+          margin-top: 50px;
+        }
       </style>
       <g class="simply">
         <path fill="black" id="s" d="m74.400002,87.400002c-16.200005,-2.599998 -21.400002,-3.800003 -21.400002,-9.599998c0,-4.100006 2.900002,-9 16.800003,-9c9.099998,0 17.299995,1.899994 23.599998,5.299995l0,-4.299995c0,-10.700005 -10.099998,-17.200005 -27,-17.200005c-17,0 -35.300003,8.599998 -35.300003,27.400002c0,11.5 6.300003,17.599998 20.5,19.599998c16.599998,2.300003 21.400002,4 21.400002,10.300003c0,9.099998 -11.900002,9.099998 -16.300003,9.099998c-11,0 -18.599998,-2.699997 -23.699997,-5.5l0,4c0,4.399994 0,17.800003 28.199997,17.800003c21,0 34.100006,-10.199997 34.100006,-26.5c0.099991,-14.800003 -11.300003,-19.800003 -20.900002,-21.400002z" class="st0"/>
@@ -1137,132 +1694,461 @@
         <path id="l" d="m400.799988,103.699997l0,-60.199997c0,-12.200001 -4.600006,-17.200001 -15.899994,-17.200001l-7.5,0l0,81.600002c0,19.200005 13.299988,26.099998 25.799988,26.099998c4.800018,0 16.100006,-1 16.100006,-10.699997l0,-7.300003l-3.700012,0c-6.399963,0 -14.799988,-1.300003 -14.799988,-12.300003z" class="st0"/>
         <path fill="black" id="y" d="m483,55l-11.399994,0c-2.100006,15.800003 -8.300018,37.099998 -14.399994,49.5l-2.5,5.099998l-2.200012,-5.199997c-4.5,-10.300003 -10.299988,-26.599998 -13.100006,-39.700005c-1.399994,-6.399994 -7.899994,-9.699997 -13.600006,-9.699997l-11.799988,0c4,21.400002 17.799988,56.099998 29.600006,73.600006l0.799988,1.199997l-0.600006,1.300003c-3.5,8 -8.099976,11.299988 -16.199982,12l-10,0.699997l0,4.5c0,8.599991 7.699982,11.699997 14.299988,11.699997c16.100006,0 21.300018,-3.800003 44.200012,-47.800003c9.300018,-17.799995 16.800018,-41.5 16.800018,-49.299995c-0.300049,-3.300003 -1.300049,-7.900002 -9.900024,-7.900002z" class="st0"/>
       </g>
-      <text x="50%" y="276">
-        me
-      </text>
+      <foreignobject x="0" y="180" width="520" height="300">
+        <div class="simply-logo-text"><simply-render rel="logotext"></simply-render></div>
+      </foreignobject>
     </svg>
+    </template>
+    <!-- component/simply-logo-->
+    <template id="logotext">
+      identify
+    </template>
+    <!-- component/delete-account-->
+    <template id="delete-account-confirm">
+      <section class="solid-form">
+      <h1>Delete your account</h1>
+      <form class="solid-form" data-simply-command="confirmDeleteAccount" action="#">
+        <p class="solid-hint">We will remove your account and all information. This cannot be undone.</p>
+        <button class="solid-button solid-button-primary">
+          <h1>Delete my account</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/delete-account-->
+    <template id="delete-account-done">
+      <section class="solid-form">
+      <h1>Delete your account</h1>
+      <form class="solid-form">
+        <p class="solid-hint">Your account has been deleted.</p>
+      </form>
+    </section>
+    </template>
+    <!-- component/delete-account-->
+    <template id="delete-account-sent">
+      <section class="solid-form">
+      <h1>Delete your account</h1>
+      <form class="solid-form">
+        <p class="solid-hint">Follow the instructions in your e-mail to delete your account.</p>
+      </form>
+    </section>
+    </template>
+    <!-- component/delete-account-->
+    <template id="delete-account">
+      <section class="solid-form">
+      <h1>Delete your account</h1>
+      <form class="solid-form" data-simply-command="deleteAccount" action="#">
+        <p class="solid-hint">You will receive a link in your e-mail. Use that link to delete your account.</p>
+        <div class="solid-form-group">
+          <input autofocus class="solid-input" data-simply-field="deleteAccount.email" type="text" placeholder="E-mail address" required>
+        </div>
+        <button class="solid-button solid-button-primary">
+          <h1>Next</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/form-elements-->
+    <template id="hint">
+      <form class="solid-form">
+      <p class="solid-hint">Hello world</p>
+    </form>
+    </template>
+    <!-- component/form-elements-->
+    <template id="primary-button-dark">
+      <div class="solid-dark">
+      <button class="solid-button solid-button-primary">Button</button>
+    </div>
+    </template>
+    <!-- component/form-elements-->
+    <template id="primary-button-light">
+      <div class="solid-light">
+      <button class="solid-button solid-button-primary">Button</button>
+    </div>
+    </template>
+    <!-- component/form-elements-->
+    <template id="secondary-button-dark">
+      <div class="solid-dark">
+      <button class="solid-button id-button-secondary">Button</button>
+    </div>
+    </template>
+    <!-- component/form-elements-->
+    <template id="secondary-button-light">
+      <div class="solid-light">
+      <button class="solid-button solid-button-secondary">Button</button>
+    </div>
+    </template>
+    <!-- component/header-toolbar-->
+    <template id="simply-toolbar-default">
+      <div class="simply-toolbar-title" data-simply-command="home">
+      <simply-render rel="logo"></simply-render>
+    </div>
+    <button class="ds-button simply-toolbar-button" data-simply-command="navigateLogin">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/img/feather-sprite.svg#log-in">
+        </use></svg>
+      Login
+    </button>
+    <button class="ds-button simply-toolbar-button" data-simply-command="navigateRegister">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/img/feather-sprite.svg#user-plus">
+        </use></svg>
+      Register
+    </button>
+    <span class="simply-toolbar-push-right"></span>
+    <button class="ds-button simply-toolbar-button" data-simply-command="navigateResetPassword">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/img/feather-sprite.svg#meh">
+        </use></svg>
+      Reset password
+    </button>
+    <button class="ds-button simply-toolbar-button" data-simply-command="navigateDeleteAccount">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/img/feather-sprite.svg#user-x">
+        </use></svg>
+      Delete account
+    </button>
+    
+    </template>
+    <!-- component/header-toolbar-->
+    <template id="simply-toolbar">
+      <nav class="simply-toolbar simply-toolbar-main" data-simply-field="page" data-simply-content="template" data-simply-default-template="default" data-simply-default-value="default">
+      <template data-simply-template="default" rel="simply-toolbar-default"></template>
+    </nav>
+    </template>
+    <!-- component/login-->
+    <template id="login-password">
+      <section class="solid-form">
+      <h1>Log in</h1>
+      <form class="solid-form" data-simply-command="loginDone" action="#">
+        <input autofocus class="solid-input" name="password" data-simply-field="login.password" type="password" placeholder="Password" required>
+        <input type="hidden" name="username" data-simply-field="login.email">
+        <input type="hidden" name="response_type" data-simply-field="loginParams.response_type">
+        <input type="hidden" name="display" data-simply-field="loginParams.display">
+        <input type="hidden" name="scope" data-simply-field="loginParams.scope">
+        <input type="hidden" name="client_id" data-simply-field="loginParams.client_id">
+        <input type="hidden" name="redirect_uri" data-simply-field="loginParams.redirect_uri">
+        <input type="hidden" name="state" data-simply-field="loginParams.state">
+        <input type="hidden" name="nonce" data-simply-field="loginParams.nonce">
+        <input type="hidden" name="request" data-simply-field="loginParams.request">
+        <button class="solid-button solid-button-primary">
+          <h1>Log in</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/login-->
+    <template id="login">
+      <section class="solid-form">
+      <h1>Log in</h1>
+      <form class="solid-form" data-simply-command="loginPassword" action="#">
+        <input autofocus class="solid-input" data-simply-field="login.email" type="text" placeholder="E-mail address" required>
+        <button class="solid-button solid-button-primary">
+          <h1>Next</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/main-form-->
+    <template id="main-form-buttons">
+      <div class="solid-form">
+      <button class="solid-button solid-button-primary" data-simply-command="navigateRegister">
+        <h1>Register</h1>
+        <p>Create a new account</p>
+      </button>
+      <button class="solid-button solid-button-primary" data-simply-command="navigateLogin">
+        <h1>Log in</h1>
+        <p>Use your existing account</p>
+      </button>
+    </div>
+    </template>
+    <!-- component/main-form-->
+    <template id="main-form">
+      <section class="solid-form">
+      <h1>Welcome to Solid</h1>
+      <simply-render rel="main-form-buttons"></simply-render>
+    </section>
+    
+    </template>
+    <!-- component/register-->
+    <template id="register-password">
+      <section class="solid-form">
+      <h1>Register</h1>
+      <form class="solid-form" data-simply-command="registerVerify" action="#">
+        <input type="hidden" data-simply-field="register.email">
+        <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="register.password" type="password" placeholder="Choose your password" required>
+        <button class="solid-button solid-button-primary">
+          <h1>Next</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/register-->
+    <template id="register-thanks">
+      <section class="solid-form">
+      <h1>Welcome to Solid</h1>
+      <p>Your identity is ready to use</p>
+      <h2 data-simply-field="createdWebId"></h2>
+      <form action="#" class="solid-form" data-simply-command="registerCompleted">
+        <button class="solid-button solid-button-primary">
+          <h1>Continue</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/register-->
+    <template id="register-verify">
+      <section class="solid-form">
+      <h1>Verify your e-mail</h1>
+      <form class="solid-form" data-simply-command="registerDone" action="#">
+        <p>Enter the code in your email to finish your registration</p>
+        <input autofocus class="solid-input" data-simply-field="register.confirm" type="text" placeholder="xxxxxx" required>
+        <button class="solid-button solid-button-primary">
+          <h1>Verify</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/register-->
+    <template id="register">
+      <section class="solid-form">  <h1>Register</h1>
+      <form class="solid-form" data-simply-command="registerNext" action="#">
+        <p>What is your e-mail?</p>
+        <div class="solid-form-group">
+          <input autofocus class="solid-input" data-simply-field="register.email" type="text" placeholder="E-mail address" required>
+        </div>
+        <button class="solid-button solid-button-primary">
+          <h1>Next</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/reset-password-->
+    <template id="change-password">
+      <section class="solid-form">
+      <h1>Reset password</h1>
+      <form class="solid-form" data-simply-command="changePassword" action="#">
+        <p>Enter your new password</p>
+        <div class="solid-form-group">
+          <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="reset.password" type="password" placeholder="Wachtwoord" required>
+        </div>
+        <button class="solid-button solid-button-primary">
+          <h1>Next</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/reset-password-->
+    <template id="reset-password-changed">
+      <section class="solid-form">
+      <h1>Reset password</h1>
+      <form class="solid-form" action="#">
+        <p class="solid-hint">Your password has been updated.</p>
+      </form>
+    </section>
+    </template>
+    <!-- component/reset-password-->
+    <template id="reset-password-sent">
+      <section class="solid-form">
+      <h1>Reset password</h1>
+      <form class="solid-form">
+        <p class="solid-hint">Follow the instructions in your e-mail to complete the password reset.</p>
+      </form>
+    </section>
+    </template>
+    <!-- component/reset-password-->
+    <template id="reset-password">
+      <section class="solid-form">
+      <h1>Reset password</h1>
+      <form class="solid-form" data-simply-command="resetPassword" action="#">
+        <p class="solid-hint">You will receive a link in your e-mail. Use the link to reset your password.</p>
+        <div class="solid-form-group">
+          <input autofocus class="solid-input" data-simply-field="reset.email" type="text" placeholder="E-mailadres" required>
+        </div>
+        <button class="solid-button solid-button-primary">
+          <h1>Next</h1>
+        </button>
+      </form>
+    </section>
+    </template>
+    <!-- component/sharing-->
+    <template id="sharing">
+      <section class="solid-form">
+      <h1>Allow access to your pod for <span data-simply-field="appOrigin" data-simply-transformer="appOrigin"></span>?</h1>
+      <form class="solid-form" data-simply-command="sharing" action="#">
+        <p>Choose what access others have on your data</p>
+        <p><strong data-simply-field="appOrigin" data-simply-transformer="appOrigin"></strong> will be allowed to:</p>
+        <label>
+          <input type="checkbox" name="access_mode" value="Read" checked>
+          Read all data
+        </label>
+        <label>
+          <input type="checkbox" name="access_mode" value="Append" checked>
+          Add data
+        </label>
+    	<label>    
+          <input type="checkbox" name="access_mode" value="Write" checked>
+          Update or remove existing data
+        </label>
+        <label>
+            <input type="checkbox" name="access_mode" value="Control">
+            Let others grant or deny access to my pod
+        </label>
+        <input type="hidden" name="response_type" data-simply-field="sharingParams.response_type">
+        <input type="hidden" name="display" data-simply-field="sharingParams.display">
+        <input type="hidden" name="scope" data-simply-field="sharingParams.scope">
+        <input type="hidden" name="client_id" data-simply-field="sharingParams.client_id">
+        <input type="hidden" name="redirect_uri" data-simply-field="sharingParams.redirect_uri">
+        <input type="hidden" name="state" data-simply-field="sharingParams.state">
+        <input type="hidden" name="nonce" data-simply-field="sharingParams.nonce">
+        <input type="hidden" name="request" data-simply-field="sharingParams.request">
+        <input type="hidden" name="returnUrl" data-simply-field="sharingParams.returnUrl">
+        <input type="hidden" name="consent" value="true">
+        <button class="solid-button solid-button-primary">
+          <h1>Grant access</h1>
+        </button>
+        <button data-simply-command="cancel" class="solid-button solid-button-secondary">
+          <h1>Cancel</h1>
+        </button>
+      </form>
+    </section>
     </template>
     <!-- /Component HTML templates -->
     <div class="main" data-simply-field="page" data-simply-content="template">
     <!-- Page HTML templates -->
+    <!-- page/delete-account-->
     <template data-simply-template="delete-account-confirm">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="delete-account-confirm"></simply-render>
     </main>
     </template>
+    <!-- page/delete-account-->
     <template data-simply-template="delete-account-done">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="delete-account-done"></simply-render>
     </main>
     </template>
+    <!-- page/delete-account-->
     <template data-simply-template="delete-account-sent">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="delete-account-sent"></simply-render>
     </main>
     </template>
+    <!-- page/delete-account-->
     <template data-simply-template="delete-account">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="delete-account"></simply-render>
     </main>
     </template>
+    <!-- page/home-->
     <template data-simply-template="home">
+      <main class="solid-main">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
       <simply-render rel="main-form"></simply-render>
     </main>
-    <footer class="solid-footer">
-      <!-- simply-render rel="footer-form"></simply-render -->
-    </footer>
+    
     </template>
+    <!-- page/login-->
     <template data-simply-template="login-done">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="login-done"></simply-render>
     </main>
     </template>
+    <!-- page/login-->
     <template data-simply-template="login-password">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="login-password"></simply-render>
     </main>
     </template>
+    <!-- page/login-->
     <template data-simply-template="login">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="login"></simply-render>
     </main>
     </template>
+    <!-- page/logout-->
     <template data-simply-template="logout">
       <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <section>
-        <h1>Je bent uitgelogd.</h1>
+        <h1>You have been logged out.</h1>
         <p>
-          Je kunt dit venster nu sluiten, of terugkeren naar de <a href="/">homepage</a>
+          You can close this window, or return to the <a href="/">home page</a>
         </p>
       </section>
     </main>
     
     </template>
+    <!-- page/register-->
     <template data-simply-template="register-password">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="register-password"></simply-render>
     </main>
     
     </template>
+    <!-- page/register-->
     <template data-simply-template="register-thanks">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="register-thanks"></simply-render>
     </main>
     
     </template>
+    <!-- page/register-->
     <template data-simply-template="register-verify">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="register-verify"></simply-render>
     </main>
     
     </template>
+    <!-- page/register-->
     <template data-simply-template="register">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="register"></simply-render>
     </main>
     
     </template>
+    <!-- page/reset-password-->
     <template data-simply-template="change-password">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="change-password"></simply-render>
     </main>
     </template>
+    <!-- page/reset-password-->
     <template data-simply-template="reset-password-changed">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="reset-password-changed"></simply-render>
     </main>
     </template>
+    <!-- page/reset-password-->
     <template data-simply-template="reset-password-sent">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="reset-password-sent"></simply-render>
     </main>
     </template>
+    <!-- page/reset-password-->
     <template data-simply-template="reset-password">
-      <simply-render rel="header-clean"></simply-render>
+      <simply-render rel="header"></simply-render>
     <main class="solid-main">
       <simply-render rel="reset-password"></simply-render>
     </main>
     </template>
+    <!-- page/sharing-->
     <template data-simply-template="sharing">
-      <simply-render rel="header-clean"></simply-render>
-    <main class="solid-main">
+      <main class="solid-main-wide">
       <simply-render rel="sharing"></simply-render>
     </main>
     </template>
@@ -1273,13 +2159,14 @@
     <script>
       /* Transformers */
       editor.transformers = {
+        // component/password-entropy
         "validateEntropy" : {
           render : function(data) {
             if (!this.entropyChecker) {
               this.entropyChecker = this.addEventListener("input", function() {
                 let entropyValid = simplyApp.actions.validatePasswordEntropy(this.value);
                 if (!entropyValid) {
-                  this.setCustomValidity("Maak een sterk wachtwoord. Gebruik meer verschillende en speciale tekens.");
+                  this.setCustomValidity("Please use a stronger password. Make it longer or add more special characters.");
                 } else {
                   this.setCustomValidity("");
                 }
@@ -1291,6 +2178,7 @@
             return data;
           }
         },
+        // component/sharing
         "appOrigin" : {
           render : function(data) {
             this.originalData = data;
@@ -1321,7 +2209,7 @@
       });
     </script>
     <!-- Foot HTML -->
-    <!-- password-input -->
+    <!-- password-input (baseComponent/password-input) -->
     <script>
       editor.field.registerType(
     	"input[type=password]",
@@ -1334,7 +2222,7 @@
     	null
     );
     </script>
-    <!-- postmessage -->
+    <!-- postmessage (baseComponent/postmessage) -->
     <script>
       document.addEventListener("simply-data-changed", function(event) {
         if (
