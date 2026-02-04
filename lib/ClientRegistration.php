@@ -5,6 +5,10 @@
 
 	class ClientRegistration {
 		public static function getRegistration($clientId) {
+			if (preg_match("/^http(s)?:/", $clientId)) {
+				return self::getRemoteRegistration($clientId);
+			}
+
 			Db::connect();
 			$query = Db::$pdo->prepare(
 				'SELECT clientData FROM clients WHERE clientId=:clientId'
@@ -18,7 +22,19 @@
 			}
 			return false;
 		}
-		
+
+		public static function getRemoteRegistration($url) {
+			$clientDocument = file_get_contents($url);
+			$clientRegistration = json_decode($clientDocument, true);
+			if (!isset($clientRegistration['client_id'])) {
+				throw new \Exception("No client ID found in client document");
+			}
+			if (!isset($clientRegistration['redirect_uris'])) {
+				throw new \Exception("No redirect URIs found in client document");
+			}
+			return $clientRegistration;
+		}
+
 		public static function saveClientRegistration($clientData) {
 			Db::connect();
 			if (!isset($clientData['client_name'])) {

@@ -68,7 +68,7 @@
 				$approval = true;
 			} else {
 				$clientRegistration = ClientRegistration::getRegistration($clientId);
-				if (in_array($clientRegistration['origin'], TRUSTED_APPS)) {
+				if (isset($clientRegistration['origin']) && in_array($clientRegistration['origin'], TRUSTED_APPS)) {
 					$approval = true;
 				}
 			}
