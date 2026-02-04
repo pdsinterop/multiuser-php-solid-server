@@ -1395,6 +1395,7 @@
             },
             // component/register
             "verifyEmail" : async function() {
+              localStorage['registerData'] = JSON.stringify(editor.pageData.register);
               let verifyParams = {
                 "email" : editor.pageData.register.email
               }
@@ -1476,6 +1477,7 @@
             "registerDone" : function(el) {
               simplyApp.actions.register()
               .then(function(result) {
+                localStorage.removeItem('registerData');
                 editor.pageData.createdWebId = result.webId;
                 document.location.hash="#register-thanks";
               });
@@ -1580,6 +1582,10 @@
             },
             // page/register
             "/register/#register-verify" : function(params) {
+              let registerData = JSON.parse(localStorage['registerData']);
+              if (registerData) {
+            	editor.pageData.register = registerData;
+              }
               editor.pageData.page = "register-verify";
             },
             // page/reset-password
