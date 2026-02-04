@@ -17,8 +17,10 @@
 		}
 
 		public function send($path, $type) {
+			ob_start();
 			foreach ($this->notifications as $notification) {
 				$notification->send($path, $type);
 			}
+			ob_end_clean();
 		}
 	}
