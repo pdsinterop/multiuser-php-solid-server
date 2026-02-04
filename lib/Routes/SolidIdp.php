@@ -204,6 +204,15 @@
 				);
 			}
 
-			Server::respond($response);
+			// Hack for podpro
+			if (PODPRO_COMPATIBILITY && strstr($clientId, "podpro.dev")) {
+				$response->getBody()->rewind();
+				$responseBody = $response->getBody()->getContents();
+				$body = json_decode($responseBody, true);
+				$body['refresh_token'] = str_repeat('a', 209); // Podpro doesn't like refresh tokens longer than 209 characters; Sad.
+				Server::respondPodPro($response, $body);
+			} else {
+				Server::respond($response);
+			}
 		}
 	}

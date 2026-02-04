@@ -163,4 +163,21 @@
 			}
 			echo json_encode($body, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 		}
+
+		public static function respondPodPro($response, $body) {
+			$statusCode = $response->getStatusCode();
+			$response->getBody()->rewind();
+			$headers = $response->getHeaders();
+
+			header("HTTP/1.1 $statusCode");
+			foreach ($headers as $header => $values) {
+				foreach ($values as $value) {
+					if ($header == "Location") {
+						$value = preg_replace("|%26%2334%3B|", "%22", $value); // odoo weird encoding
+					}
+					header($header . ":" . $value);
+				}
+			}
+			echo json_encode($body, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+		}
 	}

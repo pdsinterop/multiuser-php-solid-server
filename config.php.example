@@ -6,6 +6,7 @@
 	const FRONTENDDIR = __DIR__ . "/frontend/";
 	const DBPATH = __DIR__ . "/db/solid.db";
 	const CLEANUP_FILE = __DIR__ . "/db/lastcleanup";
+	const PODPRO_COMPATIBILITY = false;
 
 	const MAILER = [
 		"host" => "mailpit",
