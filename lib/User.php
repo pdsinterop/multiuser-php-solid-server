@@ -7,8 +7,18 @@
 	class User {
 		private static function generateTokenCode() {
 			$digits = 6;
+
+			self::cleanupTokens();
+			$existingTokens = self::getExistingVerifyTokens();
+
 			$code = random_int(0,1000000);
 			$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
+
+			while (in_array($code, $existingTokens)) { // make sure we have no collissions;
+				$code = random_int(0,1000000);
+				$code = str_pad($code, $digits, '0', STR_PAD_LEFT);
+			}
+
 			return $code;
 		}
 
@@ -330,5 +340,15 @@
 			$query->execute([
 				':now' => $now->getTimestamp()
 			]);
+		}
+
+		public static function getExistingVerifyTokens() {
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'SELECT code FROM verify'
+			);
+			$query->execute();
+			$existingTokens = $query->fetchAll();
+			return $existingTokens;
 		}
 	}		

@@ -333,16 +333,11 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"hello" => "world",
 			"expires" => time() - 10
 		]);
-		$token2 = User::saveVerifyToken("verify", [
-			"hello" => "world",
-			"expires" => time() - 10
-		]);
 		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM verify');
 		$query->execute();
 		$result = $query->fetchAll();
 		$beforeCleanup = $result[0]['count'];
-		$this->assertEquals(2, $beforeCleanup);
-		
+		$this->assertEquals(1, $beforeCleanup);
 		User::cleanupTokens();
 		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM verify');
 		$query->execute();
