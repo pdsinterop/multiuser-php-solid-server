@@ -27,7 +27,7 @@
 
 		public static function respondToDashboard() {
 			$user = User::getUser(Session::getLoggedInUser());
-			echo "Logged in as " . $user['webId'];
+			include_once(FRONTENDDIR . "bootloader.html");
 		}
 
 		public static function respondToLogout() {
@@ -170,8 +170,9 @@
 			}
 			if (User::checkPassword($_POST['username'], $_POST['password'])) {
 				Session::start($_POST['username']);
+				$user = User::getUser($_POST['username']);
 				if (!isset($_POST['redirect_uri']) || $_POST['redirect_uri'] === '') {
-					header("Location: /dashboard/");
+					header("Location: /dashboard/#webId=" . urlencode($user['webId']));
 					exit();
 				}
 				header("Location: " . urldecode($_POST['redirect_uri'])); // FIXME: Do we need to harden this?

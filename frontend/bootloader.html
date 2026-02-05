@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <!-- Component CSS -->
+    <style>
+      
+    </style>
+    <!-- /Component CSS -->
+    <!-- Page CSS -->
+    <style>
+      
+    </style>
+    <!-- /Page CSS -->
+    <!-- Head HTML -->
+    
+    <!-- /Head HTML -->
+    <script>
+      var simplyDataApi = {};
+      var simplyApp = {};
+      window.addEventListener("simply-content-loaded", function() {
+        simply.bind = false;
+        /* Raw API */
+        var simplyRawApi = {
+          
+        };
+        /* End of Raw API */
+        /* Data API */
+        simplyDataApi = {
+          
+        };
+        /* End of Data API */
+        simplyApp = simply.app({
+          /* Actions */
+          actions: {
+            
+          },
+          /* /Actions */
+          /* Commands */
+          commands: {
+            
+          },
+          /* /Commands */
+          /* Keyboard shortcuts */
+          keyboard: {
+            
+          },
+          /* /Keyboard shortcuts */
+          /* Routes */
+          routes: {
+            // page/home
+            "/" : function(params) {
+              document.location.href="https://solid-launcher.dev.muze.nl/";
+            }
+          }
+          /* /Routes */
+        });
+      });
+      function clone(ob) {
+        return JSON.parse(JSON.stringify(ob));
+      }
+      function updateDataSource(name) {
+        document.querySelectorAll('[data-simply-data="'+name+'"]').forEach(function(list) {
+          editor.list.applyDataSource(list, name);
+          list.dataBindingPaused = 0;
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Body HTML -->
+    
+    <!-- /Body HTML -->
+    <!-- Component HTML templates -->
+    
+    <!-- /Component HTML templates -->
+    <div class="main" data-simply-field="page" data-simply-content="template">
+    <!-- Page HTML templates -->
+    
+    <!-- /Page HTML templates -->
+    </div>
+    <script src="js/simply.everything.js"></script>
+    <script src="js/simply-edit.js" data-simply-storage="none" data-api-key="muze"></script>
+    <script>
+      /* Transformers */
+      editor.transformers = {
+        
+      };
+      /* /Transformers */
+    </script>
+    <script>
+      /* Sorters */
+      editor.sorters = {
+        
+      };
+      /* /Sorters */
+    </script>
+    <script>
+      window.addEventListener("simply-content-loaded", function() {
+        /* Data sources */
+        
+        /* /Data sources */
+      });
+    </script>
+    <!-- Foot HTML -->
+    
+    <!-- /Foot HTML -->
+  </body>
+</html>
