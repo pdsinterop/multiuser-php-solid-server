@@ -39,6 +39,7 @@
 	];
 
 	const STORAGEBASE = __DIR__ . "/pods/";
+	const PROFILEBASE = __DIR__ . "/profiles/";
 
 	const PUBSUB_SERVER = "wss://pubsub:8080";
 
