@@ -38,7 +38,7 @@
 :me
     a schema:Person, foaf:Person;
     ldp:inbox inbox:;
-    space:preferencesFile <{$user['storage']}settings/prefs.ttl>;
+    space:preferencesFile <{$user['storage']}settings/preferences.ttl>;
     space:storage <{$user['storage']}>;
     solid:account <{$user['storage']}>;
     solid:oidcIssuer <{$user['issuer']}>;
