@@ -22,7 +22,7 @@ Note: Update the values in the config.php file where needed befure running the i
 ```sh
 docker exec -w /opt/solid/ solid cp config.php.example config.php
 docker exec -u www-data -i -w /opt/solid/ solid php init.php
-docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods db
+docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods profiles db
 ```
 
 ### DNS gotcha and snake oil certificate
