@@ -101,7 +101,9 @@
     a acl:Authorization;
     acl:agentClass foaf:Agent;
     acl:accessTo <./>;
-	acl:mode acl:Read.
+    # All resources will inherit this authorization, by default
+    acl:default <./>;
+    acl:mode acl:Read.
 
 # The owner has full access to every resource in their pod.
 # Other agents have no access rights,
@@ -123,7 +125,7 @@ EOF;
 		public static function generateDefaultProfile() {
 			$user = self::getOwner();
 			if (!isset($user['storage']) || !$user['storage']) {
-				$user['storage'] = "https://storage-" . $userId . "." . BASEDOMAIN . "/";
+				$user['storage'] = "https://storage-" . self::getProfileId() . "." . BASEDOMAIN . "/";
 			}
 			if (is_array($user['storage'])) { // empty array is already handled
 				$user['storage'] = array_values($user['storage'])[0]; // FIXME: Handle multiple storage pods
