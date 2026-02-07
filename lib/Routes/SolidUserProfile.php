@@ -30,7 +30,8 @@
 			$resourceServer->setBaseUrl($baseUrl);
 			$wac->setBaseUrl($baseUrl);
 
-			$webId = ProfileServer::getWebId($rawRequest);
+			// use the original $_SERVER without modified path, otherwise the htu check for DPOP will fail
+			$webId = ProfileServer::getWebId($requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES));
 
 			if (!isset($webId)) {
 				$response = $resourceServer->getResponse()
