@@ -13,9 +13,11 @@
 	class SolidUserProfile {
 		public static function respondToProfile() {
 			$requestFactory = new ServerRequestFactory();
-			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			$serverData = $_SERVER;
+			$serverData['REQUEST_URI'] = "/profile.ttl"; // Hardcoded so we can only ever return profile.ttl
 
-			ProfileServer::initializeStorage();
+			$rawRequest = $requestFactory->fromGlobals($serverData, $_GET, $_POST, $_COOKIE, $_FILES);
+			ProfileServer::initializeProfile();
 			$filesystem = ProfileServer::getFileSystem();
 
 			$resourceServer = new ResourceServer($filesystem, new Response(), null);
