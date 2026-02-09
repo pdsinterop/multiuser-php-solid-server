@@ -16,6 +16,7 @@
 	switch($method) {
 		case "GET":
 		case "PUT":
+		case "PATCH":
 			SolidUserProfile::respondToProfile();
 		break;
 		case "OPTIONS":
