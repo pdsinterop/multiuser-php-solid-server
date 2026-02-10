@@ -33,8 +33,8 @@ function startSolidPhp {
   docker run -d --name "$1" --network-alias="id-alice.solid" --network-alias="storage-alice.solid" --network-alias="id-bob.solid" --network-alias="storage-bob.solid" --network=local "${2:-solid-php}"
 
   echo "Running init script for Solid PHP $1 ..."
-  docker exec -w /opt/solid/ "$1" mkdir keys pods db
-  docker exec -w /opt/solid/ "$1" chown -R www-data:www-data keys pods db
+  docker exec -w /opt/solid/ "$1" mkdir keys pods profiles db
+  docker exec -w /opt/solid/ "$1" chown -R www-data:www-data keys pods profiles db
   docker exec -w /opt/solid/ "$1" cp tests/testsuite/config.php.testsuite config.php
   docker exec -u www-data -i -w /opt/solid/ "$1" php init.php
   docker exec -u www-data -i -w /opt/solid/ "$1" php tests/testsuite/init-testsuite.php

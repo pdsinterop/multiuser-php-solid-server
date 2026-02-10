@@ -22,6 +22,7 @@
 	const PUBSUB_SERVER = "https://pubsub:8080";
 
 	const STORAGEBASE = __DIR__ . "/pods/";
+	const PROFILEBASE = __DIR__ . "/profiles/";
 	const TRUSTED_IPS = [];
 	const TRUSTED_APPS = ['https://tester', 'http://localhost:3002'];
 

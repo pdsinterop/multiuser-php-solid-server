@@ -15,16 +15,15 @@
 
 	switch($method) {
 		case "GET":
-			switch ($request) {
-				case "/":
-					SolidUserProfile::respondToProfile();
-				break;
-			}
+		case "PUT":
+		case "PATCH":
+			SolidUserProfile::respondToProfile();
 		break;
 		case "OPTIONS":
+			echo "OK";
+			return;
 		break;
 		case "POST":
-		case "PUT":
 		default:
 			header($_SERVER['SERVER_PROTOCOL'] . " 405 Method not allowed");
 		break;

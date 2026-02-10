@@ -1,52 +1,76 @@
 <?php
 	namespace Pdsinterop\PhpSolid\Routes;
 
-	use Pdsinterop\PhpSolid\User;
+	use Pdsinterop\PhpSolid\ProfileServer;
+	use Pdsinterop\PhpSolid\ClientRegistration;
+	use Pdsinterop\PhpSolid\SolidNotifications;
 	use Pdsinterop\PhpSolid\Util;
+	use Pdsinterop\Solid\Auth\WAC;
+	use Pdsinterop\Solid\Resources\Server as ResourceServer;
+	use Laminas\Diactoros\ServerRequestFactory;
+	use Laminas\Diactoros\Response;
 
 	class SolidUserProfile {
 		public static function respondToProfile() {
-			$serverName = Util::getServerName();
-			[$idPart, $rest] = explode(".", $serverName, 2);
-			$userId = preg_replace("/^id-/", "", $idPart);
+			$requestFactory = new ServerRequestFactory();
+			$serverData = $_SERVER;
 
-			$user = User::getUserById($userId);
-			if (!isset($user['storage']) || !$user['storage']) {
-				$user['storage'] = "https://storage-" . $userId . "." . BASEDOMAIN . "/";
+			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			ProfileServer::initializeProfile();
+			$filesystem = ProfileServer::getFileSystem();
+
+			$resourceServer = new ResourceServer($filesystem, new Response(), null);
+			$solidNotifications = new SolidNotifications();
+			$resourceServer->setNotifications($solidNotifications);
+
+			$wac = new WAC($filesystem);
+
+			$baseUrl = Util::getServerBaseUrl();
+			$resourceServer->setBaseUrl($baseUrl);
+			$resourceServer->lockToPath("/profile.ttl");
+			$wac->setBaseUrl($baseUrl);
+
+			// use the original $_SERVER without modified path, otherwise the htu check for DPOP will fail
+			$webId = ProfileServer::getWebId($requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES));
+
+			if (!isset($webId)) {
+				$response = $resourceServer->getResponse()
+					->withStatus(409, "Invalid token");
+				ProfileServer::respond($response);
+				exit();
 			}
-			if (is_array($user['storage'])) { // empty array is already handled
-				$user['storage'] = array_values($user['storage'])[0]; // FIXME: Handle multiple storage pods
+
+			$origin = $rawRequest->getHeaderLine("Origin");
+
+			// FIXME: Read allowed clients from the profile instead;
+			$owner = ProfileServer::getOwner();
+
+			$allowedClients = $owner['allowedClients'] ?? [];
+			$allowedOrigins = [];
+			foreach ($allowedClients as $clientId) {
+				$clientRegistration = ClientRegistration::getRegistration($clientId);
+				if (isset($clientRegistration['client_name'])) {
+					$allowedOrigins[] = $clientRegistration['client_name'];
+				}
+				if (isset($clientRegistration['origin'])) {
+					$allowedOrigins[] = $clientRegistration['origin'];
+				}
 			}
-			if (!isset($user['issuer'])) {
-				$user['issuer'] = BASEURL;
+			if (!isset($origin) || ($origin === "")) {
+				$allowedOrigins[] = "app://unset"; // FIXME: this should not be here.
+				$origin = "app://unset";
 			}
 
-			$profile = <<<"EOF"
-@prefix : <#>.
-@prefix acl: <http://www.w3.org/ns/auth/acl#>.
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
-@prefix ldp: <http://www.w3.org/ns/ldp#>.
-@prefix schema: <http://schema.org/>.
-@prefix solid: <http://www.w3.org/ns/solid/terms#>.
-@prefix space: <http://www.w3.org/ns/pim/space#>.
-@prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
-@prefix pro: <./>.
-@prefix inbox: <{$user['storage']}inbox/>.
+			if (!$wac->isAllowed($rawRequest, $webId, $origin, $allowedOrigins)) {
+				$response = new Response();
+				$response = $response->withStatus(403, "Access denied!");
+				ProfileServer::respond($response);
+				exit();
+			}
 
-<> a foaf:PersonalProfileDocument; foaf:maker :me; foaf:primaryTopic :me.
-
-:me
-    a schema:Person, foaf:Person;
-    ldp:inbox inbox:;
-    space:preferencesFile <{$user['storage']}settings/preferences.ttl>;
-    space:storage <{$user['storage']}>;
-    solid:account <{$user['storage']}>;
-    solid:oidcIssuer <{$user['issuer']}>;
-    solid:privateTypeIndex <{$user['storage']}settings/privateTypeIndex.ttl>;
-    solid:publicTypeIndex <{$user['storage']}settings/publicTypeIndex.ttl>.
-EOF;
-			header('Content-Type: text/turtle');
-			echo $profile;
+			$response = $resourceServer->respondToRequest($rawRequest);
+			$response = $wac->addWACHeaders($rawRequest, $response, $webId);
+			ProfileServer::respond($response);
 		}
 	}
 			

@@ -10,6 +10,7 @@ services:
             - ./data/keys:/opt/solid/keys
             - ./data/db:/opt/solid/db
             - ./data/pods:/opt/solid/pods
+            - ./data/profiles:/opt/solid/profiles
     pubsub:
         build:
             context: https://github.com/pdsinterop/php-solid-pubsub-server.git#main
