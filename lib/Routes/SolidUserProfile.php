@@ -14,9 +14,8 @@
 		public static function respondToProfile() {
 			$requestFactory = new ServerRequestFactory();
 			$serverData = $_SERVER;
-			$serverData['REQUEST_URI'] = "/profile.ttl"; // Hardcoded so we can only ever return profile.ttl
 
-			$rawRequest = $requestFactory->fromGlobals($serverData, $_GET, $_POST, $_COOKIE, $_FILES);
+			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 			ProfileServer::initializeProfile();
 			$filesystem = ProfileServer::getFileSystem();
 
@@ -28,6 +27,7 @@
 
 			$baseUrl = Util::getServerBaseUrl();
 			$resourceServer->setBaseUrl($baseUrl);
+			$resourceServer->lockToPath("/profile.ttl");
 			$wac->setBaseUrl($baseUrl);
 
 			// use the original $_SERVER without modified path, otherwise the htu check for DPOP will fail
