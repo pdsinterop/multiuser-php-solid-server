@@ -13,7 +13,11 @@
     </style>
     <!-- /Page CSS -->
     <!-- Head HTML -->
-    
+    <!-- metro (baseComponent/metro) -->
+    <script src="https://cdn.jsdelivr.net/npm/@muze-nl/metro@0.6.19/dist/browser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@muze-nl/oldm@0.3.6/dist/oldm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@muze-nl/metro-oauth2@0.7.4/dist/browser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@muze-nl/metro-oidc@0.5.3/dist/browser.js"></script>
     <!-- /Head HTML -->
     <script>
       var simplyDataApi = {};
@@ -27,13 +31,99 @@
         /* End of Raw API */
         /* Data API */
         simplyDataApi = {
+          // component/AppLauncher
+          "appLocation" : async function(webID){
+            let preferenceOLDM = await simplyDataApi.getPreferences(webID)
+            if (
+              preferenceOLDM.subjects[webID] &&
+              preferenceOLDM.subjects[webID].solid$launcher
+            ) {
+              return preferenceOLDM.subjects[webID].solid$launcher.id
+            } else {
+              return "https://solid-launcher.dev.muze.nl/"
+            }
+          },
+          // component/AppLauncher
+          "getPreferences" : async function(webID){
           
+            let issuer = ""
+            let profileTurtle
+          
+            const context = oldm.context({
+              prefixes: {
+                'ldp':    'http://www.w3.org/ns/ldp#',
+                'rdf':    'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                'dct':    'http://purl.org/dc/terms/',
+                'stat':   'http://www.w3.org/ns/posix/stat#',
+                'turtle': 'http://www.w3.org/ns/iana/media-types/text/turtle#',
+                'schem':  'https://schema.org/',
+                'solid':  'http://www.w3.org/ns/solid/terms#',
+                'acl':    'http://www.w3.org/ns/auth/acl#',
+                'pims':   'http://www.w3.org/ns/pim/space#',
+                'vcard':  'http://www.w3.org/2006/vcard/ns#',
+                'foaf':   'http://xmlns.com/foaf/0.1/'
+              },
+              parser: oldm.n3Parser,
+              writer: oldm.n3Writer
+            })
+          
+            //fetch profile to retrieve issuer
+            const profileURL = webID;
+            try {
+              const responseProfile = await fetch(profileURL);
+              if (!responseProfile.ok) {
+                throw new Error(`Response status: ${responseProfile.status}`);
+              }
+              profileTurtle = await responseProfile.text();
+            } catch (error) {
+              console.error(error.message);
+            }  
+          
+            let podContent = context.parse(profileTurtle, webID, 'text/turtle')
+          
+            issuer = podContent.primary?.solid$oidcIssuer?.id  
+            let preferenceFileURL = podContent.primary?.pims$preferencesFile?.id
+          
+            const oidcOptions = {
+          //    authorize_callback: metro.oauth2.authorizePopup,
+              force_authorization: true,
+              client_info: {
+                client_name: 'Solid Bootloader',
+                redirect_uris: [
+                  window.location.origin + window.location.pathname 
+                ]
+              },
+              issuer: issuer
+            }
+            if (window.location.protocol !== "https") {
+              // needed to allow app.simplyapp:// as redirect uri
+              oidcOptions['client_info']['application_type'] = 'native';
+            }
+          
+            let client = metro.client().with(metro.oidc.oidcmw(oidcOptions))
+          
+            let preferenceResponse = await client.get(preferenceFileURL)
+          
+            if (!preferenceResponse.ok) {
+              throw new Error(preferenceResponse.status+':'+preferenceResponse.statusText)
+            }
+          
+            const preferenceTurtle = await preferenceResponse.text()
+            let preferenceOLDM = context.parse(preferenceTurtle, preferenceFileURL, 'text/turtle')
+          
+            return preferenceOLDM
+          
+          }
         };
         /* End of Data API */
         simplyApp = simply.app({
           /* Actions */
           actions: {
-            
+            // component/AppLauncher
+            "getLauncherLocation" : async function (webID){
+            	let appLauncherPath = await simplyDataApi.appLocation(webID)
+                return appLauncherPath
+            }
           },
           /* /Actions */
           /* Commands */
@@ -49,8 +139,23 @@
           /* Routes */
           routes: {
             // page/home
-            "/" : function(params) {
-              document.location.href="https://solid-launcher.dev.muze.nl/";
+            "#webID/:webID" : async function(params) {
+              let webID = params.webID
+              webID = decodeURIComponent(webID)
+              localStorage['bootloader:webID'] = webID
+              let appLauncherPath = await simplyApp.actions.getLauncherLocation(webID)
+              document.location.href = appLauncherPath
+            },
+            // page/home
+            "/" : async function() {
+              if (
+                document.location.search.match("code") ||
+                document.location.search.match("state")
+              ) {
+                let webID = localStorage['bootloader:webID']
+                let appLauncherPath = await simplyApp.actions.getLauncherLocation(webID)
+                document.location.href = appLauncherPath
+              }
             }
           }
           /* /Routes */
@@ -79,7 +184,7 @@
     
     <!-- /Page HTML templates -->
     </div>
-    <script src="https://unpkg.com/simplyview@2.1.1/dist/simply.everything.js"></script>
+    <script src="https://unpkg.com/simplyview@3.5.5/dist/simply.everything.js"></script>
     <script src="https://canary.simplyedit.io/1/simply-edit.js" data-simply-storage="none" data-api-key="simply-edit-0011"></script>
     <script>
       /* Transformers */
