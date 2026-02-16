@@ -172,7 +172,7 @@
 				Session::start($_POST['username']);
 				$user = User::getUser($_POST['username']);
 				if (!isset($_POST['redirect_uri']) || $_POST['redirect_uri'] === '') {
-					header("Location: /dashboard/#webId=" . urlencode($user['webId']));
+					header("Location: /dashboard/#webID/" . urlencode($user['webId']));
 					exit();
 				}
 				header("Location: " . urldecode($_POST['redirect_uri'])); // FIXME: Do we need to harden this?
