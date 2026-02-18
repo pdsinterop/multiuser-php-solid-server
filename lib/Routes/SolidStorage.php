@@ -43,7 +43,7 @@
 			$owner = StorageServer::getOwner();
 
 			$allowedClients = $owner['allowedClients'] ?? [];
-			$allowedOrigins = [];
+			$allowedOrigins = TRUSTED_APPS ?? [];
 			foreach ($allowedClients as $clientId) {
 				$clientRegistration = ClientRegistration::getRegistration($clientId);
 				if (isset($clientRegistration['client_name'])) {
