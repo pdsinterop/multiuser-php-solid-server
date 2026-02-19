@@ -31,19 +31,7 @@
         /* End of Raw API */
         /* Data API */
         simplyDataApi = {
-          // component/AppLauncher
-          "appLocation" : async function(webID){
-            let preferenceOLDM = await simplyDataApi.getPreferences(webID)
-            if (
-              preferenceOLDM.subjects[webID] &&
-              preferenceOLDM.subjects[webID].solid$launcher
-            ) {
-              return preferenceOLDM.subjects[webID].solid$launcher.id
-            } else {
-              return "https://solid-launcher.dev.muze.nl/"
-            }
-          },
-          // component/AppLauncher
+          // component/solid-preferences
           "getPreferences" : async function(webID){
           
             let issuer = ""
@@ -90,7 +78,7 @@
               client_info: {
                 client_name: 'Solid Bootloader',
                 redirect_uris: [
-                  window.location.origin + window.location.pathname 
+                  window.location.origin + window.location.pathname
                 ]
               },
               issuer: issuer
@@ -113,13 +101,25 @@
           
             return preferenceOLDM
           
+          },
+          // component/bootloader
+          "appLocation" : async function(webID){
+            let preferenceOLDM = await simplyDataApi.getPreferences(webID)
+            if (
+              preferenceOLDM.subjects[webID] &&
+              preferenceOLDM.subjects[webID].solid$launcher
+            ) {
+              return preferenceOLDM.subjects[webID].solid$launcher.id
+            } else {
+              return "https://solid-launcher.dev.muze.nl/"
+            }
           }
         };
         /* End of Data API */
         simplyApp = simply.app({
           /* Actions */
           actions: {
-            // component/AppLauncher
+            // component/bootloader
             "getLauncherLocation" : async function (webID){
             	let appLauncherPath = await simplyDataApi.appLocation(webID)
                 return appLauncherPath
@@ -139,12 +139,12 @@
           /* Routes */
           routes: {
             // page/home
-            "#webID/:webID" : async function(params) {
+            "#autologin/:webID" : async function(params) {
               let webID = params.webID
               webID = decodeURIComponent(webID)
               localStorage['bootloader:webID'] = webID
               let appLauncherPath = await simplyApp.actions.getLauncherLocation(webID)
-              document.location.href = appLauncherPath
+              document.location.href = appLauncherPath + "#autologin/" + encodeURIComponent(webID)
             },
             // page/home
             "/" : async function() {
