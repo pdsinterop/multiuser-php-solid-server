@@ -154,7 +154,7 @@
               ) {
                 let webID = localStorage['bootloader:webID']
                 let appLauncherPath = await simplyApp.actions.getLauncherLocation(webID)
-                document.location.href = appLauncherPath
+                document.location.href = appLauncherPath + "#autologin/" + encodeURIComponent(webID)
               }
             }
           }
