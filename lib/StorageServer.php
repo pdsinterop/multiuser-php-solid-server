@@ -237,14 +237,13 @@ EOF;
 @prefix : <#>.
 @prefix sp: <http://www.w3.org/ns/pim/space#>.
 @prefix dct: <http://purl.org/dc/terms/>.
-@prefix profile: <$webId>.
 @prefix solid: <http://www.w3.org/ns/solid/terms#>.
 
 <>
 	a sp:ConfigurationFile;
 	dct:title "Preferences file".
 
-profile:me
+<$webId>
 	a solid:Developer;
 	solid:privateTypeIndex <privateTypeIndex.ttl>;
 	solid:publicTypeIndex <publicTypeIndex.ttl>.
