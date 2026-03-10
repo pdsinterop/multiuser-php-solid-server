@@ -26,7 +26,7 @@
 			switch ($request) {
 				case "/api/storage/new":
 				case "/api/storage/new/":
-					StorageServer::respondToStorageNew();
+					SolidStorageProvider::respondToStorageNew();
 				break;
 				default:
 					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
