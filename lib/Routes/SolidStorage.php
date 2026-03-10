@@ -16,8 +16,15 @@
 			$requestFactory = new ServerRequestFactory();
 			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 
-			StorageServer::initializeStorage();
-			$filesystem = StorageServer::getFileSystem();
+			try {
+				StorageServer::initializeStorage();
+				$filesystem = StorageServer::getFileSystem();
+			} catch (\Exception $e) {
+				$response = new Response();
+				$response = $response->withStatus(404, "Not found");
+				StorageServer::respond($response);
+				exit();
+			}
 
 			$resourceServer = new ResourceServer($filesystem, new Response(), null);
 			$solidNotifications = new SolidNotifications();
