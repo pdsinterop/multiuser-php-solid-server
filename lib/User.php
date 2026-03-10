@@ -170,6 +170,21 @@
 			return $result;
 		}
 
+		public static function getAllowedOrigins($userId) {
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'SELECT origin from clients LEFT JOIN allowedClients ON clients.clientId=allowedClients.clientId where allowedClients.userId=:userId'
+			);
+			$query->execute([
+				':userId' => $userId
+			]);
+			$result = [];
+			while($row = $query->fetch()) {
+				$result[] = $row['origin'];
+			}
+			return $result;
+		}
+
 		public static function getStorage($userId) {
 			Db::connect();
 			$query = Db::$pdo->prepare(
@@ -214,6 +229,8 @@
 				
 				$allowedClients = self::getAllowedClients($userData['userId']);
 				$userData['allowedClients'] = $allowedClients;
+				$allowedOrigins = self::getAllowedOrigins($userData['userId']);
+				$userData['allowedOrigins'] = $allowedOrigins;
 				$userData['issuer'] = BASEURL;
 				$storage = self::getStorage($userData['userId']);
 				if ($storage) {
@@ -239,6 +256,8 @@
 
 				$allowedClients = self::getAllowedClients($userData['userId']);
 				$userData['allowedClients'] = $allowedClients;
+				$allowedOrigins = self::getAllowedOrigins($userData['userId']);
+				$userData['allowedOrigins'] = $allowedOrigins;
 				$userData['issuer'] = BASEURL;
 				$storage = self::getStorage($userData['userId']);
 				if ($storage) {

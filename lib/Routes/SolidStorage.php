@@ -51,18 +51,8 @@
 			// $owner = StorageServer::getOwner();
 			$ownerWebId = StorageServer::getOwnerWebId();
 			$owner = User::getUserByWebId($ownerWebId);
-			$allowedClients = $owner['allowedClients'] ?? [];
+			$allowedOrigins = ($owner['allowedOrigins'] ?? []) + (TRUSTED_APPS ?? []);
 
-			$allowedOrigins = TRUSTED_APPS ?? [];
-			foreach ($allowedClients as $clientId) {
-				$clientRegistration = ClientRegistration::getRegistration($clientId);
-				if (isset($clientRegistration['client_name'])) {
-					$allowedOrigins[] = $clientRegistration['client_name'];
-				}
-				if (isset($clientRegistration['origin'])) {
-					$allowedOrigins[] = $clientRegistration['origin'];
-				}
-			}
 			if (!isset($origin) || ($origin === "")) {
 				$allowedOrigins[] = "app://unset"; // FIXME: this should not be here.
 				$origin = "app://unset";
