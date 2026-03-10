@@ -31,7 +31,7 @@
 
 		public static function createStorage($ownerWebId) {
                         $generatedStorageId = bin2hex(random_bytes(16));
-                        while (self::storageIdExists($generatedsStorageId)) {
+                        while (self::storageIdExists($generatedStorageId)) {
                                 $generatedStorageId = bin2hex(random_bytes(16));
                         }
 			Db::connect();
@@ -39,9 +39,12 @@
 				'INSERT OR REPLACE INTO storage VALUES(:storageId, :owner)'
 			);
 			$query->execute([
-				':storageId' => $storageId,
+				':storageId' => $generatedStorageId,
 				':owner' => $ownerWebId
 			]);
+			return [
+				"storageId" => $generatedStorageId
+			];
 		}
 
                 public static function storageIdExists($storageId) {
@@ -78,7 +81,7 @@
 		public static function getFileSystem() {
 			$storageId = self::getStorageId();
 			if (!self::storageIdExists($storageId)) {
-				throw new Exception("Storage does not exist");
+				throw new \Exception("Storage does not exist");
 			}
 			// The internal adapter
 			$adapter = new \League\Flysystem\Adapter\Local(
@@ -136,7 +139,6 @@
 			return $storageId;
 		}
 		
-		
 		public static function initializeStorage() {
 			$filesystem = self::getFilesystem();
 			if (!$filesystem->has("/.acl")) {
@@ -182,7 +184,7 @@
 		public static function generateDefaultAcl() {
 			$webId = self::getOwnerWebId();
 			if (!$webId) {
-				throw new Exception("No owner found for storage");
+				throw new \Exception("No owner found for storage");
 			}
 			$acl = <<< "EOF"
 # Root ACL resource for the user account
@@ -216,7 +218,7 @@ EOF;
 		public static function generatePublicAppendAcl() {
 			$webId = self::getOwnerWebId();
 			if (!$webId) {
-				throw new Exception("No owner found for storage ID");
+				throw new \Exception("No owner found for storage ID");
 			}
 			$acl = <<< "EOF"
 # Inbox ACL resource for the user account
@@ -248,7 +250,7 @@ EOF;
 		public static function generatePublicReadAcl() {
 			$webId = self::getOwnerWebId();
 			if (!$webId) {
-				throw new Exception("No owner found for storage ID");
+				throw new \Exception("No owner found for storage ID");
 			}
 			$acl = <<< "EOF"
 # Inbox ACL resource for the user account
