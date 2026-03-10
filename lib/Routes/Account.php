@@ -7,6 +7,7 @@
 	use Pdsinterop\PhpSolid\Session;
 	use Pdsinterop\PhpSolid\Mailer;
 	use Pdsinterop\PhpSolid\IpAttempts;
+	use Pdsinterop\PhpSolid\StorageServer;
 	
 	class Account {
 		public static function requireLoggedInUser() {
@@ -87,11 +88,15 @@
 				header("HTTP/1.1 400 Bad Request");
 				exit();
 			}
+			$createdStorage = StorageServer::createStorage($createdUser['webId']);
+
 			Mailer::sendAccountCreated($createdUser);
 
 			$responseData = array(
-				"webId" => $createdUser['webId']
+				"webId" => $createdUser['webId'],
+				"storageUrl" => $createdStorage['storageUrl']
 			);
+
 			header("HTTP/1.1 201 Created");
 			header("Content-type: application/json");
 			Session::start($_POST['email']);
