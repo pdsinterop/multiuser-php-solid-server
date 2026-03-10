@@ -2,19 +2,15 @@
 	namespace Pdsinterop\PhpSolid\Routes;
 
 	use Pdsinterop\PhpSolid\StorageServer;
+	use Laminas\Diactoros\ServerRequestFactory;
 
 	class SolidStorageProvider {
 		public static function respondToStorageNew() {
-			try {
-				$webId = StorageServer::getWebId($rawRequest);
+			$requestFactory = new ServerRequestFactory();
+			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			$webId = StorageServer::getWebId($rawRequest);
 
-				if (!isset($webId)) {
-					$response = $resourceServer->getResponse()
-						->withStatus(409, "Invalid token");
-					StorageServer::respond($response);
-					exit();
-				}
-			} catch (\Throwable $e) {
+			if (!isset($webId) || $webId === "public") {
 				$webId = $_POST['webId'];
 				// FIXME: Check against a trusted remote party;
 			}
