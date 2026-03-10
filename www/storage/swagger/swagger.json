@@ -1,0 +1,77 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "API documentation for PHP Solid Storage Provider",
+    "version": "0.1",
+    "title": "PHP Solid Storage Provider API",
+    "license": {
+      "name": "Copyright PDSInterop",
+      "url": "http://solid.local/api/v1/LICENSE"
+    }
+  },
+  "servers" : [
+    {
+      "url" : "/",
+      "description" : "Test here"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Storage creation",
+      "description": "Endpoints related to account creation",
+      "externalDocs": {
+        "description": "Read more",
+        "url": "http://docs.solid.local/storage/api/v1/#storage-creation"
+      }
+    }
+  ],
+  "paths": {
+    "/api/storage/new": {
+      "post": {
+        "tags": [
+          "Storage creation"
+        ],
+        "summary": "Create a new storage pod",
+        "description": "This is the second step in account creation. After having a verification token for the e-mail address, this call allows creation of an account",
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "example" : {
+                  "webId" : "https://id-123123.solid.local/#me"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "storageId": "https://storage-264e30d9-bc83-4ff7-a3b5-68d12125cdd7.solid.local/"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content" : {
+              "application/json" : {
+                "schema": {
+                  "type": "object",
+                  "example": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
