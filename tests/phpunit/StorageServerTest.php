@@ -9,6 +9,7 @@
     {
         public static $headers = [];
         public static $createdUser;
+        public static $createdStorage;
 
         protected function setUp(): void
         {
@@ -16,6 +17,7 @@
                 'DROP TABLE IF EXISTS allowedClients',
                 'DROP TABLE IF EXISTS userStorage',
                 'DROP TABLE IF EXISTS users',
+                'DROP TABLE IF EXISTS storage',
                 'CREATE TABLE IF NOT EXISTS allowedClients (
                         userId VARCHAR(255) NOT NULL PRIMARY KEY,
                         clientId VARCHAR(255) NOT NULL
@@ -29,6 +31,10 @@
                         email TEXT NOT NULL,
                         password TEXT NOT NULL,
                         data TEXT
+                )',
+                'CREATE TABLE IF NOT EXISTS storage (
+                        storage_id VARCHAR(255) NOT NULL PRIMARY KEY,
+                        owner VARCHAR(255) NOT NULL
                 )',
             ];
 
@@ -48,7 +54,7 @@
 		"hello" => "world"
             ];
             self::$createdUser = User::createUser($newUser);
-            self::$createdStorage = StorageServer::createStorage($newUser['webId']);
+            self::$createdStorage = StorageServer::createStorage(self::$createdUser['webId']);
 
             $_SERVER['REQUEST_URI'] = "/test/";
             $_SERVER['REQUEST_SCHEME'] = "https";
