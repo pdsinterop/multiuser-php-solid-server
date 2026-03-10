@@ -33,8 +33,10 @@
 
 			//Mailer::sendStorageCreated($createdStoage);
 
+                        $storageUrl = "https://storage-" . $createdStorage['storageId'] . "." . BASEDOMAIN . "/";
+
 			$responseData = array(
-				"storageId" => $createdStorage['storageId']
+				"storage" => $storageUrl
 			);
 			header("HTTP/1.1 201 Created");
 			header("Content-type: application/json");
