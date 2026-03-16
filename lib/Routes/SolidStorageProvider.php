@@ -11,14 +11,11 @@
 			$webId = StorageServer::getWebId($rawRequest);
 
 			if (!isset($webId) || $webId === "public") {
-				$webId = $_POST['webId'];
-				// FIXME: Check against a trusted remote party;
-			}
-
-			if (!isset($webId)) {
 				header("HTTP/1.1 400 Bad Request");
 				exit();
 			}
+
+			// FIXME: Get the webID issuer and validate that we allow storage creation for that issuer
 
 			$createdStorage = StorageServer::createStorage($webId);
 			if (!$createdStorage) {
