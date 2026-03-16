@@ -24,8 +24,8 @@
 		break;
 		case "POST":
 			switch ($request) {
-				case "/api/storage/new":
-				case "/api/storage/new/":
+				case "/api/storage":
+				case "/api/storage/":
 					SolidStorageProvider::respondToStorageNew();
 				break;
 				default:
