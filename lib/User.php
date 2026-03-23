@@ -268,6 +268,15 @@
 			return false;			
 		}
 
+		public static function getUserByWebId($webId) {
+			$idParts = explode(".", $webId, 2);
+			if ($idParts[1] !== BASEDOMAIN . "/#me") {
+				return false;
+			}
+			$userId = preg_replace("/^id-/", "", $idParts[0]);
+			return self::getUserById($userId);
+		}
+
 		public static function checkPassword($email, $password) {
 			Db::connect();
 			$query = Db::$pdo->prepare(

@@ -4,11 +4,85 @@
 	use Pdsinterop\PhpSolid\Server;
 	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\Util;
+	use Pdsinterop\PhpSolid\Db;
 
 	class StorageServer extends Server {
+		public static function getStorage($storageId) {
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'SELECT * FROM storage WHERE storage_id=:storageId'
+			);
+			$query->execute([
+				':storageId' => $storageId
+			]);
+			return $query->fetchAll();
+		}
+
+		public static function setStorageOwner($storageId, $owner) {
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'UPDATE storage SET owner=:owner WHERE storage_id=:storageId'
+			);
+			$query->execute([
+				':storageId' => $storageId,
+				':owner' => $owner
+			]);
+		}
+
+		public static function createStorage($ownerWebId) {
+                        $generatedStorageId = bin2hex(random_bytes(16));
+                        while (self::storageIdExists($generatedStorageId)) {
+                                $generatedStorageId = bin2hex(random_bytes(16));
+                        }
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'INSERT OR REPLACE INTO storage VALUES(:storageId, :owner)'
+			);
+			$query->execute([
+				':storageId' => $generatedStorageId,
+				':owner' => $ownerWebId
+			]);
+			return [
+				"storageId" => $generatedStorageId
+			];
+		}
+
+                public static function storageIdExists($storageId) {
+                        Db::connect();
+                        $query = Db::$pdo->prepare(
+                                'SELECT storage_id FROM storage WHERE storage_id=:storageId'
+                        );
+                        $query->execute([
+                                ':storageId' => $storageId
+                        ]);
+                        $result = $query->fetchAll();
+                        if (sizeof($result) === 1) {
+                                return true;
+                        }
+                        return false;
+                }
+
+		public static function getOwnerWebId() {
+			$storageId = self::getStorageId();
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'SELECT owner FROM storage WHERE storage_id=:storageId'
+			);
+			$query->execute([
+				':storageId' => $storageId
+			]);
+			$result = $query->fetchAll();
+			if (sizeof($result) === 1) {
+				return $result[0]['owner'];
+			}
+			return false;
+		}
+
 		public static function getFileSystem() {
 			$storageId = self::getStorageId();
-
+			if (!self::storageIdExists($storageId)) {
+				throw new \Exception("Storage does not exist");
+			}
 			// The internal adapter
 			$adapter = new \League\Flysystem\Adapter\Local(
 				// Determine root directory
@@ -65,16 +139,6 @@
 			return $storageId;
 		}
 		
-		public static function getOwner() {
-			$storageId = self::getStorageId();
-			return User::getUserById($storageId);
-		}
-
-		public static function getOwnerWebId() {
-			$owner = self::getOwner();
-			return $owner['webId'];
-		}
-		
 		public static function initializeStorage() {
 			$filesystem = self::getFilesystem();
 			if (!$filesystem->has("/.acl")) {
@@ -119,6 +183,9 @@
 		
 		public static function generateDefaultAcl() {
 			$webId = self::getOwnerWebId();
+			if (!$webId) {
+				throw new \Exception("No owner found for storage");
+			}
 			$acl = <<< "EOF"
 # Root ACL resource for the user account
 @prefix acl: <http://www.w3.org/ns/auth/acl#>.
@@ -150,6 +217,9 @@ EOF;
 
 		public static function generatePublicAppendAcl() {
 			$webId = self::getOwnerWebId();
+			if (!$webId) {
+				throw new \Exception("No owner found for storage ID");
+			}
 			$acl = <<< "EOF"
 # Inbox ACL resource for the user account
 @prefix acl: <http://www.w3.org/ns/auth/acl#>.
@@ -179,6 +249,9 @@ EOF;
 
 		public static function generatePublicReadAcl() {
 			$webId = self::getOwnerWebId();
+			if (!$webId) {
+				throw new \Exception("No owner found for storage ID");
+			}
 			$acl = <<< "EOF"
 # Inbox ACL resource for the user account
 @prefix acl: <http://www.w3.org/ns/auth/acl#>.
