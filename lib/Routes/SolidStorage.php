@@ -43,7 +43,11 @@
 			$owner = StorageServer::getOwner();
 
 			$allowedClients = $owner['allowedClients'] ?? [];
-			$allowedOrigins = ($owner['allowedOrigins'] ?? []) + (TRUSTED_APPS ?? []);
+			$allowedOrigins = array_merge(
+				($owner['allowedOrigins'] ?? []),
+				(TRUSTED_APPS ?? [])
+			);
+			$allowedOrigins = array_unique($allowedOrigins);
 
 			if (!isset($origin) || ($origin === "")) {
 				$allowedOrigins[] = "app://unset"; // FIXME: this should not be here.
