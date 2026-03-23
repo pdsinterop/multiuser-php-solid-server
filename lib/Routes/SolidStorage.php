@@ -49,7 +49,7 @@
 
 			// FIXME: Read allowed clients from the profile instead;
 
-      $ownerWebId = StorageServer::getOwnerWebId();
+			$ownerWebId = StorageServer::getOwnerWebId();
 			$owner = User::getUserByWebId($ownerWebId);
 
 			$allowedClients = $owner['allowedClients'] ?? [];

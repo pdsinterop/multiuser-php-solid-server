@@ -43,7 +43,8 @@
 				':owner' => $ownerWebId
 			]);
 			return [
-				"storageId" => $generatedStorageId
+				"storageId" => $generatedStorageId,
+				"storageUrl" => "https://storage-" . $generatedStorageId . "." . BASEDOMAIN . "/"
 			];
 		}
 

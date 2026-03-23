@@ -89,6 +89,7 @@
 				exit();
 			}
 			$createdStorage = StorageServer::createStorage($createdUser['webId']);
+			User::setStorage($createdUser['userId'], $createdStorage['storageUrl']);
 
 			Mailer::sendAccountCreated($createdUser);
 
