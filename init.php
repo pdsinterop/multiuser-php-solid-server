@@ -58,6 +58,26 @@
 		    echo $e->getMessage();
 		}
 	}
-		
+
+	function initStorageDatabase() {
+		$statements = [
+		    'CREATE TABLE IF NOT EXISTS storage (
+			storage_id VARCHAR(255) NOT NULL PRIMARY KEY,
+			owner VARCHAR(255) NOT NULL
+		    )'
+		];
+
+		try {
+		    $pdo = new \PDO("sqlite:" . DBPATH);
+
+		    // create tables
+		    foreach($statements as $statement){
+			$pdo->exec($statement);
+		    }
+		} catch(\PDOException $e) {
+		    echo $e->getMessage();
+		}
+	}
 	initKeys();
 	initDatabase();
+	initStorageDatabase();

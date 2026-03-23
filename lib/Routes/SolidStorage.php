@@ -1,6 +1,7 @@
 <?php
 	namespace Pdsinterop\PhpSolid\Routes;
 
+	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\StorageServer;
 	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\SolidNotifications;
@@ -15,8 +16,15 @@
 			$requestFactory = new ServerRequestFactory();
 			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 
-			StorageServer::initializeStorage();
-			$filesystem = StorageServer::getFileSystem();
+			try {
+				StorageServer::initializeStorage();
+				$filesystem = StorageServer::getFileSystem();
+			} catch (\Exception $e) {
+				$response = new Response();
+				$response = $response->withStatus(404, "Not found");
+				StorageServer::respond($response);
+				exit();
+			}
 
 			$resourceServer = new ResourceServer($filesystem, new Response(), null);
 			$solidNotifications = new SolidNotifications();
@@ -40,9 +48,9 @@
 			$origin = $rawRequest->getHeaderLine("Origin");
 
 			// FIXME: Read allowed clients from the profile instead;
-			$owner = StorageServer::getOwner();
-
-			$allowedClients = $owner['allowedClients'] ?? [];
+			// $owner = StorageServer::getOwner();
+			$ownerWebId = StorageServer::getOwnerWebId();
+			$owner = User::getUserByWebId($ownerWebId);
 			$allowedOrigins = ($owner['allowedOrigins'] ?? []) + (TRUSTED_APPS ?? []);
 
 			if (!isset($origin) || ($origin === "")) {

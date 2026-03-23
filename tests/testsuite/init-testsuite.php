@@ -24,6 +24,18 @@
 			$queryParams[':data'] = json_encode($testUser);
 			$query->execute($queryParams);
 		}
+
+		public static function createStorage($testUser) {
+			self::connect();
+			$query = self::$pdo->prepare(
+				 'INSERT INTO storage VALUES (:storageId, :owner)'
+			);
+
+			$queryParams = [];
+			$queryParams[':storageId'] = $testUser['id'];
+			$queryParams[':owner'] = "https://id-" . $testUser['id'] . "." . BASEDOMAIN . "/#me";
+			$query->execute($queryParams);
+		}
 	}		
 
 	TestUser::createUser([
@@ -31,10 +43,16 @@
 		"password" => "alice123",
 		"email" => "alice"
 	]);
+	TestUser::createStorage([
+		"id" => "alice"
+	]);
 
 	TestUser::createUser([
 		"id" => "bob",
 		"password" => "bob345",
 		"email" => "bob"
+	]);
+	TestUser::createStorage([
+		"id" => "bob"
 	]);
 	
