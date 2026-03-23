@@ -48,10 +48,16 @@
 			$origin = $rawRequest->getHeaderLine("Origin");
 
 			// FIXME: Read allowed clients from the profile instead;
-			// $owner = StorageServer::getOwner();
-			$ownerWebId = StorageServer::getOwnerWebId();
+
+      $ownerWebId = StorageServer::getOwnerWebId();
 			$owner = User::getUserByWebId($ownerWebId);
-			$allowedOrigins = ($owner['allowedOrigins'] ?? []) + (TRUSTED_APPS ?? []);
+
+			$allowedClients = $owner['allowedClients'] ?? [];
+			$allowedOrigins = array_merge(
+				($owner['allowedOrigins'] ?? []),
+				(TRUSTED_APPS ?? [])
+			);
+			$allowedOrigins = array_unique($allowedOrigins);
 
 			if (!isset($origin) || ($origin === "")) {
 				$allowedOrigins[] = "app://unset"; // FIXME: this should not be here.
