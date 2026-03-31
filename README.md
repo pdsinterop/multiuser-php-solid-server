@@ -25,6 +25,16 @@ docker exec -u www-data -i -w /opt/solid/ solid php init.php
 docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods profiles db
 ```
 
+Now add the following host to your `/etc/hosts` file:
+```
+127.0.0.1   solid.local
+```
+
+And browser to `https://solid.local/`. After you register a new account, you'll get an identity and storage hostname, add these to `/etc/hosts` as well, e.g:
+```
+127.0.0.1   id-d1f0e8c54e755cb45b61ee8e9dad00fe.solid.local storage-d1f0e8c54e755cb45b61ee8e9dad00fe.solid.local
+```
+
 ### DNS gotcha and snake oil certificate
 
 The webIds are created as id-xxxxx.{baseHost}, so in our example, that would be id-xxxx.solid.local.
