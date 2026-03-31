@@ -269,11 +269,13 @@
 		}
 
 		public static function getUserByWebId($webId) {
-			$idParts = explode(".", $webId, 2);
-			if ($idParts[1] !== BASEDOMAIN . "/#me") {
+			$webIdParts = parse_url($webId);
+			$idParts = explode(".", $webIdParts['host'], 2);
+			if ($idParts[1] !== BASEDOMAIN) {
 				return false;
 			}
-			$userId = preg_replace("/^id-/", "", $idParts[0]);
+			$userId = preg_replace("/^.*?id-/", "", $idParts[0]);
+
 			return self::getUserById($userId);
 		}
 
