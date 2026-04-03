@@ -1810,7 +1810,24 @@
       .solid-small {
         font-size: 80%;
       }
-      
+      .ds-button-support {
+        background: rgba(0,0,0,0.1);
+        outline: 1px solid var(--ds-primary);
+        color: var(--ds-black);
+      }
+      .ds-darkmode .ds-button-support {
+        background: rgba(0,0,0,0.5);
+        color: var(--ds-white);
+      }
+      @media (prefers-color-scheme: dark) {
+        .ds-darkmode-auto .ds-button-support {
+          background: rgba(0,0,0,0.5);
+          color: var(--ds-white);
+        }
+      }
+      input {
+        margin-top: 4px;
+      }
       /* solid-dialog (component/solid-styling) */
       @layer component {
         .solid-dialog {
@@ -1841,22 +1858,23 @@
         }
       }
       /* solid-theme (component/solid-styling) */
-        :root {
-          --ds-primary: oklch(0.4866 0.1142 255.31);
-          --ds-primary-contrast: white;
-          --ds-support: var(--ds-grey-70);
-          --ds-support-contrast: white;
-          --ds-dialog-radius: 0;
-          --ds-font-weight: 400;
-          /* https://thegoodcolors.com/full?l=62&c=23&d=12&cb=1&cbt=deuteranomaly */
-          --solid-palette-1: oklch(0.62 0.23 262);
-          --solid-palette-2: oklch(0.62 0.23 206);
-          --solid-palette-3: oklch(0.62 0.23 138);
-          --solid-palette-4: oklch(0.62 0.23 66);
-          --solid-palette-5: oklch(0.62 0.23 330);
-          --ds-primary: #0086dd;
-          --ds-support: #9e3cdc;
-          }
+      :root {
+        --ds-primary: oklch(0.4866 0.1142 255.31);
+        --ds-primary-contrast: white;
+        --ds-support: var(--ds-grey-70);
+        --ds-support-contrast: white;
+        --ds-dialog-radius: 0;
+        --ds-font-weight: 400;
+        /* https://thegoodcolors.com/full?l=62&c=23&d=12&cb=1&cbt=deuteranomaly */
+        --solid-palette-1: oklch(0.62 0.23 262);
+        --solid-palette-2: oklch(0.62 0.23 206);
+        --solid-palette-3: oklch(0.62 0.23 138);
+        --solid-palette-4: oklch(0.62 0.23 66);
+        --solid-palette-5: oklch(0.62 0.23 330);
+        --ds-primary: #0086dd;
+        /* --ds-support: #9f4e00; */
+      }
+      
       
     </style>
     <!-- /Component CSS -->
@@ -2442,48 +2460,58 @@
     </template>
     <!-- component/delete-account-->
     <template id="delete-account-confirm">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form" data-simply-command="confirmDeleteAccount" action="#">
         <p class="solid-hint">We will remove your account and all information. This cannot be undone.</p>
-        <button class="solid-button solid-button-primary">
-          <h1>Delete my account</h1>
-        </button>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">
+            Delete my account
+          </button>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/delete-account-->
     <template id="delete-account-done">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form">
         <p class="solid-hint">Your account has been deleted.</p>
+        <div class="ds-form-buttons">
+          <a href="/" class="ds-button ds-button-support">Home</a>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/delete-account-->
     <template id="delete-account-sent">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form">
         <p class="solid-hint">Follow the instructions in your e-mail to delete your account.</p>
+        <div class="ds-form-buttons">
+          <a href="/" class="ds-button ds-button-support">Home</a>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/delete-account-->
     <template id="delete-account">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form" data-simply-command="deleteAccount" action="#">
         <p class="solid-hint">You will receive a link in your e-mail. Use that link to delete your account.</p>
         <div class="solid-form-group">
           <input autofocus class="solid-input" data-simply-field="deleteAccount.email" type="text" placeholder="E-mail address" required>
         </div>
-        <button class="solid-button solid-button-primary">
-          <h1>Next</h1>
-        </button>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">
+            Next
+          </button>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/header-->
     <template id="header">
@@ -2530,12 +2558,25 @@
     </div>
     
     </template>
+    <!-- component/login-->
+    <template id="logout">
+      <div class="ds-dialog solid-dialog">
+      <h1>Logged out</h1>
+      <p>You have been logged out.</p>
+      <p>
+        You can close this window, or return to the <a href="/">home page</a>
+      </p>
+      <div class="ds-form-buttons">
+        <a href="/" class="ds-button ds-button-support">Home</a>
+      </div>
+    </div>
+    </template>
     <!-- component/register-->
     <template id="register-thanks">
-      <div class="ds-dialog solid-dialog ds-space-inside">
+      <div class="ds-dialog solid-dialog">
       <h1>Welcome to Solid</h1>
       <p>Your identity is ready to use.</p>
-      <h2 data-simply-field="createdWebId">{created webid}</h2>
+      <p class="solid-webid" data-simply-field="createdWebId">{created webid}</p>
       <form class="solid-form" data-simply-command="registerCompleted">
         <div class="ds-form-buttons">
           <button class="ds-button ds-button-primary">Continue</button>
@@ -2546,39 +2587,39 @@
     </template>
     <!-- component/register-->
     <template id="register-verify">
-          <div class="ds-dialog solid-dialog">
-          <h1>Verify your E-mail</h1>
-          <form class="solid-form" data-simply-command="registerDone">
-            <label>
-                Enter the code in your email to finish your registration
-                <input autofocus data-simply-field="register.confirm" type="text" placeholder="xxxxxx" required>
-            </label>
-            <div class="ds-form-buttons">
-              <button class="ds-button ds-button-primary">Verify</button>
-            </div>
-          </form>
+      <div class="ds-dialog solid-dialog">
+      <h1>Verify your E-mail</h1>
+      <form class="solid-form" data-simply-command="registerDone">
+        <label>
+          Enter the code in your email to finish your registration
+          <input autofocus data-simply-field="register.confirm" type="text" placeholder="xxxxxx" required>
+        </label>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">Verify</button>
         </div>
+      </form>
+    </div>
     
     </template>
     <!-- component/register-->
     <template id="register">
-          <div class="ds-dialog solid-dialog">
-          <h1>Register</h1>
-          <form class="solid-form" data-simply-command="register">
-            <label>
-              E-mail
-              <input type="email" name="email" data-simply-field="register.email" autofocus required>
-            </label>
-                    <simply-render rel="change-password"></simply-render>
-            <div class="ds-form-buttons">
-              <button class="ds-button ds-button-primary">Register</button>
-              <div class="ds-align-right">
-                <a href="/login/" class="ds-button-inline-text">
-                <span>&#8230; or login with your account</span></a>
-              </div>
-            </div>
-          </form>
+      <div class="ds-dialog solid-dialog">
+      <h1>Register</h1>
+      <form class="solid-form" data-simply-command="register">
+        <label>
+          E-mail
+          <input type="email" name="email" data-simply-field="register.email" autofocus required>
+        </label>
+        <simply-render rel="change-password"></simply-render>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">Register</button>
+          <div class="ds-align-right">
+            <a href="/login/" class="ds-button-inline-text">
+              <span>&#8230; or login with your account</span></a>
+          </div>
         </div>
+      </form>
+    </div>
     
     </template>
     <!-- component/reset-password-->
@@ -2589,7 +2630,7 @@
             <simply-render rel="change-password"></simply-render>
             <div class="ds-form-buttons">
               <button class="ds-button ds-button-primary">Reset</button>
-              <a class="ds-button" href="/login/">Cancel</a>
+              <a class="ds-button ds-button-support" href="/login/">Cancel</a>
             </div>
           </form>
         </div>
@@ -2609,19 +2650,19 @@
     </template>
     <!-- component/reset-password-->
     <template id="reset-password-sent">
-      <div class="ds-dialog solid-dialog ds-space-inside">
+      <div class="ds-dialog solid-dialog">
       <h1>Reset your password</h1>
       <form class="solid-form">
         <p>Follow the instructions in your E-mail to complete the password reset.</p>
         <div class="ds-form-buttons">
-          <a class="ds-button" href="/login/">Home</a>
+          <a class="ds-button ds-button-support" href="/login/">Home</a>
         </div>
       </form>
     </div>
     </template>
     <!-- component/reset-password-->
     <template id="reset-password">
-      <div class="ds-dialog solid-dialog ds-space-inside">
+      <div class="ds-dialog solid-dialog">
       <h1>Reset your password</h1>
       <form class="solid-form" data-simply-command="reset">
         <p>Enter your e-mail address and press Reset to receive a link that will allow you to reset your password.</p>
@@ -2631,7 +2672,7 @@
         </label>
         <div class="ds-form-buttons">
           <button class="ds-button ds-button-primary">Next</button>
-          <a class="ds-button" href="/login/">Cancel</a>
+          <a class="ds-button ds-button-support" href="/login/">Cancel</a>
         </div>
       </form>
     </div>
@@ -2672,7 +2713,7 @@
           <button class="ds-button ds-button-primary">
             Allow
           </button>
-          <button data-simply-command="cancel" class="ds-button">
+          <button data-simply-command="cancel" class="ds-button  ds-button-support">
             Deny
           </button>
         </div>
@@ -2708,30 +2749,26 @@
     <!-- page/delete-account-->
     <template data-simply-template="delete-account-confirm">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account-confirm"></simply-render>
-    </main>
+    <simply-render rel="delete-account-confirm"></simply-render>
+    
     </template>
     <!-- page/delete-account-->
     <template data-simply-template="delete-account-done">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account-done"></simply-render>
-    </main>
+    <simply-render rel="delete-account-done"></simply-render>
+    
     </template>
     <!-- page/delete-account-->
     <template data-simply-template="delete-account-sent">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account-sent"></simply-render>
-    </main>
+    <simply-render rel="delete-account-sent"></simply-render>
+    
     </template>
     <!-- page/delete-account-->
     <template data-simply-template="delete-account">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account"></simply-render>
-    </main>
+    <simply-render rel="delete-account"></simply-render>
+    
     </template>
     <!-- page/login-->
     <template data-simply-template="login">
@@ -2741,22 +2778,13 @@
     <!-- page/logout-->
     <template data-simply-template="logout">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <section>
-        <h1>You have been logged out.</h1>
-        <p>
-          You can close this window, or return to the <a href="/">home page</a>
-        </p>
-      </section>
-    </main>
+    <simply-render rel="logout"></simply-render>
     
     </template>
     <!-- page/register-->
     <template data-simply-template="register-thanks">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="register-thanks"></simply-render>
-    </main>
+    <simply-render rel="register-thanks"></simply-render>
     
     </template>
     <!-- page/register-->
@@ -2774,36 +2802,32 @@
     <!-- page/reset-password-->
     <template data-simply-template="change-password">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="reset-change-password"></simply-render>
-    </main>
+    <simply-render rel="reset-change-password"></simply-render>
+    
     </template>
     <!-- page/reset-password-->
     <template data-simply-template="reset-password-changed">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="reset-password-changed"></simply-render>
-    </main>
+    <simply-render rel="reset-password-changed"></simply-render>
+    
     </template>
     <!-- page/reset-password-->
     <template data-simply-template="reset-password-sent">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="reset-password-sent"></simply-render>
-    </main>
+    <simply-render rel="reset-password-sent"></simply-render>
+    
     </template>
     <!-- page/reset-password-->
     <template data-simply-template="reset-password">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="reset-password"></simply-render>
-    </main>
+    <simply-render rel="reset-password"></simply-render>
+    
     </template>
     <!-- page/sharing-->
     <template data-simply-template="sharing">
-      <main class="solid-main-wide">
-      <simply-render rel="sharing"></simply-render>
-    </main>
+      <simply-render rel="header"></simply-render>
+    <simply-render rel="sharing"></simply-render>
+    
     </template>
     <!-- /Page HTML templates -->
     </div>
@@ -2918,4 +2942,5 @@
       });
     </script>          
     <!-- /Foot HTML -->
-  </b
+  </body>
+</html>
