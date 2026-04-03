@@ -1880,7 +1880,16 @@
     <!-- /Component CSS -->
     <!-- Page CSS -->
     <style>
-      
+      /* home (page/home) */
+      .ds-button-multiline .ds-button-title {
+        font-size: 1.6em;
+      }
+      .ds-button-multiline {
+        padding: 1px;
+      }
+      .ds-button-wide {
+        display: block;
+      }
     </style>
     <!-- /Page CSS -->
     <!-- Head HTML -->
@@ -2297,35 +2306,43 @@
             // page/delete-account
             "/account/delete/confirm/#delete-account-done" : function(params) {
               editor.pageData.page = "delete-account-done";
+              return false;
             },
             // page/delete-account
             "/account/delete/confirm/" : function(params) {
               editor.pageData.deleteAccountToken = new URL(document.location.href).searchParams.get('token');
               editor.pageData.page = "delete-account-confirm";
+              return false;
             },
             // page/delete-account
             "/account/delete/#delete-account-sent" : function(params) {
               editor.pageData.page = "delete-account-sent";
+              return false;
             },
             // page/delete-account
             "/account/delete/" : function(params) {
               editor.pageData.page = "delete-account";
+              return false;
             },
             // page/login
             "/login/#login-done" : function(params) {
               editor.pageData.page = "login-done";
+              return false;
             },
             // page/login
             "/login/#login-password" : function(params) {
               editor.pageData.page = "login-password";
+              return false;
             },
             // page/register
             "/register/#register-password" : function(params) {
               editor.pageData.page = "register-password";
+              return false;
             },
             // page/register
             "/register/#register-thanks" : function(params) {
               editor.pageData.page = "register-thanks";
+              return false;
             },
             // page/register
             "/register/#register-verify" : function(params) {
@@ -2334,14 +2351,17 @@
               editor.pageData.register = registerData;
               }
               editor.pageData.page = "register-verify";
+              return false;
             },
             // page/reset-password
             "/change-password/#reset-password-changed" : function(params) {
               editor.pageData.page = "reset-password-changed";
+              return false;
             },
             // page/reset-password
             "/reset-password/#reset-password-sent" : function(params) {
               editor.pageData.page = "reset-password-sent";
+              return false;
             },
             // page/login
             "/login/" : function(params) {
@@ -2351,27 +2371,33 @@
                 editor.pageData.loginParams[param] = new URL(document.location.href).searchParams.get(param);
               });
               editor.pageData.page = "login";
+              return false;
             },
             // page/logout
             "/goodbye" : function(params) {
               editor.pageData.page = "logout";
+              return false;
             },
             // page/logout
             "/logout" : function(params) {
               editor.pageData.page = "logout";
+              return false;
             },
             // page/register
             "/register/" : function(params) {
               editor.pageData.page = "register";
+              return false;
             },
             // page/reset-password
             "/change-password/" : function(params) {
               editor.pageData.resetToken = new URL(document.location.href).searchParams.get('token');
               editor.pageData.page = "change-password";
+              return false;
             },
             // page/reset-password
             "/reset-password/" : function(params) {
               editor.pageData.page = "reset-password";
+              return false;
             },
             // page/sharing
             "/sharing" : function(params) {
@@ -2382,10 +2408,12 @@
               });
               editor.pageData.appOrigin = new URL(document.location.href).searchParams.get("redirect_uri");
               editor.pageData.page = "sharing";
+              return false;
             },
-            // page/login
-            ":*" : function(params) {
-              simply.route.goto('/login')
+            // page/home
+            "/" : function(params) {
+              editor.pageData.page = "home";
+              return false;
             }
           }
           /* /Routes */
@@ -2720,10 +2748,6 @@
       </form>
     </div>
     </template>
-    <!-- component/simply-logo-->
-    <template id="logotext">
-      identify
-    </template>
     <!-- component/solid-drawer-darkmode-->
     <template id="solid-drawer">
       <img class="ds-background-image solid-darkbg" src="/assets/img/bg2.jpg" alt="">
@@ -2769,6 +2793,31 @@
       <simply-render rel="header"></simply-render>
     <simply-render rel="delete-account"></simply-render>
     
+    </template>
+    <!-- page/home-->
+    <template data-simply-template="home">
+      <simply-render rel="header"></simply-render>
+    <div class="ds-dialog solid-dialog">
+      <h1 class="ds-center">Welcome to Solid</h1>
+      <a href="/login/" class="ds-button ds-button-multiline ds-button-wide ds-button-primary">
+        <p>
+          <span class="ds-button-title">Login</span><br>
+          Log in using your existing account
+        </p>
+      </a>
+      <a href="/register/" class="ds-button ds-button-multiline ds-button-wide ds-button-support">
+        <p>
+          <span class="ds-button-title">Register</span><br>
+          Register a new Web ID
+        </p>
+      </a>
+      <a href="/account/delete/" class="ds-button ds-button-multiline ds-button-wide ds-button-support">
+        <p>
+          <span class="ds-button-title">Request deletion</span><br>
+          Request removal of your existing account
+        </p>
+      </a>
+    </div>
     </template>
     <!-- page/login-->
     <template data-simply-template="login">
@@ -2941,6 +2990,12 @@
         }
       });
     </script>          
+    <!-- pushstate-fix (baseComponent/pushstate-fix) -->
+    <script>
+      addEventListener("popstate", (event) => { 
+        editor.data.apply(editor.currentData, document)
+      })
+    </script>
     <!-- /Foot HTML -->
   </body>
 </html>
