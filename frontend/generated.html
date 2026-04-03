@@ -888,6 +888,16 @@
           z-index: 101;
           border-radius: calc(2px + var(--ds-dialog-radius));
         }
+        @supports (display: flow-root) {
+          .ds-dialog {
+            display: flow-root;
+          }
+        }
+        @supports not (display: flow-root) {
+          .ds-dialog {
+            padding: 0.05px;
+          }
+        }
         .ds-dialog-narrow {
           width: var(--ds-dialog-narrow);
         }
@@ -1814,7 +1824,7 @@
         }
         .ds-darkmode .solid-dialog {
           box-shadow: var(--ds-shadow-small);
-          outline: 1px solid var(--ds-grey-80);
+          border: 1px solid var(--ds-grey-80);
         }
         @media (prefers-color-scheme: dark) {
           .ds-darkmode-auto .solid-dialog {
@@ -2141,25 +2151,6 @@
               }
               let result = await simplyDataApi.sendPasswordReset(resetParams);
               return result;
-            },
-            // component/solid-drawer-darkmode
-            "darkmodeInit" : function() {
-              const button = document.querySelector('.solid-darkmode-toggle button')
-              if (!button) {
-              return
-              }
-              if (document.body.classList.contains('ds-darkmode')) {
-                button.dataset.simplyState = 'default'
-              } else if (document.body.classList.contains('ds-darkmode-auto')) {
-                const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-                if (darkModeMql && darkModeMql.matches) {
-                  button.dataset.simplyState = 'default'
-                } else {
-                  button.dataset.simplyState = 'alt'
-                }
-              } else {
-                button.dataset.simplyState = 'alt'
-              }
             }
           },
           /* /Actions */
@@ -2697,7 +2688,10 @@
       <img class="ds-background-image solid-darkbg" src="/assets/img/bg2.jpg" alt="">
     <nav class="solid-drawer-position">
       <label class="ds-align-right ds-dropdown solid-drawer solid-darkmode-toggle">
-        <button class="ds-button ds-button-naked" data-simply-command="darkmodeToggle" data-simply-state="alt">
+        <button class="ds-button ds-button-naked" 
+                    data-simply-activate="darkmode"
+                    data-simply-command="darkmodeToggle" 
+                    data-simply-state="alt">
           <svg class="ds-icon ds-icon-feather" data-simply-state="default">
               <use xlink:href="/assets/img/feather-sprite.svg#moon"></use>
           </svg>
@@ -2781,7 +2775,7 @@
     <template data-simply-template="change-password">
       <simply-render rel="header"></simply-render>
     <main class="solid-main">
-      <simply-render rel="change-password"></simply-render>
+      <simply-render rel="reset-change-password"></simply-render>
     </main>
     </template>
     <!-- page/reset-password-->
@@ -2877,6 +2871,23 @@
         }
       })
     </script>
+    <!-- darkmode-init (baseComponent/darkmode) -->
+    <script>
+      simply.activate.addListener('darkmode', function() {
+        if (document.body.classList.contains('ds-darkmode')) {
+          this.dataset.simplyState = 'default'
+        } else if (document.body.classList.contains('ds-darkmode-auto')) {
+          const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+          if (darkModeMql && darkModeMql.matches) {
+            this.dataset.simplyState = 'default'
+          } else {
+            this.dataset.simplyState = 'alt'
+          }
+        } else {
+          this.dataset.simplyState = 'alt'
+        }
+      })
+    </script>
     <!-- password-input (baseComponent/password-input) -->
     <script>
       editor.field.registerType(
@@ -2907,5 +2918,4 @@
       });
     </script>          
     <!-- /Foot HTML -->
-  </body>
-</html>
+  </b
