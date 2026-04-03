@@ -1854,7 +1854,7 @@
           bottom: 0;
           background: var(--ds-color-background);
           padding-bottom: var(--ds-space-d2);
-        width: calc(100% - var(--ds-space-x2));
+      	width: calc(100% - var(--ds-space-x2));
         }
       }
       /* solid-theme (component/solid-styling) */
@@ -1931,8 +1931,8 @@
           },
           // baseComponent/raw-api
           "headers" : {
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
+          	'Accept': 'application/json',
+          	'Content-Type': 'application/x-www-form-urlencoded'
           },
           // baseComponent/raw-api
           "post" : function(endpoint, params={}) {
@@ -2306,62 +2306,51 @@
             // page/delete-account
             "/account/delete/confirm/#delete-account-done" : function(params) {
               editor.pageData.page = "delete-account-done";
-              return false;
             },
             // page/delete-account
             "/account/delete/confirm/" : function(params) {
               editor.pageData.deleteAccountToken = new URL(document.location.href).searchParams.get('token');
               editor.pageData.page = "delete-account-confirm";
-              return false;
             },
             // page/delete-account
             "/account/delete/#delete-account-sent" : function(params) {
               editor.pageData.page = "delete-account-sent";
-              return false;
             },
             // page/delete-account
             "/account/delete/" : function(params) {
               editor.pageData.page = "delete-account";
-              return false;
             },
             // page/login
             "/login/#login-done" : function(params) {
               editor.pageData.page = "login-done";
-              return false;
             },
             // page/login
             "/login/#login-password" : function(params) {
               editor.pageData.page = "login-password";
-              return false;
             },
             // page/register
             "/register/#register-password" : function(params) {
               editor.pageData.page = "register-password";
-              return false;
             },
             // page/register
             "/register/#register-thanks" : function(params) {
               editor.pageData.page = "register-thanks";
-              return false;
             },
             // page/register
             "/register/#register-verify" : function(params) {
               let registerData = JSON.parse(localStorage['registerData']);
               if (registerData) {
-              editor.pageData.register = registerData;
+            	editor.pageData.register = registerData;
               }
               editor.pageData.page = "register-verify";
-              return false;
             },
             // page/reset-password
             "/change-password/#reset-password-changed" : function(params) {
               editor.pageData.page = "reset-password-changed";
-              return false;
             },
             // page/reset-password
             "/reset-password/#reset-password-sent" : function(params) {
               editor.pageData.page = "reset-password-sent";
-              return false;
             },
             // page/login
             "/login/" : function(params) {
@@ -2371,33 +2360,27 @@
                 editor.pageData.loginParams[param] = new URL(document.location.href).searchParams.get(param);
               });
               editor.pageData.page = "login";
-              return false;
             },
             // page/logout
             "/goodbye" : function(params) {
               editor.pageData.page = "logout";
-              return false;
             },
             // page/logout
             "/logout" : function(params) {
               editor.pageData.page = "logout";
-              return false;
             },
             // page/register
             "/register/" : function(params) {
               editor.pageData.page = "register";
-              return false;
             },
             // page/reset-password
             "/change-password/" : function(params) {
               editor.pageData.resetToken = new URL(document.location.href).searchParams.get('token');
               editor.pageData.page = "change-password";
-              return false;
             },
             // page/reset-password
             "/reset-password/" : function(params) {
               editor.pageData.page = "reset-password";
-              return false;
             },
             // page/sharing
             "/sharing" : function(params) {
@@ -2408,12 +2391,10 @@
               });
               editor.pageData.appOrigin = new URL(document.location.href).searchParams.get("redirect_uri");
               editor.pageData.page = "sharing";
-              return false;
             },
             // page/home
             "/" : function(params) {
               editor.pageData.page = "home";
-              return false;
             }
           }
           /* /Routes */
@@ -2652,16 +2633,16 @@
     </template>
     <!-- component/reset-password-->
     <template id="reset-change-password">
-          <div class="ds-dialog solid-dialog">
-          <h1>Reset your password</h1>
-          <form class="solid-form" data-simply-command="resetChangePassword">
-            <simply-render rel="change-password"></simply-render>
-            <div class="ds-form-buttons">
-              <button class="ds-button ds-button-primary">Reset</button>
-              <a class="ds-button ds-button-support" href="/login/">Cancel</a>
-            </div>
-          </form>
-        </div>
+      		<div class="ds-dialog solid-dialog">
+    			<h1>Reset your password</h1>
+    			<form class="solid-form" data-simply-command="resetChangePassword">
+    				<simply-render rel="change-password"></simply-render>
+    				<div class="ds-form-buttons">
+    					<button class="ds-button ds-button-primary">Reset</button>
+    					<a class="ds-button ds-button-support" href="/login/">Cancel</a>
+    				</div>
+    			</form>
+    		</div>
     
     </template>
     <!-- component/reset-password-->
@@ -2752,19 +2733,19 @@
     <template id="solid-drawer">
       <img class="ds-background-image solid-darkbg" src="/assets/img/bg2.jpg" alt="">
     <nav class="solid-drawer-position">
-      <label class="ds-align-right ds-dropdown solid-drawer solid-darkmode-toggle">
-        <button class="ds-button ds-button-naked" 
+    	<label class="ds-align-right ds-dropdown solid-drawer solid-darkmode-toggle">
+    		<button class="ds-button ds-button-naked" 
                     data-simply-activate="darkmode"
                     data-simply-command="darkmodeToggle" 
                     data-simply-state="alt">
-          <svg class="ds-icon ds-icon-feather" data-simply-state="default">
-              <use xlink:href="/assets/img/feather-sprite.svg#moon"></use>
-          </svg>
-          <svg class="ds-icon ds-icon-feather" data-simply-state="alt">
-              <use xlink:href="/assets/img/feather-sprite.svg#sun"></use>
-          </svg>
-        </button>
-      </label>
+    			<svg class="ds-icon ds-icon-feather" data-simply-state="default">
+    			    <use xlink:href="/assets/img/feather-sprite.svg#moon"></use>
+    			</svg>
+    			<svg class="ds-icon ds-icon-feather" data-simply-state="alt">
+    			    <use xlink:href="/assets/img/feather-sprite.svg#sun"></use>
+    			</svg>
+    		</button>
+    	</label>
     </nav>
     </template>
     <!-- /Component HTML templates -->
@@ -2880,7 +2861,7 @@
     </template>
     <!-- /Page HTML templates -->
     </div>
-    <script src="https://unpkg.com/simplyview@2.1.1/dist/simply.everything.js"></script>
+    <script src="https://unpkg.com/simplyview@3.5.6/dist/simply.everything.js"></script>
     <script src="https://canary.simplyedit.io/1/simply-edit.js" data-simply-storage="none" data-api-key="simply-edit-0011"></script>
     <script>
       /* Transformers */
@@ -2964,14 +2945,14 @@
     <!-- password-input (baseComponent/password-input) -->
     <script>
       editor.field.registerType(
-      "input[type=password]",
-      function(field) {
-        return field.value;
-      },
-      function(field, data) {
-        field.value = data;
-      },
-      null
+    	"input[type=password]",
+    	function(field) {
+    		return field.value;
+    	},
+    	function(field, data) {
+    		field.value = data;
+    	},
+    	null
     );
     </script>
     <!-- postmessage (baseComponent/postmessage) -->
@@ -2990,12 +2971,6 @@
         }
       });
     </script>          
-    <!-- pushstate-fix (baseComponent/pushstate-fix) -->
-    <script>
-      addEventListener("popstate", (event) => { 
-        editor.data.apply(editor.currentData, document)
-      })
-    </script>
     <!-- /Foot HTML -->
   </body>
 </html>
