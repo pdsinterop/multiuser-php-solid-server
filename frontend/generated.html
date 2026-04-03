@@ -2918,12 +2918,12 @@
     <!-- Foot HTML -->
     <!-- autofocus (baseComponent/autofocus) -->
     <script>
-      simply.route.addListener('finish',':*',() => {
+      document.addEventListener("simply-content-loaded", function() {
         const focus = document.querySelector('[autofocus]')
         if (focus) {
-          focus.focus()
+          focus.focus();
         }
-      })
+      });
     </script>
     <!-- darkmode-init (baseComponent/darkmode) -->
     <script>
