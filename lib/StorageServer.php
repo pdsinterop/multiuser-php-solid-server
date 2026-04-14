@@ -84,10 +84,16 @@
 			if (!self::storageIdExists($storageId)) {
 				throw new \Exception("Storage does not exist");
 			}
+			if (is_dir(STORAGEBASE . "$storageId/")) { // backwards compatiblity check
+				$storagePath = $storageId;
+			} else {
+				$storagePath = implode("/", str_split($storageId, 4));
+			}
+
 			// The internal adapter
 			$adapter = new \League\Flysystem\Adapter\Local(
 				// Determine root directory
-				STORAGEBASE . "$storageId/"
+				STORAGEBASE . "$storagePath/"
 			);
 
 			$graph = new \EasyRdf\Graph();
