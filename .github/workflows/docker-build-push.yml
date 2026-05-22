@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - ci/docker-build
     tags:
       - '*'
   pull_request:
