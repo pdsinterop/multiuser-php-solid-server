@@ -1,11 +1,12 @@
 <?php
+
 	namespace Pdsinterop\PhpSolid\Routes;
 
-	use Pdsinterop\PhpSolid\Server;
 	use Pdsinterop\PhpSolid\ClientRegistration;
-	use Pdsinterop\PhpSolid\User;
+	use Pdsinterop\PhpSolid\Server;
 	use Pdsinterop\PhpSolid\Session;
-	
+	use Pdsinterop\PhpSolid\User;
+
 	class SolidIdp {
 		public static function respondToJwks() {
 			$authServer = Server::getAuthServer();
@@ -24,13 +25,13 @@
 
 			$clientId = $_GET['client_id'];
 			$getVars = $_GET;
-			
+
 			if (!isset($getVars['grant_type'])) {
-			    $getVars['grant_type'] = 'implicit';
+				$getVars['grant_type'] = 'implicit';
 			}
 			$getVars['scope'] = "openid" ;
 			$getVars['response_type'] = "token";
-			
+
 			$requestedResponseTypes = explode(" ", ($_GET['response_type'] ?? ''));
 			if (in_array("code", $requestedResponseTypes)) {
 				$getVars['response_type'] = "code";
@@ -45,30 +46,28 @@
 
 				if (isset($_GET['nonce'])) {
 					$_SESSION['nonce'] = $_GET['nonce'];
-				} else if (isset($_GET['request'])) {
+				} else {
 					$token = $jwtConfig->parser()->parse($_GET['request']);
 					$_SESSION['nonce'] = $token->claims()->get('nonce');
 				}
 
-				if (!isset($getVars["redirect_uri"])) {
-					if (isset($token)) {
-						$getVars['redirect_uri'] = $token->claims()->get("redirect_uri");
-					}
+				if (! isset($getVars["redirect_uri"]) && isset($token)) {
+					$getVars['redirect_uri'] = $token->claims()->get("redirect_uri");
 				}
 			}
 
 			$requestFactory = new \Laminas\Diactoros\ServerRequestFactory();
-			$request = $requestFactory->fromGlobals($_SERVER, $getVars, $_POST, $_COOKIE, $_FILES);
+			$request = $requestFactory::fromGlobals($_SERVER, $getVars, $_POST, $_COOKIE, $_FILES);
 
 			$authServer = Server::getAuthServer();
-			
+
 			$approval = false;
 			// check clientId approval for the user
-			if (in_array($clientId, ($user['allowedClients'] ?? []))) {
+			if (in_array($clientId, ($user['allowedClients'] ?? []), true)) {
 				$approval = true;
 			} else {
 				$clientRegistration = ClientRegistration::getRegistration($clientId);
-				if (isset($clientRegistration['origin']) && in_array($clientRegistration['origin'], TRUSTED_APPS)) {
+				if (isset($clientRegistration['origin']) && in_array($clientRegistration['origin'], TRUSTED_APPS, true)) {
 					$approval = true;
 				}
 			}
@@ -83,13 +82,13 @@
 				));
 				exit();
 			}
-			
+
 			$webId = "https://id-" . $user['userId'] . "." . BASEDOMAIN . "/#me";
 			$user = new \Pdsinterop\Solid\Auth\Entity\User();
 			$user->setIdentifier($webId);
 
 			$response = $authServer->respondToAuthorizationRequest($request, $user, $approval);
-			    
+
 			$tokenGenerator = Server::getTokenGenerator();
 
 			$response = $tokenGenerator->addIdTokenToResponse(
@@ -105,8 +104,8 @@
 
 		public static function respondToRegister() {
 			$postData = file_get_contents("php://input");
-			$clientData = json_decode($postData, true);
-			if (!isset($clientData)) {
+			$clientData = json_decode($postData, true, 512, JSON_THROW_ON_ERROR);
+			if (empty($clientData) || ! is_array($clientData)) {
 				header("HTTP/1.1 400 Bad request");
 				return;
 			}
@@ -125,7 +124,7 @@
 			$clientData['client_secret'] = $generatedClientSecret;
 			$clientData['origin'] = $origin;
 			ClientRegistration::saveClientRegistration($clientData);
-			
+
 			$client = ClientRegistration::getRegistration($generatedClientId);
 
 			$responseData = array(
@@ -145,7 +144,7 @@
 			header("Content-type: application/json");
 			echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 		}
-		
+
 		public static function respondToSharing() {
 			$user = User::getUser(Session::getLoggedInUser());
 			$clientId = $_POST['client_id'];
@@ -156,13 +155,13 @@
 			$returnUrl = urldecode($_POST['returnUrl']);
 			header("Location: $returnUrl");
 		}
-		
+
 		public static function respondToToken() {
 			$authServer = Server::getAuthServer();
 			$tokenGenerator = Server::getTokenGenerator();
 
 			$requestFactory = new \Laminas\Diactoros\ServerRequestFactory();
-			$request = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			$request = $requestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 			$requestBody = $request->getParsedBody();
 
 			$grantType = $requestBody['grant_type'] ?? null;
@@ -188,7 +187,7 @@
 					$userId = false;
 				break;
 			}
-			
+
 			$httpDpop = $request->getServerParams()['HTTP_DPOP'];
 
 			$response = $authServer->respondToAccessTokenRequest($request);
@@ -205,10 +204,10 @@
 			}
 
 			// Hack for podpro
-			if (PODPRO_COMPATIBILITY && strstr($clientId, "podpro.dev")) {
+			if (defined('PODPRO_COMPATIBILITY') && PODPRO_COMPATIBILITY && strstr($clientId, "podpro.dev")) {
 				$response->getBody()->rewind();
 				$responseBody = $response->getBody()->getContents();
-				$body = json_decode($responseBody, true);
+				$body = json_decode($responseBody, true, 512, JSON_THROW_ON_ERROR);
 				$body['refresh_token'] = str_repeat('a', 209); // Podpro doesn't like refresh tokens longer than 209 characters; Sad.
 				Server::respondPodPro($response, $body);
 			} else {
