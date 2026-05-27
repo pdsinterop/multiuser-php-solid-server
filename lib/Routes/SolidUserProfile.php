@@ -1,21 +1,18 @@
 <?php
 	namespace Pdsinterop\PhpSolid\Routes;
 
+	use Laminas\Diactoros\Response;
+	use Laminas\Diactoros\ServerRequestFactory;
 	use Pdsinterop\PhpSolid\ProfileServer;
-	use Pdsinterop\PhpSolid\ClientRegistration;
 	use Pdsinterop\PhpSolid\SolidNotifications;
 	use Pdsinterop\PhpSolid\Util;
 	use Pdsinterop\Solid\Auth\WAC;
 	use Pdsinterop\Solid\Resources\Server as ResourceServer;
-	use Laminas\Diactoros\ServerRequestFactory;
-	use Laminas\Diactoros\Response;
 
 	class SolidUserProfile {
 		public static function respondToProfile() {
 			$requestFactory = new ServerRequestFactory();
-			$serverData = $_SERVER;
-
-			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			$rawRequest = $requestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 			ProfileServer::initializeProfile();
 			$filesystem = ProfileServer::getFileSystem();
 
@@ -31,7 +28,7 @@
 			$wac->setBaseUrl($baseUrl);
 
 			// use the original $_SERVER without modified path, otherwise the htu check for DPOP will fail
-			$webId = ProfileServer::getWebId($requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES));
+			$webId = ProfileServer::getWebId($requestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES));
 
 			if (!isset($webId)) {
 				$response = $resourceServer->getResponse()
@@ -45,7 +42,6 @@
 			// FIXME: Read allowed clients from the profile instead;
 			$owner = ProfileServer::getOwner();
 
-			$allowedClients = $owner['allowedClients'] ?? [];
 			$allowedOrigins = array_merge(
 				($owner['allowedOrigins'] ?? []),
 				(TRUSTED_APPS ?? [])
@@ -68,4 +64,3 @@
 			ProfileServer::respond($response);
 		}
 	}
-			
