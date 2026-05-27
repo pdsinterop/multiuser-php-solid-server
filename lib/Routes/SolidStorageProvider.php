@@ -1,13 +1,13 @@
 <?php
 	namespace Pdsinterop\PhpSolid\Routes;
 
-	use Pdsinterop\PhpSolid\StorageServer;
 	use Laminas\Diactoros\ServerRequestFactory;
+	use Pdsinterop\PhpSolid\StorageServer;
 
 	class SolidStorageProvider {
 		public static function respondToStorageNew() {
 			$requestFactory = new ServerRequestFactory();
-			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			$rawRequest = $requestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 			$webId = StorageServer::getWebId($rawRequest);
 
 			if (!isset($webId) || $webId === "public") {
@@ -32,4 +32,3 @@
 			echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 		}
 	}
-			
