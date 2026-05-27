@@ -1,20 +1,19 @@
 <?php
 	namespace Pdsinterop\PhpSolid\Routes;
 
-	use Pdsinterop\PhpSolid\User;
-	use Pdsinterop\PhpSolid\StorageServer;
-	use Pdsinterop\PhpSolid\ClientRegistration;
+	use Laminas\Diactoros\Response;
+	use Laminas\Diactoros\ServerRequestFactory;
 	use Pdsinterop\PhpSolid\SolidNotifications;
+	use Pdsinterop\PhpSolid\StorageServer;
+	use Pdsinterop\PhpSolid\User;
 	use Pdsinterop\PhpSolid\Util;
 	use Pdsinterop\Solid\Auth\WAC;
 	use Pdsinterop\Solid\Resources\Server as ResourceServer;
-	use Laminas\Diactoros\ServerRequestFactory;
-	use Laminas\Diactoros\Response;
 
 	class SolidStorage {
 		public static function respondToStorage() {
 			$requestFactory = new ServerRequestFactory();
-			$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+			$rawRequest = $requestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 
 			try {
 				StorageServer::initializeStorage();
@@ -52,7 +51,6 @@
 			$ownerWebId = StorageServer::getOwnerWebId();
 			$owner = User::getUserByWebId($ownerWebId);
 
-			$allowedClients = $owner['allowedClients'] ?? [];
 			$allowedOrigins = array_merge(
 				($owner['allowedOrigins'] ?? []),
 				(TRUSTED_APPS ?? [])
@@ -76,4 +74,3 @@
 			StorageServer::respond($response);
 		}
 	}
-			
