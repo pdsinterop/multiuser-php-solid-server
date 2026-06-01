@@ -48,6 +48,20 @@
 			];
 		}
 
+		public static function getPodCount() {
+			Db::connect();
+			$query = Db::$pdo->prepare(
+				'SELECT count(storage_id) as podCount FROM storage'
+			);
+			$query->execute();
+			$result = $query->fetchAll();
+
+			if (sizeof($result) === 1) {
+				return $result[0]['podCount'];
+			}
+			return false;
+		}
+
                 public static function storageIdExists($storageId) {
                         Db::connect();
                         $query = Db::$pdo->prepare(

@@ -17,6 +17,10 @@
 	switch($method) {
 		case "GET":
 			switch ($request) {
+				case "/api/podcount":
+				case "/api/podcount/":
+					SolidStorageProvider::respondToPodCount();
+				break;
 				default:
 					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
 				break;
