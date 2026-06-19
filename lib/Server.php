@@ -66,7 +66,7 @@
 			if ($clientId) { 
 				$registeredClient = ClientRegistration::getRegistration($clientId);
 			}
-			if (isset($registeredClient)) {
+			if (isset($registeredClient)) { //FIXME: $registeredClient may be false, what then?
 				return new ConfigClient(
 					$clientId,
 					$registeredClient['client_secret'] ?? '',
