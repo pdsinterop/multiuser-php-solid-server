@@ -1,4 +1,3 @@
-version: '3'
 services:
     solid:
         build:
@@ -11,6 +10,10 @@ services:
             - ./data/db:/opt/solid/db
             - ./data/pods:/opt/solid/pods
             - ./data/profiles:/opt/solid/profiles
+            - ./frontend:/opt/solid/frontend
+            - ./lib:/opt/solid/lib
+            - ./www/idp:/opt/solid/www/idp
+            - ./config.php:/opt/solid/config.php
     pubsub:
         build:
             context: https://github.com/pdsinterop/php-solid-pubsub-server.git#main
