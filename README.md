@@ -10,19 +10,26 @@ For the user management, no framework is used to keep the codebase lean.
 Start the docker containers:
 
 ```sh
-docker-compose up
+docker compose up
 ```
 
 This will start up three containers: the solid server, pubsub server and a mailpit server. If you have an actual SMTP server running, feel free to remove the mailpit container.
 The persisted data will be stored in the data/ directory. This contains the keys, pods, db and mailpit data.
 
-Run the following commands to set up the container (replace 'solid' below with the name of your container):
-Note: Update the values in the config.php file where needed befure running the init script.
+Run the following commands to set up the container:
+Note: Update the values in the config.php file where needed before running the init script. 
 
 ```sh
-docker exec -w /opt/solid/ solid cp config.php.example config.php
-docker exec -u www-data -i -w /opt/solid/ solid php init.php
-docker exec -w /opt/solid/ solid chown -R www-data:www-data keys pods profiles db
+docker compose exec -w /opt/solid/ solid cp config.php.example config.php
+docker compose exec -w /opt/solid/ solid chown -R www-data:www-data keys pods profiles db
+docker compose exec -u www-data -i -w /opt/solid/ solid php init.php
+```
+
+If you need dev user accounts bob and alice, also run this:
+
+```sh
+docker compose exec -u www-data -i -w /opt/solid/ solid php init-devusers.php
+docker compose exec -w /opt/solid/ solid chown -R www-data:www-data keys pods profiles db # again
 ```
 
 Now add the following host to your `/etc/hosts` file:
@@ -30,7 +37,7 @@ Now add the following host to your `/etc/hosts` file:
 127.0.0.1   solid.local
 ```
 
-And browser to `https://solid.local/`. After you register a new account, you'll get an identity and storage hostname, add these to `/etc/hosts` as well, e.g:
+And browse to `https://solid.local/`. After you register a new account, you'll get an identity and storage hostname, add these to `/etc/hosts` as well, e.g:
 ```
 127.0.0.1   id-d1f0e8c54e755cb45b61ee8e9dad00fe.solid.local storage-d1f0e8c54e755cb45b61ee8e9dad00fe.solid.local
 ```
