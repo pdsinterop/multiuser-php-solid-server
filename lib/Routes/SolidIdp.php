@@ -90,15 +90,17 @@
 
 			$response = $authServer->respondToAuthorizationRequest($request, $user, $approval);
 			    
-			$tokenGenerator = Server::getTokenGenerator();
+			if (in_array("id_token", $requestedResponseTypes)) {
+				$tokenGenerator = Server::getTokenGenerator();
 
-			$response = $tokenGenerator->addIdTokenToResponse(
-				$response,
-				$clientId,
-				$webId,
-				$_SESSION['nonce'] ?? '',
-				Server::getKeys()["privateKey"]
-			);
+				$response = $tokenGenerator->addIdTokenToResponse(
+					$response,
+					$clientId,
+					$webId,
+					$_SESSION['nonce'] ?? '',
+					Server::getKeys()["privateKey"]
+				);
+			}
 
 			Server::respond($response);
 		}
