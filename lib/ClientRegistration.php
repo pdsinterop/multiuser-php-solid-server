@@ -19,7 +19,7 @@
 			if (preg_match("/^http(s)?:/", $clientId)) {
 				$clientData = self::getRemoteRegistration($clientId);
 				if (!isset($clientData['origin']) && isset($clientData['client_uri'])) {
-					$clientData['origin'] = preg_replace("/\/$/", "", $clientData['client_uri']);
+					$clientData['origin'] = rtrim($clientData['client_uri'], '/');
 				}
 				self::saveClientRegistration($clientData);
 				return $clientData;
