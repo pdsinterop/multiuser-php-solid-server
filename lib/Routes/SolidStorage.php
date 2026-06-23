@@ -36,7 +36,14 @@
 			$resourceServer->setBaseUrl($baseUrl);
 			$wac->setBaseUrl($baseUrl);
 
-			$webId = StorageServer::getWebId($rawRequest);
+			try {
+				$webId = StorageServer::getWebId($rawRequest);
+			} catch(\Exception $e) {
+				$response = $resourceServer->getResponse()
+					-> withStatus(400, "Bad request");
+				StorageServer::respond($response);
+				exit();
+			}
 
 			if (!isset($webId)) {
 				$response = $resourceServer->getResponse()
