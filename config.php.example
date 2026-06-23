@@ -43,6 +43,10 @@
 
 	const PUBSUB_SERVER = "wss://pubsub:8080";
 
+	// Token / key that needs to be in the request to fetch the pod
+	// count from the storage api
+	const POD_COUNT_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
 	// Array of IPs that can be trusted. If they are in this list, they
 	// won't be locked out after failed login attempts;
 	const TRUSTED_IPS = [];
