@@ -1,14 +1,17 @@
 <?php
 
 // phpcs:disable Generic.Files.LineLength.TooLong
+// phpcs:disable Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed
 
 	namespace Pdsinterop\PhpSolid;
-	
-	class MailTemplateGenerator {
-		public static function mailtemplate($mailTokens) {
-			$backgroundColor = MAILSTYLES['container']['backgroundColor'] ?? "#eeeeee";
-			ob_start();
-?>
+
+class MailTemplateGenerator
+{
+	public static function mailtemplate($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['container']['backgroundColor'] ?? "#eeeeee";
+		ob_start();
+		?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,15 +57,17 @@
  </table>
 </body>
 </html>
-<?php
-			$mailTemplate = ob_get_contents();
-			ob_end_clean();
-			return $mailTemplate;
-		}
+		<?php
+		$mailTemplate = ob_get_contents();
+		ob_end_clean();
 
-		private static function mailTemplateHeader($mailTokens) {
-			$backgroundColor = MAILSTYLES['header']['backgroundColor'] ?? "#3b3b3b";
-?>
+		return $mailTemplate;
+	}
+
+	private static function mailTemplateHeader($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['header']['backgroundColor'] ?? "#3b3b3b";
+		?>
   <!-- Header -->
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
    <tr>
@@ -78,44 +83,47 @@
    </tr>
   </table>
   <!-- /Header -->
-<?php
-  		}
+		<?php
+	}
 
-		private static function mailTemplateCallToAction($mailTokens) {
-			$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
-			$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
-			$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
-			$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
-?>
+	private static function mailTemplateCallToAction($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
+		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
+		$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
+		$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
+		?>
   <!-- Call to action -->
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
    <tr>
     <td valign="top" style="padding: 40px 60px 40px 60px; height: unset; background-color: <?php echo $backgroundColor; ?>;" bgcolor="<?php echo $backgroundColor; ?>">
-     <?php 
-		self::mailTemplateCallToActionTitle($mailTokens);
-	 	if (isset($mailTokens['buttonText'])) {
+		<?php
+					self::mailTemplateCallToActionTitle($mailTokens);
+		if (isset($mailTokens['buttonText'])) {
 			if (isset($mailTokens['buttonLink'])) {
 				self::mailTemplateCallToActionButton($mailTokens);
 			} else {
 				self::mailTemplateCallToActionButtonNoLink($mailTokens);
 			}
-	 	}
-	 	self::mailTemplateCallToActionDescription($mailTokens);
-    ?>
+		}
+		self::mailTemplateCallToActionDescription($mailTokens);
+		?>
     </td>
    </tr>
   </table>
   <!-- /Call to action -->
-<?php
-		}
-		private static function mailTemplateCallToActionButton($mailTokens) {
-			$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
-			$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
-			$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
-			$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
-			$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "##eeeeee";
-			$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#262c2f";
-?>
+		<?php
+	}
+
+	private static function mailTemplateCallToActionButton($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
+		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
+		$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
+		$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
+		$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "##eeeeee";
+		$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#262c2f";
+		?>
      <table width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
        <th valign="top" align="center" style="padding: 0px 0px 30px 0px; text-align: center; font-weight: normal;">
@@ -123,17 +131,18 @@
        </th>
       </tr>
      </table>
-<?php
-		}
+		<?php
+	}
 
-		private static function mailTemplateCallToActionButtonNoLink($mailTokens) {
-			$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
-			$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
-			$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
-			$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
-			$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "##eeeeee";
-			$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#262c2f";
-?>
+	private static function mailTemplateCallToActionButtonNoLink($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
+		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
+		$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
+		$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
+		$buttonTextColor = MAILSTYLES['call-to-action']['buttonTextColor'] ?? "##eeeeee";
+		$buttonBackgroundColor = MAILSTYLES['call-to-action']['buttonBackgroundColor'] ?? "#262c2f";
+		?>
      <table width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
        <th valign="top" align="center" style="padding: 0px 0px 30px 0px; text-align: center; font-weight: normal;">
@@ -141,15 +150,16 @@
        </th>
       </tr>
      </table>
-<?php
-		}
+		<?php
+	}
 
-		private static function mailTemplateCallToActionTitle($mailTokens) {
-			$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
-			$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
-			$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
-			$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
-?>
+	private static function mailTemplateCallToActionTitle($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
+		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
+		$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
+		$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
+		?>
  <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
    <td align="center" valign="top" style="padding: 0px 0px 30px 0px; height: auto;">
@@ -168,15 +178,16 @@
    </td>
   </tr>
  </table>
-<?php
-		}
+		<?php
+	}
 
-		private static function mailTemplateCallToActionDescription($mailTokens) {
-			$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
-		       	$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
-		   	$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
-		    	$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
-?>
+	private static function mailTemplateCallToActionDescription($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
+		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
+		$colorMuted = MAILSTYLES['call-to-action']['colorMuted'] ?? "#333333";
+		$fontFamily = MAILSTYLES['call-to-action']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
+		?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
    <td align="left" valign="top">
@@ -195,13 +206,15 @@
    </td>
   </tr>
  </table>
-<?php
-		}
-		private static function mailTemplateFooter($mailTokens) {
-			$backgroundColor = MAILSTYLES['footer']['backgroundColor'] ?? "#3b3b3b";
-			$color = MAILSTYLES['footer']['color'] ?? "#e8ecf0";
-			$fontFamily = MAILSTYLES['footer']['fontFamily'] ?? "Arial, Helvetica, sans-serif";	
-?>
+		<?php
+	}
+
+	private static function mailTemplateFooter($mailTokens)
+	{
+		$backgroundColor = MAILSTYLES['footer']['backgroundColor'] ?? "#3b3b3b";
+		$color = MAILSTYLES['footer']['color'] ?? "#e8ecf0";
+		$fontFamily = MAILSTYLES['footer']['fontFamily'] ?? "Arial, Helvetica, sans-serif";
+		?>
 <!-- Footer -->
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
    <tr>
@@ -235,6 +248,7 @@
   </table>
   <!-- END MODULE: Footer -->
 
-<?php		}
-	}
+	<?php		}
+}
+
 ?>

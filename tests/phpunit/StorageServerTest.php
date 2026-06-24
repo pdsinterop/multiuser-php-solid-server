@@ -2,139 +2,143 @@
 
 // phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 
-    namespace Pdsinterop\PhpSolid;
+namespace Pdsinterop\PhpSolid;
 
-    require_once(__DIR__ . "/test-config.php");
+require_once(__DIR__ . "/test-config.php");
 
-    use Pdsinterop\PhpSolid\StorageServer;
-    
-    class StorageServerTest extends \PHPUnit\Framework\TestCase
-    {
-        public static $headers = [];
-        public static $createdUser;
-        public static $createdStorage;
+use Pdsinterop\PhpSolid\StorageServer;
 
-        protected function setUp(): void
-        {
-            $statements = [
-                'DROP TABLE IF EXISTS allowedClients',
-                'DROP TABLE IF EXISTS userStorage',
-                'DROP TABLE IF EXISTS users',
-                'DROP TABLE IF EXISTS storage',
-                'CREATE TABLE IF NOT EXISTS allowedClients (
-                        userId VARCHAR(255) NOT NULL PRIMARY KEY,
-                        clientId VARCHAR(255) NOT NULL
-                )',
-                'CREATE TABLE IF NOT EXISTS userStorage (
-                        userId VARCHAR(255) NOT NULL PRIMARY KEY,
-                        storageUrl VARCHAR(255) NOT NULL
-                )',
-                'CREATE TABLE IF NOT EXISTS users (
-                        user_id VARCHAR(255) NOT NULL PRIMARY KEY,
-                        email TEXT NOT NULL,
-                        password TEXT NOT NULL,
-                        data TEXT
-                )',
-                'CREATE TABLE IF NOT EXISTS storage (
-                        storage_id VARCHAR(255) NOT NULL PRIMARY KEY,
-                        owner VARCHAR(255) NOT NULL
-                )',
-            ];
+class StorageServerTest extends \PHPUnit\Framework\TestCase
+{
+	public static $headers = [];
+	public static $createdUser;
+	public static $createdStorage;
 
-            Db::connect();
-            try {
-                // create tables
-                foreach($statements as $statement){
-                    Db::$pdo->exec($statement);
-                }
-            } catch(\PDOException $e) {
-                echo $e->getMessage();
-            }
+	protected function setUp(): void
+	{
+		$statements = [
+			'DROP TABLE IF EXISTS allowedClients',
+			'DROP TABLE IF EXISTS userStorage',
+			'DROP TABLE IF EXISTS users',
+			'DROP TABLE IF EXISTS storage',
+			'CREATE TABLE IF NOT EXISTS allowedClients (
+					userId VARCHAR(255) NOT NULL PRIMARY KEY,
+					clientId VARCHAR(255) NOT NULL
+			)',
+			'CREATE TABLE IF NOT EXISTS userStorage (
+					userId VARCHAR(255) NOT NULL PRIMARY KEY,
+					storageUrl VARCHAR(255) NOT NULL
+			)',
+			'CREATE TABLE IF NOT EXISTS users (
+					user_id VARCHAR(255) NOT NULL PRIMARY KEY,
+					email TEXT NOT NULL,
+					password TEXT NOT NULL,
+					data TEXT
+			)',
+			'CREATE TABLE IF NOT EXISTS storage (
+					storage_id VARCHAR(255) NOT NULL PRIMARY KEY,
+					owner VARCHAR(255) NOT NULL
+			)',
+		];
 
-            $newUser = [
-                "password" => "hello123!@#ABC",
-		"email" => "alice@example.com",
-		"hello" => "world"
-            ];
-            self::$createdUser = User::createUser($newUser);
-            self::$createdStorage = StorageServer::createStorage(self::$createdUser['webId']);
+		Db::connect();
+		try {
+			// create tables
+			foreach ($statements as $statement) {
+				Db::$pdo->exec($statement);
+			}
+		} catch (\PDOException $e) {
+			echo $e->getMessage();
+		}
 
-            $_SERVER['REQUEST_URI'] = "/test/";
-            $_SERVER['REQUEST_SCHEME'] = "https";
-            $_SERVER['SERVER_NAME'] = "storage-" . self::$createdStorage['storageId'] . ".example.com";
-        }
+		$newUser = [
+			"password" => "hello123!@#ABC",
+			"email" => "alice@example.com",
+			"hello" => "world"
+		];
+		self::$createdUser = User::createUser($newUser);
+		self::$createdStorage = StorageServer::createStorage(self::$createdUser['webId']);
 
-        public function testGetFileSystem() {
-            $filesystem = StorageServer::getFileSystem();
-            $this->assertInstanceOf('\League\Flysystem\Filesystem', $filesystem);
-        }
+		$_SERVER['REQUEST_URI'] = "/test/";
+		$_SERVER['REQUEST_SCHEME'] = "https";
+		$_SERVER['SERVER_NAME'] = "storage-" . self::$createdStorage['storageId'] . ".example.com";
+	}
 
-        
-        public function testRespond() {
-            $response = new MockResponse();
-            ob_start();
-            StorageServer::respond($response);
-            $sentBody = ob_get_contents();
-            ob_end_clean();
-            $this->assertTrue(in_array("HTTP/1.1 200", StorageServerTest::$headers));
-            $this->assertTrue(in_array("Foo:Bar", StorageServerTest::$headers));
-            $this->assertTrue(in_array("Foo:Blah", StorageServerTest::$headers));
-            
-            $this->assertEquals($sentBody, "{\"Hello\":\"world\"}");
-        }
+	public function testGetFileSystem()
+	{
+		$filesystem = StorageServer::getFileSystem();
+		$this->assertInstanceOf('\League\Flysystem\Filesystem', $filesystem);
+	}
 
-        public function testGetOwnerWebId() {
-            $webId = StorageServer::getOwnerWebId();
-            $this->assertEquals(self::$createdUser['webId'], $webId);
-        }
+	public function testRespond()
+	{
+		$response = new MockResponse();
+		ob_start();
+		StorageServer::respond($response);
+		$sentBody = ob_get_contents();
+		ob_end_clean();
+		$this->assertTrue(in_array("HTTP/1.1 200", StorageServerTest::$headers));
+		$this->assertTrue(in_array("Foo:Bar", StorageServerTest::$headers));
+		$this->assertTrue(in_array("Foo:Blah", StorageServerTest::$headers));
 
-        public function testGenerateDefaultAcl() {
-            $defaultAcl = StorageServer::generateDefaultAcl();
-            $this->assertTrue(strpos($defaultAcl, self::$createdUser['webId']) > 0);
-            $this->assertMatchesRegularExpression("/@prefix/", $defaultAcl);
-        }
+		$this->assertEquals($sentBody, "{\"Hello\":\"world\"}");
+	}
 
-        public function testGeneratePublicAppendAcl() {
-            $publicAppendAcl = StorageServer::generatePublicAppendAcl();
-            $this->assertTrue(strpos($publicAppendAcl, self::$createdUser['webId']) > 0);
-            $this->assertMatchesRegularExpression("/@prefix/", $publicAppendAcl);
-        }
+	public function testGetOwnerWebId()
+	{
+		$webId = StorageServer::getOwnerWebId();
+		$this->assertEquals(self::$createdUser['webId'], $webId);
+	}
 
-        public function testGeneratePublicReadAcl() {
-            $publicReadAcl = StorageServer::generatePublicReadAcl();
-            $this->assertTrue(strpos($publicReadAcl, self::$createdUser['webId']) > 0);
-            $this->assertMatchesRegularExpression("/@prefix/", $publicReadAcl);
-        }
+	public function testGenerateDefaultAcl()
+	{
+		$defaultAcl = StorageServer::generateDefaultAcl();
+		$this->assertTrue(strpos($defaultAcl, self::$createdUser['webId']) > 0);
+		$this->assertMatchesRegularExpression("/@prefix/", $defaultAcl);
+	}
 
-        public function testGenerateDefaultPrivateTypeIndex() {
-            $privateTypeIndex = StorageServer::generateDefaultPrivateTypeIndex();
-            $this->assertTrue(strpos($privateTypeIndex, "UnlistedDocument") > 0);
-            $this->assertMatchesRegularExpression("/@prefix/", $privateTypeIndex);
-        }
+	public function testGeneratePublicAppendAcl()
+	{
+		$publicAppendAcl = StorageServer::generatePublicAppendAcl();
+		$this->assertTrue(strpos($publicAppendAcl, self::$createdUser['webId']) > 0);
+		$this->assertMatchesRegularExpression("/@prefix/", $publicAppendAcl);
+	}
 
-        public function testGenerateDefaultPublicTypeIndex() {
-            $publicTypeIndex = StorageServer::generateDefaultPublicTypeIndex();
-            $this->assertTrue(strpos($publicTypeIndex, "ListedDocument") > 0);
-            $this->assertMatchesRegularExpression("/@prefix/", $publicTypeIndex);
-        }
+	public function testGeneratePublicReadAcl()
+	{
+		$publicReadAcl = StorageServer::generatePublicReadAcl();
+		$this->assertTrue(strpos($publicReadAcl, self::$createdUser['webId']) > 0);
+		$this->assertMatchesRegularExpression("/@prefix/", $publicReadAcl);
+	}
 
-        public function testGenerateDefaultPreferences() {
-            $preferences = StorageServer::generateDefaultPreferences();
-            $this->assertTrue(strpos($preferences, "ConfigurationFile") > 0);
-            $this->assertMatchesRegularExpression("/@prefix/", $preferences);
-        }
+	public function testGenerateDefaultPrivateTypeIndex()
+	{
+		$privateTypeIndex = StorageServer::generateDefaultPrivateTypeIndex();
+		$this->assertTrue(strpos($privateTypeIndex, "UnlistedDocument") > 0);
+		$this->assertMatchesRegularExpression("/@prefix/", $privateTypeIndex);
+	}
 
-        /*
-            Currently untested:
-            public static function getWebId($rawRequest) {
-            public static function initializeStorage() {
-            public static function getStorage($storageId) {
-            public static function setStorageOwner($storageId, $owner) {
-            public static function createStorage($ownerWebId) {
-            public static function storageIdExists($storageId) {
-        */
-    }
+	public function testGenerateDefaultPublicTypeIndex()
+	{
+		$publicTypeIndex = StorageServer::generateDefaultPublicTypeIndex();
+		$this->assertTrue(strpos($publicTypeIndex, "ListedDocument") > 0);
+		$this->assertMatchesRegularExpression("/@prefix/", $publicTypeIndex);
+	}
 
+	public function testGenerateDefaultPreferences()
+	{
+		$preferences = StorageServer::generateDefaultPreferences();
+		$this->assertTrue(strpos($preferences, "ConfigurationFile") > 0);
+		$this->assertMatchesRegularExpression("/@prefix/", $preferences);
+	}
 
-
-		
+	/*
+		Currently untested:
+		public static function getWebId($rawRequest) {
+		public static function initializeStorage() {
+		public static function getStorage($storageId) {
+		public static function setStorageOwner($storageId, $owner) {
+		public static function createStorage($ownerWebId) {
+		public static function storageIdExists($storageId) {
+	*/
+}

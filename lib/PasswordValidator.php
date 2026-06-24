@@ -1,4 +1,5 @@
 <?php
+
 /*
 	Code modified from https://gitlab.com/garybell/password-validation/ (MIT licensed)
 */
@@ -97,8 +98,7 @@ class PasswordValidator
 		$characters = str_split($password);
 		$length = 0;
 
-		foreach ($characters as $character)
-		{
+		foreach ($characters as $character) {
 			if (array_key_exists($character, $usedCharacters) && $usedCharacters[$character] < self::$maxOccurrences) {
 				$length++;
 				$usedCharacters[$character]++;

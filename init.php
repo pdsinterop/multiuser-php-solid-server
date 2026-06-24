@@ -2,85 +2,89 @@
 
 // phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 
-	require_once(__DIR__ . "/config.php");
-	require_once(__DIR__ . "/vendor/autoload.php");
-	
-	use Pdsinterop\PhpSolid\Server;
-	
-	function initKeys() {
-		$keys = Server::generateKeySet();
-		file_put_contents(KEYDIR . "public.key", $keys['publicKey']);
-		file_put_contents(KEYDIR . "private.key", $keys['privateKey']);
-		file_put_contents(KEYDIR . "encryption.key", $keys['encryptionKey']);
-	}
+require_once(__DIR__ . "/config.php");
+require_once(__DIR__ . "/vendor/autoload.php");
 
-	function initDatabase() {
-		$statements = [
-		    'CREATE TABLE IF NOT EXISTS clients (
-			clientId VARCHAR(255) NOT NULL PRIMARY KEY,
-			origin TEXT NOT NULL,
-			clientData TEXT NOT NULL
-		    )',
-		    'CREATE TABLE IF NOT EXISTS allowedClients (
-			userId VARCHAR(255) NOT NULL PRIMARY KEY,
-			clientId VARCHAR(255) NOT NULL
-		    )',
-		    'CREATE TABLE IF NOT EXISTS userStorage (
-			userId VARCHAR(255) NOT NULL PRIMARY KEY,
-			storageUrl VARCHAR(255) NOT NULL
-		    )',
-		    'CREATE TABLE IF NOT EXISTS verify (
-			code VARCHAR(255) NOT NULL PRIMARY KEY,
-			data TEXT NOT NULL
-		    )',
-		    'CREATE TABLE IF NOT EXISTS jti (
-			jti VARCHAR(255) NOT NULL PRIMARY KEY,
-			expires TEXT NOT NULL
-		    )',
-		    'CREATE TABLE IF NOT EXISTS users (
-			user_id VARCHAR(255) NOT NULL PRIMARY KEY,
-			email TEXT NOT NULL,
-			password TEXT NOT NULL,
-			data TEXT
-		    )',
-		    'CREATE TABLE IF NOT EXISTS ipAttempts (
-			ip VARCHAR(255) NOT NULL,
-			type VARCHAR(255) NOT NULL,
-			expires TEXT NOT NULL
-		    )',
-		];
-		      
-		try {
-		    $pdo = new \PDO("sqlite:" . DBPATH);
+use Pdsinterop\PhpSolid\Server;
 
-		    // create tables
-		    foreach($statements as $statement){
+function initKeys()
+{
+	$keys = Server::generateKeySet();
+	file_put_contents(KEYDIR . "public.key", $keys['publicKey']);
+	file_put_contents(KEYDIR . "private.key", $keys['privateKey']);
+	file_put_contents(KEYDIR . "encryption.key", $keys['encryptionKey']);
+}
+
+function initDatabase()
+{
+	$statements = [
+		'CREATE TABLE IF NOT EXISTS clients (
+		clientId VARCHAR(255) NOT NULL PRIMARY KEY,
+		origin TEXT NOT NULL,
+		clientData TEXT NOT NULL
+		)',
+		'CREATE TABLE IF NOT EXISTS allowedClients (
+		userId VARCHAR(255) NOT NULL PRIMARY KEY,
+		clientId VARCHAR(255) NOT NULL
+		)',
+		'CREATE TABLE IF NOT EXISTS userStorage (
+		userId VARCHAR(255) NOT NULL PRIMARY KEY,
+		storageUrl VARCHAR(255) NOT NULL
+		)',
+		'CREATE TABLE IF NOT EXISTS verify (
+		code VARCHAR(255) NOT NULL PRIMARY KEY,
+		data TEXT NOT NULL
+		)',
+		'CREATE TABLE IF NOT EXISTS jti (
+		jti VARCHAR(255) NOT NULL PRIMARY KEY,
+		expires TEXT NOT NULL
+		)',
+		'CREATE TABLE IF NOT EXISTS users (
+		user_id VARCHAR(255) NOT NULL PRIMARY KEY,
+		email TEXT NOT NULL,
+		password TEXT NOT NULL,
+		data TEXT
+		)',
+		'CREATE TABLE IF NOT EXISTS ipAttempts (
+		ip VARCHAR(255) NOT NULL,
+		type VARCHAR(255) NOT NULL,
+		expires TEXT NOT NULL
+		)',
+	];
+
+	try {
+		$pdo = new \PDO("sqlite:" . DBPATH);
+
+		// create tables
+		foreach ($statements as $statement) {
 			$pdo->exec($statement);
-		    }
-		} catch(\PDOException $e) {
-		    echo $e->getMessage();
 		}
+	} catch (\PDOException $e) {
+		echo $e->getMessage();
 	}
+}
 
-	function initStorageDatabase() {
-		$statements = [
-		    'CREATE TABLE IF NOT EXISTS storage (
-			storage_id VARCHAR(255) NOT NULL PRIMARY KEY,
-			owner VARCHAR(255) NOT NULL
-		    )'
-		];
+function initStorageDatabase()
+{
+	$statements = [
+		'CREATE TABLE IF NOT EXISTS storage (
+		storage_id VARCHAR(255) NOT NULL PRIMARY KEY,
+		owner VARCHAR(255) NOT NULL
+		)'
+	];
 
-		try {
-		    $pdo = new \PDO("sqlite:" . DBPATH);
+	try {
+		$pdo = new \PDO("sqlite:" . DBPATH);
 
-		    // create tables
-		    foreach($statements as $statement){
+		// create tables
+		foreach ($statements as $statement) {
 			$pdo->exec($statement);
-		    }
-		} catch(\PDOException $e) {
-		    echo $e->getMessage();
 		}
+	} catch (\PDOException $e) {
+		echo $e->getMessage();
 	}
-	initKeys();
-	initDatabase();
-	initStorageDatabase();
+}
+
+initKeys();
+initDatabase();
+initStorageDatabase();
