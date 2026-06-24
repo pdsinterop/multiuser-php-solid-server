@@ -5,10 +5,6 @@
 
 	class ClientRegistration {
 		public static function getRegistration($clientId) {
-			if (preg_match("/^http(s)?:/", $clientId)) {
-				return self::getRemoteRegistration($clientId);
-			}
-
 			Db::connect();
 			$query = Db::$pdo->prepare(
 				'SELECT clientData FROM clients WHERE clientId=:clientId'
@@ -19,6 +15,14 @@
 			$result = $query->fetchAll();
 			if (sizeof($result) === 1) {
 				return json_decode($result[0]['clientData'], true);
+			}
+			if (preg_match("/^http(s)?:/", $clientId)) {
+				$clientData = self::getRemoteRegistration($clientId);
+				if (!isset($clientData['origin']) && isset($clientData['client_uri'])) {
+					$clientData['origin'] = rtrim($clientData['client_uri'], '/');
+				}
+				self::saveClientRegistration($clientData);
+				return $clientData;
 			}
 			return false;
 		}
