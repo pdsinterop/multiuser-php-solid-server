@@ -1,4 +1,8 @@
 <?php
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+
     namespace Pdsinterop\PhpSolid;
 
     require_once(__DIR__ . "/test-config.php");

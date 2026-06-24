@@ -1,4 +1,7 @@
 <?php
+
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+
 namespace Pdsinterop\PhpSolid\Tests;
 
 require_once(__DIR__ . "/test-config.php");

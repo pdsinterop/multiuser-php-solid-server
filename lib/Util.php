@@ -1,4 +1,7 @@
 <?php
+
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+
 	namespace Pdsinterop\PhpSolid;
 	
 	class Util {

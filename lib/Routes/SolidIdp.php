@@ -1,4 +1,7 @@
 <?php
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 	namespace Pdsinterop\PhpSolid\Routes;
 
 	use Pdsinterop\PhpSolid\Server;

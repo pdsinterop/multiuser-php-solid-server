@@ -1,4 +1,8 @@
 <?php
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+
     namespace Pdsinterop\PhpSolid;
 
     use Pdsinterop\PhpSolid\Mailer;

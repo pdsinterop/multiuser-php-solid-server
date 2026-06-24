@@ -1,4 +1,7 @@
 <?php
+
+// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+
 namespace Pdsinterop\PhpSolid;
 
 const DBPATH = ":memory:";
