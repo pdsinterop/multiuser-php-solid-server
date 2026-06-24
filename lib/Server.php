@@ -66,7 +66,12 @@
 			if ($clientId) { 
 				$registeredClient = ClientRegistration::getRegistration($clientId);
 			}
-			if (isset($registeredClient)) { //FIXME: $registeredClient may be false, what then?
+			if (isset($registeredClient)) { 
+				if (!$registeredClient || !isset($registeredClient['redirect_uris'])) {
+					//TODO: better to throw an error and handle that on the outside
+					header("HTTP/1.1 400 Bad request");
+					exit();
+				}
 				return new ConfigClient(
 					$clientId,
 					$registeredClient['client_secret'] ?? '',
