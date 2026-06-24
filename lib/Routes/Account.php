@@ -71,7 +71,7 @@
 				header("HTTP/1.1 400 Bad Request");
 				exit();
 			}
-			if (!$_POST['password'] === $_POST['repeat_password']) {
+			if ($_POST['password'] !== $_POST['repeat_password']) {
 				error_log("Password repeat does not match");
 				header("HTTP/1.1 400 Bad Request");
 				exit();
