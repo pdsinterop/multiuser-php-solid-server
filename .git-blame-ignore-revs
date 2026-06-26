@@ -10,3 +10,7 @@
 #
 # When adding a new revision to the list, please put its commit message
 # in a comment above it.
+
+
+# Mass fix of PHP Codesniffer whitespace violations
+aaeca415e39669aae893f2fde47cf2ae04a6a287
