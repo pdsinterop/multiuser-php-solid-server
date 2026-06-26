@@ -1,0 +1,24 @@
+root = true
+
+[*.php]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = tab
+insert_final_newline = true
+max_line_length = 120
+spelling_language = en-US
+tab_width = 4
+trim_trailing_whitespace = true
+
+# Unset settings for vendor directories
+[{node_modules,vendor}/**]
+charset = unset
+end_of_line = unset
+indent_size = unset
+indent_style = unset
+insert_final_newline = unset
+max_line_length = unset
+spelling_language = unset
+tab_width = unset
+trim_trailing_whitespace = unset

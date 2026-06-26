@@ -1,24 +1,25 @@
 <?php
-	ini_set("log_errors", 1);
-	ini_set('expose_php', 'off');
 
-	require_once(__DIR__ . "/../../config.php");
-	require_once(__DIR__ . "/../../vendor/autoload.php");
+ini_set("log_errors", 1);
+ini_set('expose_php', 'off');
 
-	use Pdsinterop\PhpSolid\Middleware;
-	use Pdsinterop\PhpSolid\Routes\SolidStorage;
-	
-	$method = $_SERVER['REQUEST_METHOD'];
+require_once(__DIR__ . "/../../config.php");
+require_once(__DIR__ . "/../../vendor/autoload.php");
 
-	Middleware::cors();
-	Middleware::pubsub();
+use Pdsinterop\PhpSolid\Middleware;
+use Pdsinterop\PhpSolid\Routes\SolidStorage;
 
-	switch ($method) {
-		case "OPTIONS":
-			echo "OK";
-			return;
-		break;
-		default:
-			SolidStorage::respondToStorage();
-		break;
-	}
+$method = $_SERVER['REQUEST_METHOD'];
+
+Middleware::cors();
+Middleware::pubsub();
+
+switch ($method) {
+	case "OPTIONS":
+		echo "OK";
+		return;
+	break;
+	default:
+		SolidStorage::respondToStorage();
+	break;
+}
