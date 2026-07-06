@@ -5,1135 +5,1895 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Component CSS -->
     <style>
+      @layer reset, setup, theme, base, component, page, utility;
       /* extra (component/0-ds-styling) */
-      @import url('https://fonts.googleapis.com/css?family=Alegreya+Sans:400,400i,700,700i');
+      @import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,100;0,300;0,700;1,100;1,300;1,700&family=Quicksand:wght@300..700&display=swap')
+      @layer reset, setup, theme, base, component, page, utility;
+      
       /* style (component/0-ds-styling) */
-      /* ds-alert-root */
-      :root {
-        --ds-alert-text-color: var(--ds-black);
-        --ds-alert-error-color: var(--ds-error-color);
-        --ds-alert-warning-color: var(--ds-warning-color);
-        --ds-alert-info-color: var(--ds-info-color);
+      /* reset.css */
+      @layer reset {
+          body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,p,blockquote,th,td {
+              margin:0; 
+              padding:0; 
+          }
+          body {
+              display: flow-root;
+          }
+          img {
+              max-width: 100%;
+              display: block;
+          }
+          * {
+              box-sizing: border-box;
+          }
       }
-      /* ds-alert */
-      .ds-alert {
-        padding: 0.05px; /* contain child margins */
-        color: var(--ds-alert-text-color);
+      
+      /* fonts.css */
+      @layer theme {
+          :root {
+              --ds-font-heading: 'Alegreya Sans', sans-serif;
+              --ds-font-body: 'Quicksand', Helvetica, sans-serif;
+          }
       }
-      @supports (display: flow-root) {
-        .ds-alert {
-          display: flow-root;
-          padding: 0;
+      
+      /* colors.css */
+      /* colors */
+      @layer setup {
+        :root {
+          --ds-black: #000;
+          --ds-white: #FFF;
+          --ds-primary: oklch(0.7388 0.1792 126.69);
+          --ds-support: oklch(0.7388 0.1792 216.69);
+          /* http://www.colorbox.io/#steps=11#hue_start=198#hue_end=198#hue_curve=linear#sat_start=15#sat_end=15#sat_curve=linear#sat_rate=130#lum_start=98#lum_end=0#lum_curve=easeOutQuad#lock_hex=eef1f8#minor_steps_map=0 */
+          --ds-grey-0: #eef1f8;
+          --ds-grey-5: #e9edf6;
+          --ds-grey-10: #e4eaf4;
+          --ds-grey-20: #dae2ed;
+          --ds-grey-30: #cdd7e3;
+          --ds-grey-40: #bdc8d4;
+          --ds-grey-50: #a8b4c0;
+          --ds-grey-60: #8f9ba6;
+          --ds-grey-70: #707c84;
+          --ds-grey-80: #4d565c;
+          --ds-grey-90: #262c2f;
+          --ds-grey-100: #000000;
+      
+          --ds-color-error: rgb(253, 143, 143);
+          --ds-color-warning: #FFFFCC;
+          --ds-color-info: rgb(140, 180, 250);
         }
       }
-      .ds-alert-error {
-        background-color: var(--ds-alert-error-color);
-      }
-      .ds-alert-warning {
-        background-color: var(--ds-alert-warning-color);
-      }
-      .ds-alert-info {
-        background-color: var(--ds-alert-info-color);
-      }
-      /* ds-align */
-      .ds-align-center {
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .ds-align-center-middle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .ds-align-right {
-        float: right;
-      }
-      .ds-align-left {
-        float: left;
-      }
-      /* ds-background-root */
-      :root {
-        --ds-background-dark-text-color: white;
-        --ds-background-dark-shadow-color: var(--ds-black);
-        --ds-background-dark-shadox-size: 2px;
-        --ds-background-dark-shadow-offset: 0 0;
+      @layer base {
+        @property --channel {
+          syntax: "*";
+          inherits: false;
+          initial-value: clamp(0, (
+            (
+              (r * .299) + (g * .587) + (b * .114)
+            ) - 128
+          ) * -1000, 255);
+        }
       
-        --ds-background-light-text-color: var(--ds-color);
-        --ds-background-light-shadow-color: white;
-        --ds-background-light-shadox-size: 3px;
-        --ds-background-light-shadow-offset: 0 0;
+        :root {
+          --ds-primary-10: oklch( from var(--ds-primary) calc(l + 0.3) c h);
+          --ds-primary-90: oklch( from var(--ds-primary) calc(l - 0.3) c h);
+          --ds-primary-high: var(--ds-primary-90);
+          --ds-primary-low: var(--ds-primary-10);
+          --ds-primary-contrast: white;
+      
+          --ds-support-10: oklch( from var(--ds-support) calc(l + 0.3) c h);
+          --ds-support-90: oklch( from var(--ds-support) calc(l - 0.3) c h);
+          --ds-support-high: var(--ds-support-90);
+          --ds-support-low: var(--ds-support-10);
+          --ds-support-contrast: white;
+      
+          --ds-link-color: var(--ds-primary-high);
+          --ds-link-color-visited: var(--ds-primary);
+          --ds-link-color-hover: var(--ds-support);
+          --ds-link-color-active: var(--ds-support);
+      
+          --ds-grey-high: var(--ds-grey-90);
+          --ds-grey-medium: var(--ds-grey-60);
+          --ds-grey-low: var(--ds-grey-10);
+      
+          --ds-light-color: var(--ds-black);
+          --ds-light-color-background: var(--ds-white);
+      
+          --ds-dark-color: var(--ds-white);
+          --ds-dark-color-background: var(--ds-grey-high);
+        }
+        
+        :root, .ds-lightmode {
+          --ds-color: var(--ds-light-color);
+          --ds-color-background: var(--ds-light-color-background);
+        }
+        .ds-darkmode, .ds-dark-background {
+          --ds-color: var(--ds-dark-color);
+          --ds-color-background: var(--ds-dark-color-background);
+          --ds-grey-high: var(--ds-grey-10);
+          --ds-grey-medium: var(--ds-grey-60);
+          --ds-grey-low: var(--ds-grey-90);
+          --ds-support-high: var(--ds-support-10);
+          --ds-support-low: var(--ds-support-90);
+          --ds-primary-high: var(--ds-primary-10);
+          --ds-primary-low: var(--ds-primary-90);
+          --ds-link-color: var(--ds-primary-high);
+          --ds-link-color-visited: var(--ds-grey-high);
+          --ds-link-color-hover: var(--ds-support);
+          --ds-link-color-active: var(--ds-support);
+        }
+        @media (prefers-color-scheme: dark) {
+          .ds-darkmode-auto {
+            --ds-color: var(--ds-dark-color);
+            --ds-color-background: var(--ds-dark-color-background);
+            --ds-grey-high: var(--ds-grey-10);
+            --ds-grey-medium: var(--ds-grey-60);
+            --ds-grey-low: var(--ds-grey-90);
+            --ds-support-high: var(--ds-support-10);
+            --ds-support-low: var(--ds-support-90);
+            --ds-primary-high: var(--ds-primary-10);
+            --ds-primary-low: var(--ds-primary-90);
+            --ds-link-color: var(--ds-primary-high);
+            --ds-link-color-visited: var(--ds-grey-high);
+            --ds-link-color-hover: var(--ds-support);
+            --ds-link-color-active: var(--ds-support);
+          }
+        }
+        :root, .ds-darkmode, .ds-lightmode, .ds-darkmode-auto {
+          --ds-color-contrast: rgb(from var(--ds-color-background) var(--channel) var(--channel) var(--channel));
+          --ds-primary-gradient: linear-gradient( to bottom, var(--ds-primary-low), var(--ds-primary-high) );
+          --ds-support-gradient: linear-gradient( to bottom, var(--ds-support-low), var(--ds-support-high) );
+          color: var(--ds-color-contrast);
+          background-color: var(--ds-color-background);
+        }
       }
       
-      :root {
-        --ds-background-dark-text-shadow: var(--ds-background-dark-shadow-offset) var(--ds-background-dark-shadow-size) var(--ds-background-dark-shadow-color);
-        --ds-background-light-text-shadow: var(--ds-background-light-shadow-offset) var(--ds-background-light-shadow-size) var(--ds-background-light-shadow-color);
+      @layer base {
+        a:link {
+          color: var(--ds-link-color);
+        }
+        a:visited {
+          color: var(--ds-link-color-visited);
+        }
+        a.ds-link-hover,
+        a:hover {
+          color: var(--ds-link-color-hover);
+        }
+        a.ds-link-active,
+        a:active {
+          color: var(--ds-link-color-active);
+        }
       }
       
-      /* ds-background */
-      .ds-background-dark {
-        color: var(--ds-background-dark-text-color);
-        text-shadow: var(--ds-background-dark-text-shadow);
+      @layer utility {
+        .ds-bg-primary, .ds-bg-primary-gradient {
+            --ds-color-background: var(--ds-primary);
+        }
+        .ds-bg-support, .ds-bg-support-gradient {
+            --ds-color-background: var(--ds-support);
+        }
+        .ds-bg-grey-low {
+            --ds-color-background: var(--ds-grey-low);
+        }
+        .ds-bg-grey-medium {
+            --ds-color-background: var(--ds-grey-medium);
+        }
+        .ds-bg-grey-high {
+            --ds-color-background: var(--ds-grey-high);
+        }
+        .ds-bg-black {
+            --ds-color-background: var(--ds-black);
+        }
+        .ds-bg-primary, .ds-bg-primary-gradient, 
+        .ds-bg-support, .ds-bg-support-gradient,
+        .ds-bg-grey-high, .ds-bg-grey-medium, .ds-bg-grey-low,
+        .ds-black, .ds-bg-default {
+            --ds-color-contrast: rgb(from var(--ds-color-background) var(--channel) var(--channel) var(--channel));
+            background: var(--ds-color-background);
+            color: var(--ds-color-contrast);
+        }
+        .ds-bg-primary-gradient {
+            background: var(--ds-primary-gradient);
+        }
+        .ds-bg-support-gradient {
+            background: var(--ds-support-gradient);
+        }
+        .ds-color-default {
+          color: var(--ds-color-contrast);
+        }
+        .ds-color-primary {
+            color: var(--ds-primary);
+        }
+        .ds-color-primary-high {
+            color: var(--ds-primary-high);
+        }
+        .ds-color-support {
+            color: var(--ds-support);
+        }
+        .ds-color-grey-low {
+            color: var(--ds-grey-low);
+        }
+        .ds-color-grey-medium {
+            color: var(--ds-grey-medium);
+        }
+        .ds-color-grey-high {
+            color: var(--ds-grey-high);
+        }
       }
-      .ds-background-light {
-        color: var(--ds-background-light-text-color);
-        text-shadow: var(--ds-background-light-text-shadow);
+      
+      /* space.css */
+      /* space */
+      /* --ds-line-height is defined in typography.css */
+      @layer theme {
+          :root {
+              --ds-space: var(--ds-line-height);
+          }
       }
-      /* ds-background-image */
-      .ds-background-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -1;
+      @layer base {
+          :root {
+              --ds-space-d4: calc(var(--ds-space) / 4);
+              --ds-space-d3: calc(var(--ds-space) / 3);
+              --ds-space-d2: calc(var(--ds-space) / 2);
+              --ds-space-x2: calc(2 * var(--ds-space));
+              --ds-space-x3: calc(3 * var(--ds-space));
+              --ds-space-x4: calc(4 * var(--ds-space));
+          }
       }
-      /* ds-box-root */
-      :root {
-        --ds-box-radius: 3px;
-        --ds-box-shadow: var(--ds-shadow-small);
+      @layer utility {
+          @supports (display: flow-root) {
+              .ds-space-contain {
+                  display: flow-root;
+              }
+          }
+          @supports not (display: flow-root) {
+              .ds-space-contain {
+                  padding: 0.05px;
+              }
+          }
+          .ds-no-space {
+              margin: 0;
+          }
+          .ds-space {
+              margin: var(--ds-space);
+          }
+          .ds-space-vertical {
+              margin: var(--ds-space) 0;
+          }
+          .ds-space-horizontal {
+              margin-inline-start: var(--ds-space);
+              margin-inline-end: var(--ds-space);
+          }
+          .ds-space-left {
+              margin-inline-start: var(--ds-space);
+          }
+          .ds-space-right {
+              margin-inline-end: var(--ds-space);
+          }
+          .ds-space-top {
+              margin-block-start: var(--ds-space);
+          }
+          .ds-space-bottom {
+              margin-block-end: var(--ds-space);
+          }
+      
+          .ds-space-inside-horizontal,
+          .ds-space-inside {
+            padding: 0 var(--ds-space);
+          }
+      
+          /* FIXME: this seems broken check out why */
+          .ds-space-inside-vertical::befofe,
+          .ds-space-inside-vertical::after,
+          .ds-space-inside::before,
+          .ds-space-inside::after {
+            content: "";
+            display: block;
+            height: 0;
+          }
+          .ds-space-inside-vertical::before,
+          .ds-space-inside::before {
+            margin-block-end: var(--ds-space);
+          }
+          .ds-space-inside-vertical::after,
+          .ds-space-inside::after {
+            margin-block-start: var(--ds-space);
+          }
       }
-      /* ds-box */
-      .ds-box {
-        border-radius: var(--ds-box-radius);
-        box-shadow: var(--ds-box-shadow);
-        position: relative;
-        break-inside: avoid;
+      
+      /* typography.css */
+      @layer theme {
+        :root {
+          --ds-font-weight: 300;
+          --ds-font-size: 1.25rem;
+          --ds-line-height: 1.6rem;
+          --ds-heading-weight: 400;
+          --ds-heading-multiplier: 1.27201965;
+        }
       }
-      @supports (display: flow-root) {
+      @layer base {
+        body {
+          font-family: var(--ds-font-body);
+          font-weight: var(--ds-font-weight);
+          font-size: var(--ds-font-size);
+          line-height: var(--ds-line-height);
+        }
+        h1 {
+            --ds-font-size: calc(1em * var(--ds-heading-multiplier) * var(--ds-heading-multiplier) * var(--ds-heading-multiplier));
+            line-height: calc(2 * var(--ds-line-height));
+        }
+        h2 {
+            --ds-font-size: calc(1em * var(--ds-heading-multiplier) * var(--ds-heading-multiplier));    
+            line-height: calc(2 * var(--ds-line-height));
+        }
+        h3 {
+            --ds-font-size: calc(1em * var(--ds-heading-multiplier));    
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: var(--ds-font-size);
+            font-weight: var(--ds-heading-weight);
+            font-family: var(--ds-font-heading);
+        }
+        h4, h5, h6 {
+            font-size: 1em;
+        }
+        h1, h2, h3, h4, h5, h6, p, ol, ul, dl {
+            margin: var(--ds-space) 0;
+        }
+        dd, li, blockquote {
+            margin-inline-start: var(--ds-space);
+        }
+      }
+      @layer utility {
+        .ds-margin-up {
+            margin-block-start: calc(-1 * var(--ds-line-height));
+        }
+      }
+      
+      /* icons.css */
+      /* icons */
+      @layer theme {
+        :root {
+          --ds-icon-height: var(--ds-line-height);
+        }
+      }
+      @layer base {
+        .ds-icon {
+          display: inline-block;
+          height: var(--ds-icon-height);
+          width: 1em;
+          vertical-align: bottom;
+        }
+        .ds-icon-feather {
+          stroke: currentColor;
+          stroke-width: 2;
+          stroke-linecap: square;
+          stroke-linejoin: square;
+          fill: none;
+        }
+      }
+      
+      /* forms.css */
+      /* forms */
+      @layer theme {
+        :root {
+          --ds-input-border: var(--ds-grey-medium);
+          --ds-input-space: var(--ds-space);
+          --ds-input-font: var(--ds-font-family);
+          --ds-input-radio-space: 0.2em;
+          --ds-input-height: calc(var(--ds-line-height) * 1.5);
+          --ds-input-margin: calc(var(--ds-line-height) * 0.5);
+        }
+      }
+      @layer base {
+        .ds-form-group {
+          margin: var(--ds-input-space) 0;
+        }
+        .ds-form-line {
+          display: flex;
+        }
+        .ds-form-help {
+          margin-top: calc(-1 * var(--ds-input-margin));
+          height: var(--ds-input-margin);
+        }
+        .ds-form-buttons {
+          display: flex;
+        }
+        label {
+          display: block;
+          margin: var(--ds-input-space) 0;
+        }
+        .ds-input, 
+        input:not([type="radio"],[type="checkbox"]), 
+        select {
+          width: 100%;
+          display: block;
+          height: var(--ds-input-height);
+          margin: 0;
+          margin-bottom: var(--ds-input-margin);
+          box-sizing: border-box;
+          background: inherit;
+          color: inherit;
+          border: 0px;
+          outline: 1px solid var(--ds-input-border);
+          padding: 0 0.5em;
+          font-family: var(--ds-input-font);
+          font-size: inherit;
+          line-height: inherit;
+        }
+        select:not([multiple]) {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTBweCIgdmlld0JveD0iMCAwIDQwMS45OTggNDAxLjk5OCIgaGVpZ2h0PSIyMHB4Ij4KPHBhdGggZD0iTTczLjA5MiwxNjQuNDUyaDI1NS44MTNjNC45NDksMCw5LjIzMy0xLjgwNywxMi44NDgtNS40MjRjMy42MTMtMy42MTYsNS40MjctNy44OTgsNS40MjctMTIuODQ3ICAgIGMwLTQuOTQ5LTEuODEzLTkuMjI5LTUuNDI3LTEyLjg1TDIxMy44NDYsNS40MjRDMjEwLjIzMiwxLjgxMiwyMDUuOTUxLDAsMjAwLjk5OSwwcy05LjIzMywxLjgxMi0xMi44NSw1LjQyNEw2MC4yNDIsMTMzLjMzMSAgICBjLTMuNjE3LDMuNjE3LTUuNDI0LDcuOTAxLTUuNDI0LDEyLjg1YzAsNC45NDgsMS44MDcsOS4yMzEsNS40MjQsMTIuODQ3QzYzLjg2MywxNjIuNjQ1LDY4LjE0NCwxNjQuNDUyLDczLjA5MiwxNjQuNDUyeiIvPgo8cGF0aCBkPSJNMzI4LjkwNSwyMzcuNTQ5SDczLjA5MmMtNC45NTIsMC05LjIzMywxLjgwOC0xMi44NSw1LjQyMWMtMy42MTcsMy42MTctNS40MjQsNy44OTgtNS40MjQsMTIuODQ3ICAgIGMwLDQuOTQ5LDEuODA3LDkuMjMzLDUuNDI0LDEyLjg0OEwxODguMTQ5LDM5Ni41N2MzLjYyMSwzLjYxNyw3LjkwMiw1LjQyOCwxMi44NSw1LjQyOHM5LjIzMy0xLjgxMSwxMi44NDctNS40MjhsMTI3LjkwNy0xMjcuOTA2ICAgIGMzLjYxMy0zLjYxNCw1LjQyNy03Ljg5OCw1LjQyNy0xMi44NDhjMC00Ljk0OC0xLjgxMy05LjIyOS01LjQyNy0xMi44NDdDMzM4LjEzOSwyMzkuMzUzLDMzMy44NTQsMjM3LjU0OSwzMjguOTA1LDIzNy41NDl6Ii8+Cjwvc3ZnPg==');
+          background-repeat: no-repeat;
+          background-position: right 1em center;
+        }
+        select[multiple] {
+          height: auto; /* unset? */
+          -webkit-appearance: menulist;
+          -moz-appearance: menulist; 
+          appearance: menulist; 
+        }
+        .ds-textarea,
+        textarea {
+          width: 100%;
+          border: 0;
+          outline: 1px solid var(--ds-input-border);
+          padding: 0 0.5em;
+          font-family: var(--ds-input-font);
+          font-size: inherit;
+          line-height: inherit;
+          margin: 0;
+          height: calc(3 * var(--ds-input-height));
+          margin-bottom: var(--ds-input-margin);
+          display: block;
+        }
+        input[type="radio"],
+        input[type="checkbox"] {
+          width: auto;
+          height: auto;
+          padding: 0;
+        }
+        .ds-form-radio label {
+          margin: 0;
+        }
+      
+      }
+      
+      
+      /* buttons.css */
+      /* buttons */
+      @layer theme {
+        :root {
+          --ds-button-space: calc(0.5 * var(--ds-input-space));
+          --ds-button-bg-color: var(--ds-grey-light);
+          --ds-button-default-bg-color: var(--ds-white);
+          --ds-button-border-color: var(--ds-grey-light);
+          --ds-button-disabled-color: var(--ds-grey-medium);
+          --ds-button-disabled-bg-color: var(--ds-white);
+          --ds-button-primary-bg-color: var(--ds-primary);
+          --ds-button-primary-color: var(--ds-primary-contrast);
+          --ds-button-primary-border: none;
+          --ds-button-support-bg-color: var(--ds-support);
+          --ds-button-support-color: var(--ds-support-contrast);
+          --ds-button-support-border: none;
+          --ds-button-line-height: calc(var(--ds-line-height) * 1.5);
+          --ds-button-shadow: 0;
+          --ds-button-shadow-hover: var(--ds-shadow-small);
+          --ds-button-glow: 0;
+          --ds-button-glow-hover: var(--ds-glow-small);
+          --ds-button-radius: 2px;
+          --ds-button-padding: calc(0.5 * var(--ds-line-height));
+          --ds-button-font-size: calc(0.875 * var(--ds-font-size));
+        }
+      }
+      @layer base {
+        .ds-darkmode, .ds-dark-background {
+          --ds-button-shadow: var(--ds-button-glow);
+          --ds-button-shadow-hover: var(--ds-button-glow-hover);
+        }
+        @media (prefers-color-scheme: dark) {
+          .ds-darkmode-auto {
+            --ds-button-shadow: var(--ds-button-glow);
+            --ds-button-shadow-hover: var(--ds-button-glow-hover);
+          }
+        }
+        :root .ds-button {
+          line-height: var(--ds-button-line-height);
+          min-height: var(--ds-button-line-height);
+        }
+        .ds-button {
+          margin: 0 var(--ds-button-space) var(--ds-button-space) 0;
+          overflow: visible;
+          font: inherit;
+          color: inherit;
+          display: inline-block;
+          box-sizing: border-box;
+          padding: 0 var(--ds-button-padding);
+          font-size: var(--ds-button-font-size);
+          text-align: center;
+          text-decoration: none;
+          text-transform: uppercase;
+          background-color: var(--ds-button-bg-color);
+          outline: var(--ds-button-border);
+          border: 0;
+          white-space: nowrap;
+          box-shadow: var(--ds-button-shadow);
+          border-radius: var(--ds-button-radius);
+        }
+        .ds-button::-moz-focus-inner {
+          border: 0;
+        }
+        .ds-button:hover,
+        .ds-button:focus {
+          cursor: pointer;
+          text-decoration: none;
+          color: inherit;
+          box-shadow: var(--ds-button-shadow-hover);
+        }
+        a.ds-button,
+        a.ds-button:hover,
+        a.ds-button:active,
+        a.ds-button:visited {
+          color: inherit;
+        }
+        .ds-button-default {
+          background-color: var(--ds-button-default-bg-color);
+        }
+        a.ds-button-primary, a.ds-button-primary:hover,
+        a.ds-button-primary:active, a.ds-button-primary:visited,
+        .ds-button-primary, .ds-button-primary:hover {
+          background-color: var(--ds-button-primary-bg-color);
+          color: var(--ds-button-primary-color);
+          border-color: var(--ds-button-primary-border-color);
+          text-shadow: #666 0 0 1px;
+        }
+        a.ds-button-support, a.ds-button-support:hover,
+        a.ds-button-support:active, a.ds-button-support:visited,
+        .ds-button-support, .ds-button-support:hover {
+          background-color: var(--ds-button-support-bg-color);
+          color: var(--ds-button-support-color);
+          border-color: var(--ds-button-support-border-color);
+        }
+        .ds-button:disabled {
+          background-color: var(--ds-button-disabled-bg-color);
+          color: var(--ds-button-disabled-color);
+        }
+        .ds-button:disabled:hover {
+          cursor: not-allowed;
+          box-shadow: 0 0 0;
+        }
+        .ds-button-group {
+          display: flex;
+          flex-wrap: wrap;
+        }
+        .ds-button-light {
+          background: none;
+          outline: 0;
+          padding: 0;
+        }
+        .ds-button-naked {
+          background: none;
+          outline: 0;
+        }
+        .ds-button-close {
+          position: absolute;
+          right: var(--ds-button-space);
+          margin: 0;
+        }
+        .ds-button-grow {
+          display: block;
+          width: 100%;
+        }
+        /* icon buttons */
+        .ds-button .ds-icon {
+          height: var(--ds-button-line-height);
+        }
+        .ds-button-bar .ds-button:not(:last-child):not(:only-child) {
+          margin-right: 0;
+          border-right: 0;
+        }
+        /* icon buttons with state */
+        .ds-button[data-simply-state] {
+          height: var(--ds-button-line-height);
+          overflow: hidden;
+          width: 1em;
+          box-sizing: content-box;
+          white-space: normal;
+        }
+        .ds-button[data-simply-state] .ds-icon {
+          width: 1em;
+          height: var(--ds-button-line-height);
+          transform: translateY(calc(-1 * var(--ds-button-line-height)));
+          transition: transform 0.2s ease;
+          display: block;
+          margin: 0;
+        }
+        .ds-button[data-simply-state="alt"] .ds-icon {
+          transform: translateY(0);
+        }
+      }
+      
+      /* grid.css */
+      @layer theme {
+          :root {
+              --ds-grid-space: var(--ds-space);
+              --ds-grid-space-column: var(--ds-grid-space);
+              --ds-grid-space-row: var(--ds-grid-space);
+              --ds-grid-columns: 1;
+              --ds-grid-min-colwidth: 15rem;
+              --ds-screen-size: small;
+          }
+          :root,
+          .ds-grid-2,
+          .ds-grid-3,
+          .ds-grid-4,
+          .ds-grid-6,
+          .ds-grid-12 {
+              --ds-grid-columns: 2;
+          }
+          @container (width >= 640px) {
+              :root {
+                  --ds-screen-size: tablet;
+              }
+              :root,
+              .ds-grid-4,
+              .ds-grid-6,
+              .ds-grid-12 {
+                  --ds-grid-columns: 4;
+              }
+              .ds-grid-3 {
+                  --ds-grid-columns: 3;
+              }
+          }
+          @container (width >= 992px) {
+              :root {
+                  --ds-screen-size: medium;
+              }
+              :root,
+              .ds-grid-6,
+              .ds-grid-12 {
+                  --ds-grid-columns: 6;
+              }
+              .ds-grid-6,
+              .ds-grid-12 {
+                  --ds-grid-columns: 6;
+              }
+          }
+          @container (width >= 1200px) {
+              :root {
+                  --ds-screen-size: large;
+              }
+              .ds-grid-12 {
+                  --ds-grid-columns: 12;
+              }
+          }
+          @container (width >= 1800px) {
+              :root {
+                  --ds-screen-size: extra-large;
+              }
+          }
+      }
+      
+      @layer base {
+          .ds-grid-fixed {
+              display: grid;
+              grid-column-gap: var(--ds-grid-spacing-column);
+              grid-row-gap: var(--ds-grid-spacing-row);
+              /* add row-gap/column-gap or gap */
+              grid-auto-flow: row;
+              grid-template-rows: repeat(1, auto);
+              grid-template-columns: repeat(var(--ds-grid-columns), 1fr);
+          }
+          .ds-grid-dense {
+              grid-auto-flow: dense;
+          }
+          .ds-grid-fixed > * { /* FIXME: only target grid items */
+              max-width: 100%;
+              overflow: hidden; /* FIXME: better alternative? */
+          }
+          .ds-grid-span-2 {
+              grid-column: auto / span 2;
+          }
+          .ds-grid-span-3 {
+              grid-column: auto / span 3;
+          }
+          .ds-grid-span-4 {
+              grid-column: auto / span 4;
+          }
+          .ds-grid-span-5 {
+              grid-column: auto / span 5;
+          }
+          .ds-grid-span-6 {
+              grid-column: auto / span 6;
+          }
+          .ds-grid-span-7 {
+              grid-column: auto / span 7;
+          }
+          .ds-grid-span-8 {
+              grid-column: auto / span 8;
+          }
+          .ds-grid-span-9 {
+              grid-column: auto / span 9;
+          }
+          .ds-grid-span-10 {
+              grid-column: auto / span 10;
+          }
+          .ds-grid-span-11 {
+              grid-column: auto / span 11;
+          }
+          .ds-grid-span-6 {
+              grid-column: auto / span 12;
+          }
+          .ds-grid-span-all {
+              grid-column: 1 / -1;
+          }
+          .ds-grid-row-2 {
+              grid-row: auto / span 2;
+          }
+          .ds-grid-row-3 {
+              grid-row: auto / span 3;
+          }
+          .ds-grid-row-4 {
+              grid-row: auto / span 4;
+          }
+          .ds-grid-row-5 {
+              grid-row: auto / span 5;
+          }
+          .ds-grid-row-6 {
+              grid-row: auto / span 6;
+          }
+          .ds-grid-row-7 {
+              grid-row: auto / span 7;
+          }
+          .ds-grid-row-8 {
+              grid-row: auto / span 8;
+          }
+          .ds-grid-row-9 {
+              grid-row: auto / span 9;
+          }
+          .ds-grid-row-10 {
+              grid-row: auto / span 10;
+          }
+      
+          /* flexible grid */
+          .ds-grid {
+              --ds-grid-spacing-column: var(--ds-grid-spacing);
+              --ds-grid-spacing-row: var(--ds-grid-spacing);
+              display: grid;
+              grid-column-gap: var(--ds-grid-spacing-column);
+              grid-row-gap: var(--ds-grid-spacing-row);
+              grid-template-columns: repeat(auto-fit, minmax(var(--ds-grid-min-colwidth), 1fr));
+          }
+      }
+      
+      /* glow.css */
+      @layer theme {
+        :root {
+          --ds-glow-1: rgb(from var(--ds-white) r g b / 0.2);
+          --ds-glow-2: rgb( from var(--ds-primary) r g b / 0.3);
+          --ds-glow-3: rgb(from var(--ds-grey-low) r g b / 0.1);
+          --ds-glow-support: rgb( from var(--ds-support) r g b / 0.3);
+        }
+      }
+      @layer base {
+        :root {
+          --ds-glow-large: 
+              0 0 8px 2px var(--ds-glow-1),
+              0 0 15px 15px var(--ds-glow-2),
+              0 0 25px 25px var(--ds-glow-3);
+          --ds-glow-medium: 
+              0 0 4px 2px var(--ds-glow-1),
+              0 0 7px 7px var(--ds-glow-2),
+              0 0 12px 12px var(--ds-glow-3);
+          --ds-glow-small: 
+              0 0 2px 1px var(--ds-glow-1),
+              0 0 4px 4px var(--ds-glow-2),
+              0 0 6px 6px var(--ds-glow-3);
+        }
+        .ds-glow, .ds-glow-hover:hover, .ds-glow-focus:focus {
+          box-shadow: var(--ds-glow-medium);
+        }
+        .ds-glow-small, .ds-glow-small-hover:hover, .ds-glow-small-focus:focus {
+          box-shadow: var(--ds-glow-small);
+        }
+        .ds-glow-large, .ds-glow-large-hover:hover, .ds-glow-large-focus:focus {
+          box-shadow: var(--ds-glow-large);
+        }
+        .ds-glow-support {
+          --ds-glow-2: var(--ds-glow-support);
+          --ds-glow-large: 
+              0 0 8px 2px var(--ds-glow-1),
+              0 0 15px 15px var(--ds-glow-2),
+              0 0 25px 25px var(--ds-glow-3);
+          --ds-glow-medium: 
+              0 0 4px 2px var(--ds-glow-1),
+              0 0 7px 7px var(--ds-glow-2),
+              0 0 12px 12px var(--ds-glow-3);
+          --ds-glow-small: 
+              0 0 2px 1px var(--ds-glow-1),
+              0 0 4px 4px var(--ds-glow-2),
+              0 0 6px 6px var(--ds-glow-3);
+        }
+      }
+      
+      /* box.css */
+      /* box */
+      @layer theme {
+        :root {
+          --ds-box-radius: 3px;
+          --ds-box-shadow: var(--ds-shadow-small);
+        }
+      }
+      @layer base {
         .ds-box {
-          display: flow-root;
+          border-radius: var(--ds-box-radius);
+          box-shadow: var(--ds-box-shadow);
+          position: relative;
+          break-inside: avoid;
+        }
+        @supports (display: flow-root) {
+          .ds-box {
+            display: flow-root;
+            padding: 0;
+          }
+        }
+        .ds-box-top {
+          border-top-left-radius: var(--ds-box-radius);
+          border-top-right-radius: var(--ds-box-radius);
+        }
+        .ds-box-bottom {
+          border-bottom-left-radius: var(--ds-box-radius);
+          border-bottom-right-radius: var(--ds-box-radius);
+        }
+      }
+      
+      /* dialog.css */
+      /* dialog */
+      @layer theme {
+        :root {
+          --ds-dialog-background: var(--ds-color-background);
+          --ds-dialog-color: var(--ds-color-contrast);
+          --ds-dialog-shadow: var(--ds-shadow-large);
+          --ds-dialog-radius: calc( 2 * var(--ds-box-radius));
+          --ds-dialog-size: calc( 50% - (1/2 * var(--ds-space)));
+          --ds-dialog-narrow: calc( 33% - (1/2 * var(--ds-space)));
+          --ds-dialog-min-width: 25em;
+          --ds-dialog-image-height: calc(var(--ds-line-height) * 6);
+        }
+        .ds-darkmode {
+          --ds-dialog-background: var(--ds-color-background);
+          --ds-dialog-color: var(--ds-color-contrast);
+          --ds-dialog-shadow: var(--ds-glow-large);
+        }
+        @media (prefers-color-scheme: dark) {
+          .ds-darkmode-auto {
+            --ds-dialog-background: var(--ds-color-background);
+            --ds-dialog-color: var(--ds-color-contrast);
+            --ds-dialog-shadow: var(--ds-glow-large);      
+          }
+        }
+      }
+      @layer component {
+        .ds-dialog {
+          border: 0;
+          color: var(--ds-dialog-color);
+          background: var(--ds-dialog-background);
+          width: var(--ds-dialog-size);
+          min-width: min(100%, var(--ds-dialog-min-width));
+          max-width: 100%;
+          box-shadow: var(--ds-dialog-shadow);
+          padding: 0;
+          z-index: 101;
+          border-radius: calc(2px + var(--ds-dialog-radius));
+        }
+        @supports (display: flow-root) {
+          .ds-dialog {
+            display: flow-root;
+          }
+        }
+        @supports not (display: flow-root) {
+          .ds-dialog {
+            padding: 0.05px;
+          }
+        }
+        .ds-dialog-narrow {
+          width: var(--ds-dialog-narrow);
+        }
+        .ds-dialog-header,
+        .ds-dialog-header-image > img {
+          border-radius: var(--ds-dialog-radius) var(--ds-dialog-radius) 0 0;
+        }
+        .ds-dialog-footer,
+        .ds-dialog-footer-image > img {
+          border-radius: 0 0 var(--ds-dialog-radius) var(--ds-dialog-radius);
+        }
+        .ds-dialog-header,
+        .ds-dialog-footer {
+          flex-grow: 0;
+        }
+        .ds-dialog-header,
+        .ds-dialog-footer,
+        .ds-dialog-content {
+          position: relative;
+          padding: 0.05px; 
+        }
+        .ds-dialog-header-image,
+        .ds-dialog-footer-image {
+          min-height: var(--ds-dialog-image-size);
+        }
+        .ds-dialog-content {
+          flex-grow: 1;
+        }
+        .ds-dialog::backdrop {
+          background-color: rgba(0,0,0,0.5);
+        }
+        @media (max-width: 480px)  {
+          .ds-dialog-narrow {
+            min-width: 100%;
+          }
+        }
+      }
+      
+      /* dropdown.css */
+      /* dropdown */
+      @layer theme {
+        :root {
+          --ds-dropdown-background: var(--ds-color-background);
+          --ds-dropdown-color: var(--ds-color-contrast);
+          --ds-dropdown-width: 200px;
+          --ds-dropdown-focus: var(--ds-grey-40);
+          --ds-dropdown-shadow: var(--ds-shadow-medium);
+          --ds-dropdown-radius: var(--ds-box-radius);
+          --ds-dropdown-padding: var(--ds-space-d4) var(--ds-space-d2);
+        }
+        .ds-darkmode, .ds-darkmode-auto {
+          --ds-dropdown-background: var(--ds-color-background);
+          --ds-dropdown-color: var(--ds-color-contrast);
+          --ds-dropdown-shadow: var(--ds-glow-small);    
+        }
+      }
+      @layer component {
+        .ds-dropdown {
+          anchor-name: var(--ds-dropdown-anchor);
+          position: relative;
+        }
+        .ds-dropdown-icon {
+          padding: 0 0.25em;
+          width: 1.5em;
+          border-radius: 2px;
+        }
+        .ds-dropdown-icon:hover {
+          background: var(--ds-dropdown-focus);
+        }
+        .ds-dropdown-state {
+          display: none;
+        }
+        .ds-dropdown-button {
+          margin: 0;
+        }
+        .ds-dropdown-nav {
+          position-anchor: var(--ds-dropdown-anchor);
+          position-area: bottom span-left;
+          width: var(--ds-dropdown-width);
+          background: var(--ds-dropdown-background);
+          color: var(--ds-dropdown-color);
+          box-shadow: var(--ds-dropdown-shadow);
+          border-radius: var(--ds-dropdown-radius);
+          border: none;
+          margin: 0;
+          inset: unset;
+          overflow: visible;
+          --ds-dropdown-marker-position: -0.2rem 0.5rem auto auto;
+          --ds-dropdown-marker-transform: rotate(45deg);
+        }
+        .ds-dropdown-nav::before {
+          content: "";
+          display: block;
+          width: 0.5rem; 
+          height: 0.5rem;
+          background: var(--ds-dropdown-background);
+          position: absolute;
+          inset: var(--ds-dropdown-marker-position);
+          transform: var(--ds-dropdown-marker-transform);
+          filter: drop-shadow(-1px -1px 2px #DDD);
+          clip-path: polygon(-2px 0.6rem, -2px -2px, 0.6rem -2px);
+        }
+        .ds-dropdown-up {
+          position-area: top;
+        }
+        .ds-dropdown-up::before {
+          transform: rotate(-135deg);
+          top: auto;
+          bottom: -0.2rem;
+          filter: drop-shadow(1px 1px 2px #000);
+        }
+        .ds-dropdown-left {
+          position-try-fallbacks: --ds-dropdown-left, --ds-dropdown-center, --ds-dropdown-right;
+        }
+        .ds-dropdown-right {
+          position-try-fallbacks: --ds-dropdown-right, --ds-dropdown-center, --ds-dropdown-left;
+        }
+        .ds-dropdown-center {
+          position-try-fallbacks: --ds-dropdown-center, --ds-dropdown-left, --ds-dropdown-right;
+        }
+        @position-try --ds-dropdown-left {
+          --ds-dropdown-marker-position: -0.2rem auto auto 0.75rem;
+          left: anchor(left);
+        }
+        @position-try --ds-dropdown-right {
+          right: anchor(right);
+          --ds-dropdown-marker-position: -0.2rem 0.5rem auto auto;
+        }
+        @position-try --ds-dropdown-center {
+          justify-self: anchor-center;
+          --ds-dropdown-marker-position: -0.2rem auto auto calc(50% - 0.25rem);
+        }
+        
+        .ds-dropdown-nav a:link,
+        .ds-dropdown-nav a:visited,
+        .ds-dropdown-nav a:hover,
+        .ds-dropdown-nav a:active {
+          color: var(--ds-dropdown-color);
+          text-decoration: none;
+        }
+        .ds-dropdown-list {
+          list-style: none;
+          margin: 0;
+          padding: var(--ds-dropdown-padding);
+        }
+        .ds-dropdown-item {
+          list-style: none;
+          margin: 0;
           padding: 0;
         }
-      }
-      .ds-box-top {
-        border-top-left-radius: var(--ds-box-radius);
-        border-top-right-radius: var(--ds-box-radius);
-      }
-      .ds-box-bottom {
-        border-bottom-left-radius: var(--ds-box-radius);
-        border-bottom-right-radius: var(--ds-box-radius);
+      
+        .ds-dropdown-nav:not([popover]) {
+          display: none;
+          z-index: 101;
+          position:absolute;
+      
+          &:where(.ds-dropdown-state:checked ~ .ds-dropdown-nav) {
+            display: block;
+          }
+        }
+        @supports (not (position-try-fallbacks)) {
+          .ds-dropdown-right {
+            left: auto;
+            right: 0;
+          }
+          .ds-dropdown-right::before {
+            left: auto;
+            right: 0.5rem;
+            top: -0.15rem;
+          }
+      
+          .ds-dropdown-up {
+            bottom: 1.5em
+          }
+          .ds-dropdown-up::before {
+            transform: rotate(-135deg);
+            top: auto;
+            bottom: -0.2rem;
+            filter: drop-shadow(1px 1px 2px #000);
+          }
+      
+          .ds-dropdown-center {
+            margin-left: calc(-0.5 * var(--ds-dropdown-width) + 50%);
+          }
+          .ds-dropdown-center::before {
+            left: calc(50% - 0.25rem);
+          }
+        }
       }
       
-      /* ds-button-root */
-      :root {
-        --ds-button-spacing: calc(0.5 * var(--ds-input-spacing));
-        --ds-button-bg-color: var(--ds-grey-light);
-        --ds-button-default-bg-color: var(--ds-white);
-        --ds-button-border-color: var(--ds-grey-light);
-        --ds-button-disabled-color: var(--ds-grey-medium);
-        --ds-button-disabled-bg-color: var(--ds-white);
-        --ds-button-primary-bg-color: var(--ds-primary);
-        --ds-button-primary-color: var(--ds-primary-contrast);
-        --ds-button-primary-border-color: var(--ds-primary);
-        --ds-button-line-height: calc(var(--ds-line-height) * 1.5);
-        --ds-button-shadow: var(--ds-shadow-tiny);
-        --ds-button-shadow-hover: var(--ds-shadow-small);
-        --ds-button-radius: 3px;
+      /* tabs.css */
+      /* tabs */
+      @layer theme {
+        :root {
+          --ds-tabs-space: var(--ds-button-space);
+          --ds-tabs-bg-color: var(--ds-background);
+          --ds-tabs-color: var(--ds-color);
+          --ds-tabs-default-bg-color: transparent;
+          --ds-tabs-primary-bg-color: var(--ds-primary);
+          --ds-tabs-primary-color: var(--ds-primary-contrast);
+          --ds-tabs-line-height: var(--ds-button-line-height);
+          --ds-tabs-border-color: var(--ds-primary);
+          --ds-tabs-direction: row;
+          --ds-tabs-border-alignment: top;
+          --ds-tabs-radius: var(--ds-button-radius);
+          --ds-tabs-font-size: calc(0.875 * var(--ds-font-size));
+          --ds-tabs-unselected-background: var(--ds-grey-20);
+        }
       }
-      /* ds-button */
-      :root .ds-button {
-        line-height: var(--ds-button-line-height);
-        min-height: var(--ds-button-line-height);
-      }
-      .ds-button {
-        margin: 0 var(--ds-button-spacing) var(--ds-button-spacing) 0;
-        overflow: visible;
-        font: inherit;
-        color: inherit;
-        display: inline-block;
-        box-sizing: border-box;
-        padding: 0 calc(0.5 * var(--ds-line-height));
-        vertical-align: middle;
-        font-size: calc(0.875 * var(--ds-font-size));
-        text-align: center;
-        text-decoration: none;
-        text-transform: uppercase;
-        background-color: var(--ds-button-bg-color);
-        outline: 1px solid var(--ds-button-border-color);
-        border: 0;
-        white-space: nowrap;
-        box-shadow: var(--ds-button-shadow);
-        border-radius: var(--ds-button-radius);
-      }
-      .ds-button::-moz-focus-inner {
-        border: 0;
-      }
-      .ds-button:hover,
-      .ds-button:focus {
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
-        box-shadow: var(--ds-button-shadow-hover);
-      }
-      a.ds-button,
-      a.ds-button:hover,
-      a.ds-button:active,
-      a.ds-button:visited {
-        color: inherit;
-      }
-      .ds-button-default {
-        background-color: var(--ds-button-default-bg-color);
-      }
-      a.ds-button-primary, a.ds-button-primary:hover,
-      a.ds-button-primary:active, a.ds-button-primary:visited,
-      .ds-button-primary, .ds-button-primary:hover {
-        background-color: var(--ds-button-primary-bg-color);
-        color: var(--ds-button-primary-color);
-        border-color: var(--ds-button-primary-border-color);
-      }
-      a.ds-button-support, a.ds-button-support:hover,
-      a.ds-button-support:active, a.ds-button-support:visited,
-      .ds-button-support, .ds-button-support:hover {
-        background-color: var(--ds-button-support-bg-color);
-        color: var(--ds-button-support-color);
-        border-color: var(--ds-button-support-border-color);
-      }
-      .ds-button:disabled {
-        background-color: var(--ds-button-disabled-bg-color);
-        color: var(--ds-button-disabled-color);
-      }
-      .ds-button:disabled:hover {
-        cursor: not-allowed;
-        box-shadow: 0 0 0;
-      }
-      .ds-button-group {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .ds-button-light {
-        background: none;
-        outline: 0;
-        padding: 0;
-      }
-      .ds-button-naked {
-        background: none;
-        outline: 0;
-      }
-      .ds-button-close {
-        position: absolute;
-        right: var(--ds-spacing);
-        margin: 0;
-      }
-      
-      .ds-button-grow {
-        display: block;
-        width: 100%;
-      }
-      /* ds-bg */
-      .ds-bg-primary {
-        background: var(--ds-primary);
-        color: var(--ds-primary-contrast);
-        --ds-contrast: var(--ds-primary-contrast);
-      }
-      .ds-bg-primary-gradient {
-        background: var(--ds-primary-gradient);
-        color: var(--ds-primary-contrast);
-        --ds-contrast: var(--ds-primary-contrast);
-      }
-      .ds-bg-support {
-        background: var(--ds-support);
-        color: var(--ds-support-contrast);
-        --ds-contrast: var(--ds-support-contrast);
-      }
-      .ds-bg-support-gradient {
-        background: var(--ds-support-gradient);
-        color: var(--ds-support-contrast);
-        --ds-contrast: var(--ds-support-contrast);
-      }
-      .ds-bg-grey-dark {
-        background: var(--ds-grey-dark);
-        color: var(--ds-white);
-        --ds-contrast: var(--ds-white);
-      }
-      .ds-bg-grey-medium {
-        background: var(--ds-grey-medium);
-        color: var(--ds-white);
-        --ds-contrast: var(--ds-white);
-      }
-      .ds-bg-grey-light {
-        background: var(--ds-grey-light);
-        color: var(--ds-black);
-        --ds-contrast: var(--ds-black);
-      }
-      /* ds-color */
-      .ds-color {
-        display: flex;
-        text-align: center;
-        font-size: 0.8em;
-        align-items: center;
-        justify-content: center;
-      }
-      .ds-color-primary {
-        color: var(--ds-primary);
-      }
-      .ds-color-support {
-        color: var(--ds-support);
-      }
-      /* ds-contain */
-      .ds-contain {
-        padding: 0.05px; /* IE fallback */
-      }
-      @supports (display: flow-root) {
-        .ds-contain {
+      @layer component {
+        .ds-tabs {
+          display: flex;
+          flex-direction: var(--ds-tabs-direction);
+          margin: 0;
+          list-style: none;
+          padding: 0 0 1px 0;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .ds-tabs li {
+          margin: 0;
           padding: 0;
-          display: flow-root;
+        }
+        :root .ds-tabs-tab {
+          line-height: var(--ds-tabs-line-height);
+          min-height: var(--ds-tabs-line-height);
+        }
+      
+        .ds-tabs-tab {
+          display: block;
+          margin: 0;
+          overflow: visible;
+          box-sizing: border-box;
+          margin: 0 var(--ds-tabs-space) 0 0;
+          padding: 0 calc(0.5 * var(--ds-tabs-line-height));
+          vertical-align: middle;
+          font-size: var(--ds-tabs-font-size);
+          text-align: center;
+          text-decoration: none;
+          background-color: transparent;
+          border: 0;
+          white-space: nowrap;
+          border-radius: var(--ds-tabs-radius) var(--ds-tabs-radius) 0 0;
+        }
+        .ds-tabs-tab:hover,
+        .ds-tabs-tab:focus {
+          cursor: pointer;
+          text-decoration: none;
+        }
+        a.ds-tabs-tab,
+        a.ds-tabs-tab:hover,
+        a.ds-tabs-tab:active,
+        a.ds-tabs-tab:visited {
+          color: inherit;
+        }
+        .ds-tabs-support {
+          --ds-tabs-border-color: var(--ds-support);
+        }
+        .ds-tabs-primary {
+          --ds-tabs-border-color: var(--ds-primary);
+        }
+        .ds-tabs-primary .ds-tabs-tab,
+        .ds-tabs a.ds-tabs-primary, .ds-tabs a.ds-tabs-primary:hover,
+        .ds-tabs a.ds-tabs-primary:active, .ds-tabs a.ds-tabs-primary:visited {
+          background-color: var(--ds-primary);
+          color: var(--ds-primary-contrast);
+          border-color: var(--ds-tabs-border-color);
+        }
+        .ds-tabs-support .ds-tabs-tab,
+        .ds-tabs a.ds-tabs-support, .ds-tabs a.ds-tabs-support:hover,
+        .ds-tabs a.ds-tabs-support:active, .ds-tabs a.ds-tabs-support:visited {
+          background-color: var(--ds-support);
+          color: var(--ds-support-contrast);
+          border-color: var(--ds-tabs-border-color);
+        }
+        .ds-tabs-border li {
+          background: linear-gradient(to var(--ds-tabs-border-alignment), var(--ds-tabs-border-color) 0px, var(--ds-tabs-border-color) 1px, transparent 1px);
+          padding-bottom: 1px;
+        }
+        .ds-tabs-border .ds-tabs-tab-selected {
+          border: 1px solid var(--ds-tabs-border-color);
+          border-bottom: 0;
+          position: relative;
+          top: 1px;
+          line-height: calc(var(--ds-tabs-line-height) - 1px);
+          background: var(--ds-tabs-bg-color);
+        }
+        .ds-tabs-border .ds-tabs-tab-selected {
+          position: relative;
+          top: 1px;
+          line-height: calc(var(--ds-tabs-line-height) - 1px);
+        }
+        .ds-tabs-border-bottom li {
+          background: linear-gradient(to var(--ds-tabs-border-alignment), var(--ds-tabs-border-color) 0px, var(--ds-tabs-border-color) 1px, transparent 1px);
+        }
+        .ds-tabs-border-bottom .ds-tabs-tab-selected {
+          background: linear-gradient(to var(--ds-tabs-border-alignment), var(--ds-tabs-border-color) 0px, var(--ds-tabs-border-color) 2px, transparent 2px);
+        }
+        .ds-tabs-border-color li {
+          background: linear-gradient(to var(--ds-tabs-border-alignment), var(--ds-tabs-unselected-background) 0px, var(--ds-tabs-unselected-background) 1px, transparent 1px);
+        }
+        .ds-tabs-border-color .ds-tabs-tab-selected {
+          background: linear-gradient(to var(--ds-tabs-border-alignment), var(--ds-tabs-border-color) 0px, var(--ds-tabs-border-color) 1px, transparent 1px);
+        }
+      
+        .ds-tabs-vertical {
+          --ds-tabs-direction: column;
+          --ds-tabs-border-alignment: right;
+          flex-direction: var(--ds-tabs-direction);
+        }
+        .ds-tabs-vertical .ds-tabs-tab {
+          text-align: left;
+        }
+        .ds-tabs-vertical.ds-tabs-border-color li {
+          background: linear-gradient(to var(--ds-tabs-border-alignment), var(--ds-tabs-unselected-background) 0px, var(--ds-tabs-unselected-background) 1px, transparent 1px);
+        }
+        .ds-tabs-vertical.ds-tabs-border-color .ds-tabs-tab-selected {
+          background: linear-gradient(to var(--ds-tabs-border-alignment), var(--ds-tabs-border-color) 0px, var(--ds-tabs-border-color) 1px, transparent 1px);
         }
       }
-      /* ds-core-colors */
-      :root {
-        --ds-black: #000;
-        --ds-white: #FFF;
       
-        --ds-primary: #ae47ff;
-        --ds-primary-light: #c880ff;
-        --ds-primary-dark: #8d00f8;
-        --ds-primary-bump: #b65cfc;
-        --ds-primary-contrast: var(--ds-white);
-        --ds-primary-gradient: linear-gradient( 180deg, var(--ds-primary), var(--ds-primary-dark) );
-        --ds-primary-gradient-bump: linear-gradient( 180deg, var(--ds-primary-bump), var(--ds-primary-light) 95%, var(--ds-primary-dark) 100%);
-      
-        --ds-support: #06CC06;
-        --ds-support-dark: #05BB05;
-        --ds-support-light: #07DE07;
-        --ds-support-contrast: #FFF;
-        --ds-support-gradient: linear-gradient( to left, var(--ds-support-light), var(--ds-support-dark) );
-        /* http://www.colorbox.io/#steps=11#hue_start=198#hue_end=198#hue_curve=linear#sat_start=15#sat_end=15#sat_curve=linear#sat_rate=130#lum_start=98#lum_end=0#lum_curve=easeOutQuad#lock_hex=eef1f8#minor_steps_map=0 */
-        --ds-grey-0: #eef1f8;
-        --ds-grey-5: #e9edf6;
-        --ds-grey-10: #e4eaf4;
-        --ds-grey-20: #dae2ed;
-        --ds-grey-30: #cdd7e3;
-        --ds-grey-40: #bdc8d4;
-        --ds-grey-50: #a8b4c0;
-        --ds-grey-60: #8f9ba6;
-        --ds-grey-70: #707c84;
-        --ds-grey-80: #4d565c;
-        --ds-grey-90: #262c2f;
-        --ds-grey-100: #000000;
-        --ds-grey-dark: var(--ds-grey-90);
-        --ds-grey-medium: var(--ds-grey-60);
-        --ds-grey-light: var(--ds-grey-0);
-      
-        --ds-error-color: rgb(253, 143, 143);
-        --ds-warning-color: #FFFFCC;
-        --ds-info-color: rgb(140, 180, 250);
-      }
-      /* ds-core-reset */
-      body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,p,blockquote,th,td {
-        margin:0; 
-        padding:0; 
-      }
-      img {
-        max-width: 100%;
-        display: block;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      /* ds-core-shadows */
-      :root {
-        --ds-shadow-light: rgba(0,0,0,0.07);
-        --ds-shadow-middle: rgba(0,0,0,0.09);
-        --ds-shadow-dark: rgba(0,0,0,0.11);
-        --ds-shadow-tiny: 
-          0 1px 1px var(--ds-shadow-dark)
-          ;
-        --ds-shadow-small: 
-          0 1px 1px var(--ds-shadow-dark),
-          0 2px 2px var(--ds-shadow-middle),
-          0 4px 4px var(--ds-shadow-light)
-          ;
-        --ds-shadow-medium: 
-          0 1px 1px var(--ds-shadow-middle),
-          0 2px 2px var(--ds-shadow-middle),
-          0 4px 4px var(--ds-shadow-middle),
-          0 6px 8px var(--ds-shadow-middle),
-          0 8px 16px var(--ds-shadow-middle)
-          ;
-        --ds-shadow-large: 
-          0 2px 1px var(--ds-shadow-light),
-          0 4px 2px var(--ds-shadow-light),
-          0 8px 4px var(--ds-shadow-light),
-          0 16px 8px var(--ds-shadow-light),
-          0 32px 16px var(--ds-shadow-light) 
-          ;
-      }
-      /* ds-core-typography */
-      @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;1,300&family=Roboto+Condensed:ital@0;1&display=swap');
-      :root {
-        --ds-body-font: 'Lato', sans-serif;
-        --ds-heading-font: 'Roboto Condensed', Helvetica, sans-serif;
-      }
-      :root {
-        --ds-font-size: 1rem;
-        --ds-font-weight: 300;
-        --ds-line-height: calc(1.6 * var(--ds-font-size));
-        --ds-color: var(--ds-black);
-        --ds-color-transparent: rgba(0,0,0,0);
-        --ds-contrast: var(--ds-grey-dark);
-        --ds-background: var(--ds-white);
-        --ds-background-transparent: rgba(255,255,255,0);
-        --ds-heading-weight: 400;
-        --ds-heading-multiplier: 1.27201965;
-        --ds-spacing: var(--ds-line-height);
-      }
-      /* ds-hidden */
-      .ds-hidden {
-        max-height: 0;
-        overflow: hidden;
-      }
-      /* ds-icon */
-      .ds-icon {
-        display: inline-block;
-        height: var(--ds-line-height);
-        width: 1em;
-        vertical-align: bottom;
-      }
-      
-      .ds-icon-feather {
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: square;
-        stroke-linejoin: square;
-        fill: none;
-      }
-      /* ds-screen-size */
-      :root {
-        --ds-screen-size: tiny;
-      }
-      @media (min-width: 480px)  {
+      /* badge.css */
+      @layer theme {
         :root {
-          --ds-screen-size: small;
+          --ds-badge-color: var(--ds-grey-50);
+          --ds-badge-font-color: var(--ds-white);
+          --ds-badge-label-color: var(--ds-primary);
+          --ds-badge-label-contrast-color: var(--ds-primary-contrast);
+          --ds-badge-font-size: 0.66em;
+          --ds-badge-height: 2em;
         }
       }
-      @media (min-width: 640px) {
+      @layer component {
+        .ds-badge {
+          font-size: var(--ds-badge-font-size);
+          display: inline-block;
+          align-items: center;
+          background: var(--ds-badge-color);
+          color: var(--ds-badge-font-color);
+          border-radius: 0.3em;
+          padding: 0 0.6em;
+          text-align: center;   
+          margin: 0.05em 0;
+          margin-right: 0.3em;
+          line-height: var(--ds-badge-height);
+          max-height: var(--ds-badge-height);
+          position: relative;
+        }
+        .ds-badge-label,
+        .ds-badge > label {
+          display: inline-flex;
+          margin: 0;
+          margin-left: -0.6em;
+          margin-right: 0.6em;
+          padding: 0 0.5em;
+          background: var(--ds-badge-label-color);
+          color: var(--ds-badge-label-contrast-color);
+          float: left;
+          min-height: var(--ds-badge-height);
+          align-items: center;
+          border-radius: 0.3em 0 0 0.3em;
+        }
+        a.ds-badge {
+          color: inherit;
+        }
+        .ds-badge label .ds-icon,
+        .ds-badge-label .ds-icon {
+          margin-top: 0;
+          height: var(--ds-badge-height);
+        }
+        .ds-badge-inline {
+          display: inline;
+        }
+        .ds-badge-inverted {
+          background: var(--ds-badge-label-color);
+          color: var(--ds-badge-label-contrast-color);
+        }
+        .ds-badge-inverted .ds-badge-label {
+          background: var(--ds-badge-color);
+          color: var(--ds-badge-font-color);
+        }
+        .ds-badge-tag {
+          position: relative;
+          border-radius: 0.3em 0 0 0.3em;
+          padding-right: 0.2em;
+          margin-right: 0.6em;
+        }
+        .ds-badge-tag::after {
+          content: "";
+          display: block;
+          border: calc(0.5 * var(--ds-badge-height)) solid transparent;
+          border-left: 0.8em solid var(--ds-badge-color); 
+          position: absolute;
+          top: 0;
+          left: 100%;
+        }
+        .ds-badge-tag-reverse {
+          position: relative;
+          border-radius: 0 5px 5px 0;
+          padding-left: 0.2em;
+          margin-left: 0.6em;
+        }
+        .ds-badge-tag-reverse::before {
+          content: "";
+          display: block;
+          border: calc(0.5 * var(--ds-badge-height)) solid transparent;
+          border-right: 0.8em solid var(--ds-badge-color); 
+          position: absolute;
+          top: 0;
+          right: 100%;
+        }
+        .ds-badge-inverted.ds-badge-tag::after {
+          border-left-color: var(--ds-badge-label-color);
+        }
+        .ds-badge-inverted.ds-badge-tag-reverse::before {
+          border-right-color: var(--ds-badge-label-color);
+        }
+      }
+      
+      /* navigation.css */
+      /* navigation */
+      @layer theme {
         :root {
-          --ds-screen-size: tablet;
+          --ds-navbar-shadow: var(--ds-shadow-small);
+          --ds-navbar-space: var(--ds-space-d2);
+          --ds-navbar-line-height: var(--ds-line-height);
+          --ds-navbar-side-space: var(--ds-space-d4);
         }
       }
-      @media (min-width: 992px) {
+      @layer component {
+        .ds-navbar {
+          display: flex;
+          box-shadow: var(--ds-navbar-shadow);
+        }
+        ul.ds-navbar {
+          list-style: none;
+          margin-left: 0;
+          padding-left: 0;
+        }
+        .ds-navbar .ds-button,
+        .ds-navbar input,
+        .ds-navbar select {
+          border-top: 0;
+          border-bottom: 0;
+          outline: 0;
+          margin-bottom: 0;
+        }
+        .ds-navbar-left {
+          padding-left: 1em;
+        }
+        .ds-navbar-right {
+          margin-left: auto;
+          margin-right: 1em;
+        }
+        .ds-navbar-center {
+          margin: 0 auto;
+        }
+        .ds-navbar-nav {
+          margin: 0;
+          padding: 0;
+          display: flex;
+        }
+        .ds-navbar-nav li {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+        .ds-navbar-nav a {
+          text-decoration: none;
+          color: inherit;
+          padding: 0 var(--ds-navbar-space) 0 0;
+        }
+        .ds-navbar-nav .ds-button {
+          margin-bottom: 0;
+        }
+        .ds-navbar-nav .ds-button:last-child {
+          margin-right: 0;
+        }
+        /* sidebar */
+        .ds-navbar-side,
+        .ds-navbar-side .ds-navbar-nav {
+          flex-direction: column;
+        }
+        .ds-navbar-side .ds-nav {
+          display: block;
+          position: relative;
+          padding: calc(0.5 * var(--ds-navbar-line-height));
+          text-align: left;
+        }
+        .ds-navbar-side .ds-nav .ds-icon {
+          margin-right: var(--ds-navbar-size-space);
+        }
+        .ds-navbar-side .ds-selected,
+        .ds-navbar-side .ds-nav:hover,
+        .ds-navbar-side .ds-nav-hover {
+          background: rgba(0,0,0,0.2);
+        }
+      }
+      
+      /* alert.css */
+      @layer theme {
+          :root {
+              --ds-alert-error-color: var(--ds-color-error);
+              --ds-alert-warning-color: var(--ds-color-warning);
+              --ds-alert-info-color: var(--ds-color-info);
+              --ds-alert-background-color: var(--ds-grey-30);
+          }
+      }
+      @layer component {
+          .ds-alert {
+              padding: 0.05px; /* contain child margins */
+          }
+          @supports (display: flow-root) {
+              .ds-alert {
+                  display: flow-root;
+                  padding: 0;
+              }
+          }
+          .ds-alert {
+              border-left: 10px solid var(--ds-alert-info-color);
+          }
+          .ds-alert-error {
+              border-color: var(--ds-alert-error-color);
+          }
+          .ds-alert-warning {
+              border-color: var(--ds-alert-warning-color);
+          }
+          .ds-alert-info {
+              border-color: var(--ds-alert-info-color);
+          }
+      }
+      
+      /* toast.css */
+      /* toast */
+      @layer theme {
         :root {
-          --ds-screen-size: medium;
+          --ds-toast-height: 60px;
+          --ds-toast-hide-delay: 3s; /* 5 seems better */
+          --ds-toast-show-duration: 0.3s;
+          --ds-toast-hide-duration: 0.5s;
+          --ds-toast-margin: 20px;
+          --ds-toast-shadow: var(--ds-shadow-medium);
+          --ds-toast-space: var(--ds-space);
+          --ds-toast-background: var(--ds-grey-80);
+          --ds-toast-font-color: var(--ds-white);
+          --ds-toast-default-color: var(--ds-grey-50);
+          --ds-toast-error-color: var(--ds-error-color);
+          --ds-toast-info-color: var(--ds-info-color);
+          --ds-toast-warning-color: var(--ds-warning-color);
         }
       }
-      @media (min-width: 1200px) {
+      @layer component {
+        ul.ds-toasts,
+        ol.ds-toasts,
+        .ds-toasts {
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 101;
+          display: block;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          max-width: 50%;
+          min-width: 300px;
+        }
+        .ds-toast,
+        li.ds-toast {
+          min-width: 300px;
+          float: right;
+          clear: both;
+          margin-top: var(--ds-toast-space);
+          margin-right: var(--ds-toast-space);
+          background: var(--ds-toast-background);
+          color: var(--ds-toast-font-color);
+          display: block;
+          border-left: 10px solid var(--ds-toast-default-color);
+          box-shadow: var(--ds-toast-shadow);
+        }
+        .ds-toast-error,
+        li.ds-toast-error {
+          border-color: var(--ds-toast-error-color);
+        }
+        .ds-toast-info,
+        li.ds-toast-info {
+          border-color: var(--ds-toast-info-color);
+        }
+        .ds-toast-warning,
+        li.ds-toast-warning {
+          border-color: var(--ds-toast-warning-color);
+        }
+      
+        @keyframes ds-toast-show {
+          0% {
+            transform: scaleX(0);
+            transform-origin: right;
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: scaleX(1);
+            transform-origin: right;
+            opacity: 1;
+          }
+        }
+        @keyframes ds-toast-hide {
+          0% {
+            transform: scaleX(1);
+            transform-origin: right;
+            opacity: 1;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: scaleX(0);
+            transform-origin: right;
+            opacity: 0;
+          }
+        }
+        @keyframes ds-toast-move {
+          0% {
+            transform: translateY(-80px); /* toast-height + toast-margin */
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+        .ds-toast[data-state="new"] {
+          animation: ds-toast-show var(--ds-toast-show-duration) forwards;
+        }
+        .ds-toast-autohide[data-state="new"] {
+          animation: ds-toast-show var(--ds-toast-show-duration);
+          animation-delay: 0s;
+        }
+        .ds-toast-autohide.ds-toast-animated[data-state="shown"] {
+          animation: ds-toast-hide var(--ds-toast-hide-duration) forwards;
+          animation-delay: calc(var(--ds-toast-hide-delay) - var(--ds-toast-show-duration));
+        }
+        .ds-toast-autohide:not(.ds-toast-animated)[data-state="shown"] {
+          animation: ds-toast-move var(--ds-toast-show-duration), ds-toast-hide var(--ds-toast-hide-duration) forwards;
+          animation-delay: 0s, var(--ds-toast-hide-delay);
+        }
+      }
+      
+      /* alignment.css */
+      @layer utility {
+          .ds-center {
+              text-align: center;
+              margin-left: auto;
+              margin-right: auto;
+          }
+          .ds-center-middle {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: auto;
+          }
+          .ds-align-right {
+              float: right;
+              margin-left: auto;
+          }
+      }
+      
+      /* shadow.css */
+      @layer theme {
+          :root {
+              --ds-shadow-light: rgba(0,0,0,0.07);
+              --ds-shadow-middle: rgba(0,0,0,0.09);
+              --ds-shadow-dark: rgba(0,0,0,0.11);
+              --ds-shadow-tiny: 
+                  0 1px 1px var(--ds-shadow-dark)
+              ;
+              --ds-shadow-small: 
+                  0 1px 1px var(--ds-shadow-dark),
+                  0 2px 2px var(--ds-shadow-middle),
+                  0 4px 4px var(--ds-shadow-light)
+              ;
+              --ds-shadow-medium: 
+                  0 1px 1px var(--ds-shadow-middle),
+                  0 2px 2px var(--ds-shadow-middle),
+                  0 4px 4px var(--ds-shadow-middle),
+                  0 6px 8px var(--ds-shadow-middle),
+                  0 8px 16px var(--ds-shadow-middle)
+              ;
+              --ds-shadow-large: 
+                  0 -2px 2px var(--ds-shadow-light), 
+                  0 4px 2px var(--ds-shadow-light), 
+                  0 8px 4px var(--ds-shadow-light), 
+                  0 16px 8px var(--ds-shadow-light), 
+                  0 32px 16px var(--ds-shadow-light);
+          }
+      }
+      @layer utility {
+          .ds-shadow-tiny {
+              box-shadow: var(--ds-shadow-tiny);
+          }
+          .ds-shadow-small {
+              box-shadow: var(--ds-shadow-small);
+          }
+          .ds-shadow-medium {
+              box-shadow: var(--ds-shadow-medium);
+          }
+          .ds-shadow-large {
+              box-shadow: var(--ds-shadow-large);
+          }
+      }
+      
+      /* sticky.css */
+      @layer theme {
         :root {
-          --ds-screen-size: large;
+          --ds-top: 0;
+          --ds-left: 0;
+          --ds-bottom: 0;
+          --ds-right: 0;
         }
       }
-      @media (min-width: 1800px) {
-        :root {
-          --ds-screen-size: extra-large;
+      @layer component {
+        .ds-sticky-top {
+          position: sticky;
+          top: var(--ds-top);
+          z-index: 2;
+        }
+        .ds-sticky-bottom {
+          position: sticky;
+          bottom: var(--ds-bottom);
+          z-index: 2;
+        }
+        .ds-sticky-left {  
+          position: sticky;
+          left: var(--ds-left);
+          display: inline-block;
+          z-index: 2;
+        }
+        .ds-sticky-right {  
+          position: sticky;
+          right: var(--ds-right);
+          display: inline-block;
+          z-index: 2;
         }
       }
-      /* ds-shadow */
-      .ds-shadow-tiny {
-        box-shadow: var(--ds-shadow-tiny);
+      
+      /* panels.css */
+      @layer theme {
+          :root {
+            --ds-panels-list-width: 20em;
+            --ds-panels-padding: var(--ds-space-d4);
+          }
       }
-      .ds-shadow-small {
-        box-shadow: var(--ds-shadow-small);
-      }
-      .ds-shadow-medium {
-        box-shadow: var(--ds-shadow-medium);
-      }
-      .ds-shadow-large {
-        box-shadow: var(--ds-shadow-large);
-      }
-      /* ds-space */
-      .ds-space-margin-up {
-        margin-top: calc(-1 * var(--ds-spacing));
-      }
-      .ds-space-none {
-        margin: 0;
-      }
-      .ds-space {
-        margin: var(--ds-line-height);
-      }
-      .ds-space-vertical {
-        margin: var(--ds-line-height) 0;
-      }
-      .ds-space-horizontal {
-        margin-left: var(--ds-spacing);
-        margin-right: var(--ds-spacing);
-      }
-      .ds-space-left {
-        margin-left: var(--ds-spacing);
-      }
-      .ds-space-right {
-        margin-right: var(--ds-spacing);
-      }
-      .ds-space-top {
-        margin-top: var(--ds-spacing);
-      }
-      .ds-space-bottom {
-        margin-bottom: var(--ds-spacing);
+      @layer component {
+        .ds-panels-container {
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
+          overflow-x: scroll;
+        }
+          .ds-panels-panes {
+              display: flex;
+              flex-wrap: nowrap;
+          }
+          .ds-panels-pane {
+              scroll-snap-align: start;
+              width: 100%;
+              flex-shrink: 0;
+              padding: var(--ds-panels-padding);  
+          }
+          .ds-panels-list-details {
+              height: 100%;
+              width: 100%;
+              overflow: auto;
+              scroll-snap-type: x mandatory;
+              @media (prefers-reduced-motion: no-preference) {
+                  scroll-behavior: smooth;
+              }
+          }
+          .ds-panels-heading {
+              width: 100%;
+              overflow: hidden;
+              z-index: 10;
+              padding: var(--ds-panels-padding);
+          }
+          .ds-panels-heading::after {
+              background: var(--ds-color-background);
+              width: var(--ds-panels-list-width);
+              height: calc((var(--ds-line-height) * 1.5) + var(--ds-space-d2));
+              display: block;
+              content: "";
+              position: absolute;
+              top: calc(-1 * var(--ds-space-d2));
+              z-index: -1;
+          }
+          @media screen and (min-width: 720px) {
+              .ds-panels-list-details {
+                  scroll-snap-type: none;
+              }
+              .ds-panels-list-details .ds-panels-panes {
+                  display: grid;
+                  grid-template-areas: "list details";
+                  grid-template-columns: var(--ds-panels-list-width) 1fr;
+              }
+              .ds-panels-list-details .ds-panels-pane {
+                  width: auto;
+              }
+          }
       }
       
-      .ds-space-inside {
-        padding: 0 var(--ds-spacing);
-      }
-      .ds-space-inside::before,
-      .ds-space-inside::after {
-        content: "";
-        display: block;
-        height: 0;
-      }
-      .ds-space-inside::before {
-        margin-bottom: var(--ds-spacing);
-      }
-      .ds-space-inside::after {
-        margin-top: var(--ds-spacing);
-      }
-      
-      /* extra (component/1-styling) */
-      @import url('https://fonts.googleapis.com/css?family=Alegreya+Sans:400,400i,700,700i');
-      
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        min-height: 100vh;
-      }
-      [data-simply-command] {
-        cursor: pointer; /* Dear iOS, why don't you have a click event when the cursor is not a pointer? */
-      }
-      textarea {
-        width: 100%;
-        height: 120px;
-        color: #e0e0e0;
-        background-color: #151515;
-        border: 0;
-        padding: 10px;
-      }
-      input:not([type]),
-      input[type=text],
-      input[type=password] {
-        color: #e0e0e0;
-        background-color: #151515;
-        border: 0;
-        padding: 15px 10px;
-        font-size: 1.6em;
-      }
-      
-      div.main,
-      main {
-        min-height: 100%;
-      }
-      .simply-toolbar.simply-toolbar-main {
-        z-index: 10;
-      }
-      /* main-grid (component/1-styling) */
-      main {
-        display: grid;
-        grid-template-areas:
-          "header header"
-          "left right"
-          ;
-        grid-template-columns: 320px auto;
-        grid-template-rows: 65px auto;
-        min-height: 100vh;
-      }
-      @media (max-width: 480px) {
-        main {
-          display: grid;
-          grid-template-areas:
-            "header"
-            "content"
-            ;
-        	grid-template-columns: auto;
-          grid-template-rows: 65px auto;
-          min-height: 100vh;
+      /* background.css */
+      @layer utility {
+        .ds-background-image {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: -1;
+        }
+        .ds-dark-background {
+          color: white;
+          text-shadow: 0 0 2px var(--ds-black);
+        }
+        .ds-light-background {
+          color: var(--ds-color);
+          text-shadow: 0 0 3px white;
         }
       }
-      main > .simply-toolbar {
-        grid-area: header;
-      }
-      
-      /* simply-toast (component/1-styling) */
-      :root {
-        --simply-toast-height: 60px;
-        --simply-toast-hide-delay: 3s;
-        --simply-toast-show-duration: 0.3s;
-        --simply-toast-hide-duration: 0.5s;
-        --simply-toast-margin: 20px;
-        --simply-toast-error-color: rgb(253, 143, 143);
-        --simply-toast-warning-color: #FFFFCC;
-        --simply-toast-info-color: rgb(140, 180, 250);
-        --simply-toast-white: #FFF;
-        --simply-toast-grey-50: #a8b4c0;
-        --simply-toast-grey-80: #4d565c;
-        --simply-toast-font-size: calc(1.1 * 1rem);
-        --simply-toast-font-weight: 300;
-        --simply-toast-line-height: calc(1.5 * var(--simply-toast-font-size));
-        --simply-toast-color: var(--simplycode-grey-medium);
-        --simply-toast-contrast: var(--simplycode-grey-medium);
-        --simply-toast-background:var(--simplycode-white);
-        --simply-toast-heading-weight: 900;
-        --simply-toast-heading-multiplier: 1.1;
-      }
-      
-      ul.simply-toasts,
-      ol.simply-toasts,
-      .simply-toasts {
-        position: fixed;
-        right: 0;
-        top: 0;
-        z-index: 101;
-        display: block;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        max-width: 50%;
-        min-width: 300px;
-      }
-      .simply-toast,
-      li.simply-toast {
-        min-width: 300px;
-        float: right;
-        clear: both;
-        margin-right: 0;
-        margin-top: 60px;
-        background-color: var(--simply-toast-grey-80);
-        color: var(--simply-toast-white);
-        display: block;
-        border-left: 10px solid var(--simply-toast-grey-50);
-        padding: 20px;
-        border-radius: 2px;
-      }
-      .simply-toast-error,
-      li.simply-toast-error {
-        border-color: var(--simply-toast-error-color);
-      }
-      .simply-toast-info,
-      li.simply-toast-info {
-        border-color: var(--simply-toast-info-color);
-      }
-      .simply-toast-warning,
-      li.simply-toast-warning {
-        border-color: var(--simply-toast-warning-color);
-      }
-      
-      @keyframes simply-toast-show {
-        0% {
-          transform: scaleX(0);
-          transform-origin: right;
-          opacity: 0;
-        }
-        50% {
-          transform: scaleX(0);
-          transform-origin: right;
-          opacity: 0;
-        }
-        75% {
-          opacity: 1;
-        }
-        100% {
-          transform: scaleX(1);
-          transform-origin: right;
-          opacity: 1;
-        }
-      }
-      @keyframes simply-toast-hide {
-        0% {
-          transform: scaleX(1);
-          transform-origin: right;
-          opacity: 1;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          transform: scaleX(0);
-          transform-origin: right;
-          opacity: 0;
-        }
-      }
-      @keyframes simply-toast-move {
-        0% {
-          transform: translateY(-80px); /* toast-height + toast-margin */
-        }
-        100% {
-          transform: translateY(0px);
-        }
-      }
-      .simply-toast[data-state="new"] {
-        animation: simply-toast-show var(--simply-toast-show-duration) forwards;
-      }
-      .simply-toast-autohide[data-state="new"] {
-        animation: simply-toast-show var(--simply-toast-show-duration);
-        animation-delay: 0s;
-      }
-      .simply-toast-autohide.simply-toast-animated[data-state="shown"] {
-        animation: simply-toast-hide var(--simply-toast-hide-duration) forwards;
-        animation-delay: calc(var(--simply-toast-hide-delay) - var(--simply-toast-show-duration));
-      }
-      .simply-toast-autohide:not(.simply-toast-animated)[data-state="shown"] {
-        animation: simply-toast-move var(--simply-toast-show-duration), simply-toast-hide var(--simply-toast-hide-duration) forwards;
-        animation-delay: 0s, var(--simply-toast-hide-delay);
-      }
-      
-      /* simplycode-ds-mapping (component/1-styling) */
-      /* simplycode-ds-core-colors */
-      :root {
-        --ds-primary: var(--simplycode-highlight-light);
-        --ds-primary-dark: var(--simplycode-highlight-dark);
-        --ds-primary-contrast: var(--simplycode-highlight-color);
-        --ds-primary-light: var(--simplycode-highlight-light);
-        --ds-primary-gradient: var(--simplycode-highlight-gradient);
-        --ds-primary-bump: #b65cfc;
-        --ds-primary-gradient-bump: linear-gradient( 180deg, var(--ds-primary-bump), var(--simplycode-highlight-light) 95%, var(--simplycode-highlight-dark) 100%);
-      
-        --ds-support: #06CC06;
-        --ds-support-dark: #05BB05;
-        --ds-support-light: #07DE07;
-        --ds-support-contrast: #FFF;
-        --ds-support-gradient: linear-gradient( to left, var(--ds-support-light), var(--ds-support-dark) );
-      
-        --ds-heading-font: var(--simplycode-font-family);
-      }
-      
-      /* style (component/1-styling) */
-      :root {
-        --simplycode-highlight-dark: #f16623;
-        --simplycode-highlight-light: #ff8003;
-        --simplycode-highlight-color: #fff;
-        --simplycode-highlight-background: linear-gradient( to left, var(--simplycode-highlight-light), var(--simplycode-highlight-dark) );
-      
-        --simplycode-support-dark: #444;
-        --simplycode-support-light: #484848;
-        --simplycode-support-color: #eee;
-        --simplycode-support-background: linear-gradient( to left, var(--simplycode-support-light), var(--simplycode-support-dark) );
-      
-        --simplycode-grey-dark: #38393c;
-        --simplycode-grey-medium: #7f8185;
-        --simplycode-grey-light: #e9ebec;
-        --simplycode-grey-dark: #38393c;
-        --simplycode-black: #000;
-        --simplycode-white: #fff;
-        --simplycode-grey-background: var(--simplycode-grey-dark);
-      
-        --simplycode-font-family: 'Alegreya Sans', sans-serif;
-        --simplycode-font-size: 14px;
-        --simplycode-line-height: 1.5em;
-        --simplycode-color: #7f8185;
-        --simplycode-background: #333;
-      }
-      
-      /* general styling on default elements */
-      
-      html, body {
-        margin: 0;
-        padding: 0;
-        font-family: var(--simplycode-font-family);
-        font-size: var(--simplycode-font-size);
-        line-height: var(--simplycode-line-height);
-        color: var(--simplycode-color); 
-        background-color: var(--simplycode-background);
-      }
-      h1 {
-        font-size: 2em;
-        font-weight: 300;
-        line-height: 1.1em;
-        margin: 0;
-        margin-bottom: 0.5em;
-      }
-      
-      h2 {
-        font-size: 1.6em;
-        font-weight: 400;
-        line-height: 1.1em;
-        margin: 0;
-        margin-bottom: 0.5em;
-      }
-      
-      * {
-        box-sizing: border-box;
-      }
-      
-      img {
-        display: block;
-        max-width: 100%;
-      }
-      
-      a {
-        color: var(--simplycode-highlight-dark);
-      }
-      a:visited {
-        color: var(--simplycode-highlight-dark);
-      }
-      
-      /* custom styling for custom elements */
-      
-      .simply-button,
-      a.simply-button {
-        background: var(--simply-support-background);
-        color: var(--simply-support-color);
-        padding: 0.3em 0.5em;
-        margin: 0 0.3em;
-        border: 1px solid #ccc;
-        text-decoration: none;
-      }
-      
-      .simply-button:first-child {
-        margin-left: 0;
-      }
-      .simply-button:last-child {
-        margin-right: 0;
-      }
-      .simply-button.highlight {
-        background: var(--simply-highlight-background);
-        color: var(--simply-highlight-color);
-      }
-      
-      .text-content {
-        padding: 2.2375em;
-        max-width: 50em;
-      }
-      .text-content *:first-child {
-        margin-top: 0;
-      }
-      
-      header {
-        position: fixed;
-        padding: 8px 10px 6px 10px;
-        left: 0;
-        right: 0;
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        background-color: #404040;
-        border-bottom: 2px solid #2222;
-        vertical-align: middle;
-        z-index: 200;
-      }
-      header h1 {
-        margin: 0;
-      }
-      header .simply-controls {
-        padding-top: 5px;
-        padding-right: 5px;
-        text-align: right;
-      }
-      /* simply-logo (component/simply-logo) */
-      :root {
-        --simply-logo-color-primary: var(--simplycode-highlight-dark);
-        --simply-logo-color-secondary: white;
-      }
-      /* simply-toolbar-button (component/simply-toolbar) */
-      .simply-toolbar-button {
-        height: var(--simply-toolbar-button-height);
-        border-top: 1px solid transparent;
-        border-bottom: 2px solid transparent;
-        transition: background 0.2s ease;
-        font-size: var(--simply-toolbar-button-font-size);
-        letter-spacing: 0;
-        font-family: var(--simply-toolbar-button-font);
-        white-space: nowrap;
-        user-select: none;
-        vertical-align: top;
-        min-width: var(--simply-toolbar-button-width);
-        text-align: center;
-        cursor: pointer;
-        padding: 0 4px;
-        text-transform: none;
-        background: transparent;
-        outline: none;
-        box-shadow: none;
-        border-radius: 0;
-        color: var(--simply-toolbar-button-color);
-        margin: 0;
-      }
-      .simply-toolbar-button:hover {
-        border-bottom: 2px solid var(--simply-toolbar-button-primary);
-        box-shadow: none;
-      }
-      .simply-toolbar-button .ds-icon {
-        height: 26px;
-        font-size: 26px;
-        padding: 0 4px;
-        display: block;
-        margin: 6px auto -14px;
-        position: relative;
-      }
-      .simply-toolbar-button-expands:not(:focus)::after,
-      .simply-toolbar-button-expands:not(.ds-selected)::after {
-        content: "";
-        display: block;
-        position: absolute;
-        bottom: 6px;
-        left: 50%;
-        margin-left: -3px;
-        width: 0;
-        border-top: 3px solid #888;
-        border-bottom: 0;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-      }
-      .simply-toolbar-button:focus,
-      .simply-toolbar-button.ds-selected {
-        background-color: var(--ds-grey-80);
-        border-left-color: var(--ds-black);
-        border-top-color: var(--ds-black);
-        border-right-color: var(--ds-grey-60);
-      }
-      .simply-toolbar-button[disabled] {
-        background-color: transparent;
-        color: var(--ds-grey-60);
-      }
-      /* simply-toolbar (component/simply-toolbar) */
-      :root {
-        --simply-toolbar-height: 60px;
-        --simply-toolbar-primary: var(--simplycode-highlight-dark);
-        --simply-toolbar-button-font: arial, helvetica, sans-serif;
-        --simply-toolbar-button-font-size: 11px;
-        --simply-toolbar-button-width: 60px;
-        --simply-toolbar-button-height: var(--simply-toolbar-height);
-        --simply-toolbar-button-color: var(--ds-white);
-        --simply-toolbar-button-primary: var(--simply-toolbar-primary);
-        --simply-toolbar-title-width: 70px;
-        --simply-toolbar-title-height: var(--simply-toolbar-height);
-      }
-      .simply-toolbar {
-        border-top: 1px solid var(--simply-toolbar-button-primary);
-        background: linear-gradient(180deg, var(--ds-white) 0, var(--ds-white) 95%, var(--ds-grey-40) 100%);
-        white-space: nowrap;
-        min-width: 100%;
-        min-height: var(--simply-toolbar-height);
-        display: flex;
-      }
-      .simply-toolbar-title {
-        padding: 0 10px;
-        font-size: 16px;
-        width: var(--simply-toolbar-title-width);
-        font-family: sans-serif;
-        text-transform: none;
-        border: 0;
-        height: var(--simply-toolbar-button-height);
-        cursor: default;
-        border-radius: 0;
-        box-shadow: 0;
-        outline: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      .simply-toolbar-highlight {
-        background: var(--ds-primary-gradient-bump);
-        color: var(--ds-primary-contrast);
-      }
-      .simply-toolbar .simply-toolbar-title {
-        margin-top: 0;
-      }
-      .simply-toolbar-spacer {
-        border-left: 1px solid #ccc;
-        height: var(--simply-toolbar-height);
-        position: absolute;
-        display: inline-block;
-      }
-      .simply-toolbar-button-expands:not(.ds-selected)::after {
-        content: "";
-        display: block;
-        position: absolute;
-        bottom: 6px;
-        left: 50%;
-        margin-left: -3px;
-        width: 0;
-        border-top: 3px solid #888;
-        border-bottom: 0;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-      }
-      .simply-toolbar-push-right {
-        margin-left: auto;
-      }
-      .simply-toolbar-title img {
-        height: 30px;
-      }
-      .simply-toolbar input[type="text"] {
-        margin-right:0;
-        margin-bottom: 0;
-        margin-top: 10px;
-        font-size: small;
-        line-height: 1.2em;
-        height: 35px;
-      }
-      .simply-toolbar.simply-toolbar-main {
-        border-top-width: 5px;
-      }
-      
-      .simply-toolbar {
-        background: linear-gradient(var(--ds-grey-90) 0%, var(--ds-grey-90) 95%, black 100%);
-        color: var(--ds-white);
-      }
-      /* buttons (component/form-elements) */
-      .solid-button {
-        padding: var(--solid-button-padding);
-        border-radius: var(--solid-button-border-radius);
-        font-weight: var(--solid-button-font-weight);
-        font-size: var(--solid-button-font-size);
-        height: var(--solid-button-height);
-        width: var(--solid-button-width);
-        box-sizing: border-box;
-      }
-      .solid-button-primary {
-        background: var(--solid-light-button-primary-background);
-        color: var(--solid-light-button-primary-text-color);
-        border: var(--solid-light-button-primary-border);
-      }
-      .solid-button-secondary {
-        background: var(--solid-light-button-secondary-background);
-        color: var(--solid-light-button-secondary-text-color);
-        border: var(--solid-light-button-secondary-border);
-      }
-      .solid-dark .solid-button-primary {
-        background: var(--solid-dark-button-primary-background);
-        color: var(--solid-dark-button-primary-text-color);
-        border: var(--solid-dark-button-primary-border);
-      }
-      .solid-dark .solid-button-secondary {
-        background: var(--solid-dark-button-secondary-background);
-        color: var(--solid-dark-button-secondary-text-color);
-        border: var(--solid-dark-button-secondary-border);
-      }
-      /* checkbox (component/form-elements) */
-      .solid-form *:before,
-      .solid-form *:after {
-        box-sizing: border-box;
-      }
-      .solid-form label:has(input[type="checkbox"]) {
-        display: flex;
-        gap: calc(var(--solid-main-form-buttons-gap) / 2);
-      }
-      .solid-form input[type="checkbox"] {
-        /* Add if not using autoprefixer */
-        -webkit-appearance: none;
-        /* Remove most all native input styles */
-        appearance: none;
-        /* For iOS < 15 */
-        background-color: none;
-        /* Not removed via appearance */
-        margin: 0;
-      
-        font: inherit;
-        color: var(--simplycode-highlight-dark);
-        width: var(--solid-checkbox-size);
-        height: var(--solid-checkbox-size);
-        border: var(--solid-checkbox-border-size) solid var(--solid-checkbox-border-color);
-        border-radius: var(--solid-checkbox-size);
-        display: grid;
-        place-content: center;
-        margin-right: 10px;
-      }
-      
-      .solid-form input[type="checkbox"]::before {
-        width: var(--solid-checkbox-size);
-        height: var(--solid-checkbox-size);
-        border-radius: var(--solid-checkbox-size);
-        background: var(--solid-checkbox-border-color);
-      }
-      .solid-form input[type="checkbox"]:checked::before {
-        content: "";
-      }
-      
-      .solid-form input[type="checkbox"]:focus {
-        outline: max(2px, 0.15em) solid currentColor;
-        outline-offset: max(2px, 0.15em);
-      }
-      
-      .solid-form input[type="checkbox"]:disabled {
-        --solid-checkbox-border-color: var(--solid-form-control-disabled-color);
-        color: var(--solid-form-control-disabled-color);
-        cursor: not-allowed;
-      }
-      /* form (component/form-elements) */
-      .solid-form {
-        display: flex;
-        flex-direction: column;
-        gap: var(--solid-form-gap);
-        max-width: var(--solid-form-width);
-        --solid-button-width: 100%;
-        --solid-input-width: 100%;
-      }
-      .solid-form p {
-        margin: 0;
-      }
-      .solid-form:invalid {
-        --solid-light-button-primary-background: var(--solid-pink-inactive);
-        --solid-dark-button-primary-background: var(--solid-pink-inactive);
-        --solid-light-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-inactive);
-        --solid-dark-button-primary-border: var(--solid-button-border-size) solid var(--solid-pink-inactive);
-      }
-      /* hint (component/form-elements) */
-      .solid-hint  {
-        box-sizing: border-box;
-        border-radius: var(--solid-hint-border-radius);
-        border: var(--solid-hint-border);
-        padding: var(--solid-hint-padding);
-        background: var(--solid-hint-background);
-        color: var(--solid-hint-text-color);
-      }
-      /* inputs (component/form-elements) */
-      .solid-input  {
-        width: var(--solid-input-width);
-        box-sizing: border-box;
-        border-radius: var(--solid-input-border-radius);
-        border: var(--solid-input-border);
-        padding: var(--solid-input-padding);
-        box-shadow: var(--solid-input-box-shadow);
-      }
-      /* main (component/main-form) */
-      section.solid-form {
-        margin: 10px;
-      }
-      div.solid-form,
-      form.solid-form {
-        display: flex;
-        flex-direction: vertical;
-        gap: 10px;
-      }
-      .solid-main-form-buttons {
-        display: grid;
-        gap: var(--solid-main-form-buttons-gap);
-        justify-content: left;
-        align-content: center;
-      }
-      .solid-button {
-        background-color: var(--ds-grey-90);
-        padding: 10px;
-      }
-      .solid-button:focus,
-      .solid-button:hover {
-        background-color: var(--ds-grey-80);
-      }
-      .solid-button h1 {
-        margin: 0;
-        padding: 0;  
-      }
-      
       /* checkbox (component/sharing) */
       :root {
         --solid-checkbox-size: 1.4em;
         --solid-checkbox-border-size: 2px;
         --solid-checkbox-border-color: var(--simplycode-highlight-dark);
       }
+      /* solid-drawer (component/solid-drawer-darkmode) */
+      @layer component {
+        .solid-drawer-position {
+          position: fixed;
+          top: 0;
+          right: 0;
+          z-index: 100;
+        }
+        .solid-drawer {
+          clip-path: polygon( 0 0%, 17px 100%, 100% 100%, 100% 0);
+          padding: 6px 10px 6px 25px;
+          background: var(--ds-grey-70);
+          color: white;
+          margin: 0;
+        }
+      }
+      /* fixes (component/solid-styling) */
+      .ds-panels-center {
+        justify-content: center;
+        align-items: center;
+      }
+      .ds-panels-panes {
+        height: 100%;
+      }
+      .ds-background-image {
+        z-index: 0;
+      }
+      .ds-button-inline-text {
+        --ds-icon-height: var(--ds-button-line-height);
+        line-height: var(--ds-button-line-height);
+      }
+      .ds-button {
+        text-transform: none;
+      }
+      /* solid-base (component/solid-styling) */
+      html,body {
+        height: 100%;
+      }
+      .solid-darkbg {
+        opacity: 0;
+        transition: opacity 0.3s linear;
+      }
+      body.ds-darkmode {
+        background-color: #0E0E0E;
+        .solid-darkbg {
+          opacity: 1;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        body.ds-darkmode-auto {
+          background-color: #0E0E0E;
+          .solid-darkbg {
+            opacity: 1;
+          }
+        }
+      }
+      body {
+        background-color: #e4eaf4;
+        background-image: url('/assets/img/bg1.jpg');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+      }
+      body, .solid-dialog, .ds-form-buttons { 
+        transition: background-color 0.2s linear;
+      }
+      main {
+        background-color: rgba(0,0,0,0.3);
+      }
+      .ds-background-image {
+        z-index: 0;
+      }
+      .solid-darkmode-toggle .ds-button {
+        margin: 0;
+      }
+      .solid-small {
+        font-size: 80%;
+      }
+      .ds-button-support {
+        background: rgba(0,0,0,0.1);
+        outline: 1px solid var(--ds-primary);
+        color: var(--ds-black);
+      }
+      .ds-darkmode .ds-button-support {
+        background: rgba(0,0,0,0.5);
+        color: var(--ds-white);
+      }
+      @media (prefers-color-scheme: dark) {
+        .ds-darkmode-auto .ds-button-support {
+          background: rgba(0,0,0,0.5);
+          color: var(--ds-white);
+        }
+      }
+      input {
+        margin-top: 4px;
+      }
+      /* solid-dialog (component/solid-styling) */
+      @layer component {
+        .solid-dialog {
+          position: relative;
+          height: auto;
+          min-height: 350px;
+          max-height: 100%;
+          max-width: 25em;
+          padding: 0 var(--ds-space);
+          padding-bottom: var(--ds-space-x4);
+        }
+        .ds-darkmode .solid-dialog {
+          box-shadow: var(--ds-shadow-small);
+          border: 1px solid var(--ds-grey-80);
+        }
+        @media (prefers-color-scheme: dark) {
+          .ds-darkmode-auto .solid-dialog {
+            box-shadow: var(--ds-shadow-small);
+            outline: 1px solid var(--ds-grey-80);
+          }
+        }
+        .solid-dialog .ds-form-buttons {
+          position: absolute;
+          bottom: 0;
+          background: var(--ds-color-background);
+          padding-bottom: var(--ds-space-d2);
+      	width: calc(100% - var(--ds-space-x2));
+        }
+      }
+      /* solid-theme (component/solid-styling) */
+      :root {
+        --ds-primary: oklch(0.4866 0.1142 255.31);
+        --ds-primary-contrast: white;
+        --ds-support: var(--ds-grey-70);
+        --ds-support-contrast: white;
+        --ds-dialog-radius: 0;
+        --ds-font-weight: 400;
+        /* https://thegoodcolors.com/full?l=62&c=23&d=12&cb=1&cbt=deuteranomaly */
+        --solid-palette-1: oklch(0.62 0.23 262);
+        --solid-palette-2: oklch(0.62 0.23 206);
+        --solid-palette-3: oklch(0.62 0.23 138);
+        --solid-palette-4: oklch(0.62 0.23 66);
+        --solid-palette-5: oklch(0.62 0.23 330);
+        --ds-primary: #0086dd;
+        /* --ds-support: #9f4e00; */
+      }
+      
+      
     </style>
     <!-- /Component CSS -->
     <!-- Page CSS -->
     <style>
-      
+      /* home (page/home) */
+      .ds-button-multiline .ds-button-title {
+        font-size: 1.6em;
+      }
+      .ds-button-multiline {
+        padding: 1px;
+      }
+      .ds-button-wide {
+        display: block;
+      }
     </style>
     <!-- /Page CSS -->
     <!-- Head HTML -->
-    <!-- cocon (baseComponent/font-cocon) -->
-    <style>
-      @font-face {
-        font-family: 'Cocon';
-        font-style: normal;
-        font-weight: 500;
-        src: local('Cocon'), url('/assets/fonts/CoconRegularFont.woff') format('woff');
-      }
-    </style>
+    
     <!-- /Head HTML -->
     <script>
       var simplyDataApi = {};
@@ -1423,9 +2183,29 @@
           /* /Actions */
           /* Commands */
           commands: {
-            // component/simply-toolbar
-            "home" : function(el) {
-              document.location.hash="";
+            // component/change-password
+            "changePasswordMatches" : function(input, value) {
+              if (value.length && value!==editor.pageData.change.password) {
+                input.style['outline-color'] = 'var(--ds-alert-error-color)'
+                editor.pageData.change.passwordMatches = false
+              } else if (value.length) {
+                input.style = ''
+                editor.pageData.change.passwordMatches = true
+              } else {
+                input.style = ''
+                editor.pageData.change.passwordMatches = null
+              }
+            },
+            // component/change-password
+            "changePasswordStrength" : function(input, value) {
+              const entropy = simplyApp.actions.getPasswordEntropy(value)
+              if (entropy<30) {
+                editor.pageData.change.passwordStrength='weak';
+              } else if (entropy<45) {
+                editor.pageData.change.passwordStrength='average';
+              } else {
+                editor.pageData.change.passwordStrength='strong';
+              }
             },
             // component/delete-account
             "confirmDeleteAccount" : function(el) {
@@ -1440,21 +2220,6 @@
               .then(function() {
                 document.location.hash = "delete-account-sent";
               })
-            },
-            // component/form-elements
-            "autofocus" : function() {
-              let autofocus = document.querySelector("[autofocus]");
-              if (autofocus) {
-                autofocus.focus();
-              }
-            },
-            // component/header-toolbar
-            "login" : function(params) {
-                document.location.hash="login";
-            },
-            // component/header-toolbar
-            "register" : function(params) {
-                document.location.hash="register";
             },
             // component/login
             "loginDone" : function(el) {
@@ -1481,11 +2246,6 @@
                 editor.pageData.createdWebId = result.webId;
                 document.location.hash="#register-thanks";
               });
-            },
-            // component/register
-            "registerNext" : function(el) {
-              document.location.hash="#register-password";
-              simplyApp.commands.autofocus();
             },
             // component/register
             "registerVerify" : function(el) {
@@ -1527,21 +2287,17 @@
               el.setAttribute("method", "POST");
               el.submit();
             },
-            // page/home
-            "navigateDeleteAccount" : function(el) {
-              document.location.pathname = "/account/delete/";
-            },
-            // page/home
-            "navigateLogin" : function(el) {
-              document.location.pathname = "/login/";
-            },
-            // page/home
-            "navigateRegister" : function(el) {
-              document.location.pathname = "/register/";
-            },
-            // page/home
-            "navigateResetPassword" : function(el) {
-              document.location.pathname = "/reset-password/";
+            // component/solid-drawer-darkmode
+            "darkmodeToggle" : function(button, value) {
+              if (button.dataset.simplyState=='default') {
+                button.dataset.simplyState='alt'
+                document.body.classList.remove('ds-darkmode-auto')
+                document.body.classList.remove('ds-darkmode')
+              } else {
+                document.body.classList.remove('ds-darkmode-auto')
+                document.body.classList.add('ds-darkmode')
+                button.dataset.simplyState='default'
+              }
             }
           },
           /* /Commands */
@@ -1655,179 +2411,149 @@
       }
     </script>
   </head>
-  <body>
+  <body class="ds-darkmode-auto ds-panels-container">
     <!-- Body HTML -->
     
     <!-- /Body HTML -->
     <!-- Component HTML templates -->
-    <!-- component/header-->
-    <template id="header">
-      <simply-render rel="simply-toolbar"></simply-render>
-    </template>
-    <!-- component/simply-logo-->
-    <template id="logo">
-      <svg viewbox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
-      <style type="text/css">
-        .st0 {
-          fill: var(--simply-logo-color-secondary);
-        }	
-        .st1 {
-          fill: var(--simply-logo-color-primary);
-        }
-        text {
-          font-family: Cocon;
-          font-size: 143px;
-          letter-spacing: -7px;
-          fill: var(--simply-logo-color-primary);
-          text-anchor: middle;
-        }
-        .simply-logo-text {
-          font-family: Cocon;
-          font-size: 143px;
-          letter-spacing: -7px;
-          color: var(--simply-logo-color-primary);
-          text-align: center;
-          vertical-align: middle;
-          height: 200px;
-          margin-top: 50px;
-        }
-      </style>
-      <g class="simply">
-        <path fill="black" id="s" d="m74.400002,87.400002c-16.200005,-2.599998 -21.400002,-3.800003 -21.400002,-9.599998c0,-4.100006 2.900002,-9 16.800003,-9c9.099998,0 17.299995,1.899994 23.599998,5.299995l0,-4.299995c0,-10.700005 -10.099998,-17.200005 -27,-17.200005c-17,0 -35.300003,8.599998 -35.300003,27.400002c0,11.5 6.300003,17.599998 20.5,19.599998c16.599998,2.300003 21.400002,4 21.400002,10.300003c0,9.099998 -11.900002,9.099998 -16.300003,9.099998c-11,0 -18.599998,-2.699997 -23.699997,-5.5l0,4c0,4.399994 0,17.800003 28.199997,17.800003c21,0 34.100006,-10.199997 34.100006,-26.5c0.099991,-14.800003 -11.300003,-19.800003 -20.900002,-21.400002z" class="st0"/>
-        <path fill="black" id="im" d="m187.600006,72.5c9.199997,0 13.900009,5.599998 13.900009,16.5l0,29.599998c0,10.599998 3.799988,14.099998 15.199997,14.099998l7.399994,0l0,-43.399994c0,-13.900002 7.300018,-16.800003 13.300018,-16.800003c10.099976,0 14.5,5.300003 14.5,17.300003l0,28.899994c0,9.199997 2.599976,14.100006 16.099976,14.100006l7.300018,0l0,-42.5c0,-24.300003 -12.700012,-37.700005 -35.900024,-37.700005c-11.199982,0 -20.5,8.300003 -23.699997,13.599998l-2.699997,4.400002l-1.899994,-4.799995c-2.200012,-5.5 -10.800003,-13.100002 -23.100006,-13.100002c-8.300003,0 -15.399994,1.599998 -21.199997,4.799999c-10.800003,5.900002 -16.5,17 -16.5,32.099998l0,12.200005c0,7.599998 -3.5,11.5 -11.199997,12.199997l-0.200012,0l-0.199997,0c-7.699997,-0.599998 -11.300003,-4.5 -11.300003,-12.199997l0,-27c0,-13.5 -4.099991,-17.200005 -19,-17.200005l-4.399994,0l0,48.400002c0,7.300003 1.800003,12.900002 5.199997,16.699997c5,5.5 15.699997,11.400009 29.400009,11.400009l0.599991,0c3.900009,0 7.199997,-0.5 10,-1.200012l0.600006,-0.099991c6.800003,-1.699997 10.800003,-4.100006 13,-5.699997l0.599991,-0.400009c2.800003,-2.099991 10.300003,-9.699997 10.400009,-20l0,-16.699997c0.300003,-6.900002 1.899994,-17.5 13.800003,-17.5z" class="st0"/>
-        <path id="i-dot" d="m115,45.099998c6.800003,0 12.300003,-5.199997 12.300003,-11.599998c0,-6.400002 -5.5,-11.6 -12.300003,-11.6c-6.899994,0 -12.5,5.199999 -12.5,11.6c0,6.400002 5.600006,11.599998 12.5,11.599998z" class="st1"/>
-        <path fill="black" id="p" d="m328.600006,52.599998c-27.899994,0 -43.299988,15.800003 -43.299988,44.5l0,43.900002c0,12.199997 4.5,17.5 14.899994,17.5l7.799988,0l0,-38.099998c0,0 0.200012,2.900002 4.900024,8.299995c5.5,5.600006 10.299988,6.5 19,6.5c21.899994,0 36.599976,-17.299995 36.599976,-43.099998c0,-23.299995 -16.399994,-39.5 -39.899994,-39.5zm1.600006,62.900002c-9.799988,0 -19.100006,-6.199997 -19.100006,-23.800003c0,-12.199997 8.100006,-19.799995 15.899994,-19.799995c11.800018,0 18.900024,5.400002 18.900024,23.199997c-0.000031,12.400002 -6.700012,20.400002 -15.700012,20.400002z" class="st0"/>
-        <path id="l" d="m400.799988,103.699997l0,-60.199997c0,-12.200001 -4.600006,-17.200001 -15.899994,-17.200001l-7.5,0l0,81.600002c0,19.200005 13.299988,26.099998 25.799988,26.099998c4.800018,0 16.100006,-1 16.100006,-10.699997l0,-7.300003l-3.700012,0c-6.399963,0 -14.799988,-1.300003 -14.799988,-12.300003z" class="st0"/>
-        <path fill="black" id="y" d="m483,55l-11.399994,0c-2.100006,15.800003 -8.300018,37.099998 -14.399994,49.5l-2.5,5.099998l-2.200012,-5.199997c-4.5,-10.300003 -10.299988,-26.599998 -13.100006,-39.700005c-1.399994,-6.399994 -7.899994,-9.699997 -13.600006,-9.699997l-11.799988,0c4,21.400002 17.799988,56.099998 29.600006,73.600006l0.799988,1.199997l-0.600006,1.300003c-3.5,8 -8.099976,11.299988 -16.199982,12l-10,0.699997l0,4.5c0,8.599991 7.699982,11.699997 14.299988,11.699997c16.100006,0 21.300018,-3.800003 44.200012,-47.800003c9.300018,-17.799995 16.800018,-41.5 16.800018,-49.299995c-0.300049,-3.300003 -1.300049,-7.900002 -9.900024,-7.900002z" class="st0"/>
-      </g>
-      <foreignobject x="0" y="180" width="520" height="300">
-        <div class="simply-logo-text"><simply-render rel="logotext"></simply-render></div>
-      </foreignobject>
-    </svg>
-    </template>
-    <!-- component/simply-logo-->
-    <template id="logotext">
-      identify
+    <!-- component/change-password-->
+    <template id="change-password">
+      <label>
+      Choose a Password
+      <input type="password" name="password1" 
+             data-simply-field="change.password"
+             data-simply-command="changePasswordStrength" data-simply-immediate=true autofocus required>
+      <div class="ds-form-help">
+        <span data-simply-field="change.passwordStrength" data-simply-content="template">
+          <template data-simply-template="weak">
+            <span>
+              <svg class="solid-contacts-filter-icon ds-icon ds-icon-feather">
+                <use xlink:href="/assets/img/feather-sprite.svg#alert-triangle"></use>
+              </svg>
+              Password is too weak
+            </span>
+          </template>
+          <template data-simply-template="average">
+            <span>
+              <svg class="solid-contacts-filter-icon ds-icon ds-icon-feather">
+                <use xlink:href="/assets/img/feather-sprite.svg#alert-circle"></use>
+              </svg>
+              Password is average
+            </span>
+          </template>
+          <template data-simply-template="strong">
+            <span>
+              <svg class="solid-contacts-filter-icon ds-icon ds-icon-feather">
+                <use xlink:href="/assets/img/feather-sprite.svg#thumbs-up"></use>
+              </svg>
+              Password is strong!
+            </span>
+          </template>
+        </span></div>
+    </label>
+    <label>
+      Confirm your Password
+      <input type="password" name="repeat_password" data-simply-command="changePasswordMatches" required>
+      <div class="ds-form-help"><span data-simply-field="change.passwordMatches" data-simply-content="template">
+        <template data-simply-template="false">
+          <span>
+            <svg class="solid-contacts-filter-icon ds-icon ds-icon-feather">
+              <use xlink:href="/assets/img/feather-sprite.svg#external-link"></use>
+            </svg>
+            Passwords do not match
+          </span>
+        </template>
+        </span></div>
+    </label>
+    
     </template>
     <!-- component/delete-account-->
     <template id="delete-account-confirm">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form" data-simply-command="confirmDeleteAccount" action="#">
         <p class="solid-hint">We will remove your account and all information. This cannot be undone.</p>
-        <button class="solid-button solid-button-primary">
-          <h1>Delete my account</h1>
-        </button>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">
+            Delete my account
+          </button>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/delete-account-->
     <template id="delete-account-done">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form">
         <p class="solid-hint">Your account has been deleted.</p>
+        <div class="ds-form-buttons">
+          <a href="/" class="ds-button ds-button-support">Home</a>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/delete-account-->
     <template id="delete-account-sent">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form">
         <p class="solid-hint">Follow the instructions in your e-mail to delete your account.</p>
+        <div class="ds-form-buttons">
+          <a href="/" class="ds-button ds-button-support">Home</a>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/delete-account-->
     <template id="delete-account">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Delete your account</h1>
       <form class="solid-form" data-simply-command="deleteAccount" action="#">
         <p class="solid-hint">You will receive a link in your e-mail. Use that link to delete your account.</p>
         <div class="solid-form-group">
           <input autofocus class="solid-input" data-simply-field="deleteAccount.email" type="text" placeholder="E-mail address" required>
         </div>
-        <button class="solid-button solid-button-primary">
-          <h1>Next</h1>
-        </button>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">
+            Next
+          </button>
+        </div>
       </form>
-    </section>
-    </template>
-    <!-- component/form-elements-->
-    <template id="hint">
-      <form class="solid-form">
-      <p class="solid-hint">Hello world</p>
-    </form>
-    </template>
-    <!-- component/form-elements-->
-    <template id="primary-button-dark">
-      <div class="solid-dark">
-      <button class="solid-button solid-button-primary">Button</button>
     </div>
     </template>
-    <!-- component/form-elements-->
-    <template id="primary-button-light">
-      <div class="solid-light">
-      <button class="solid-button solid-button-primary">Button</button>
-    </div>
-    </template>
-    <!-- component/form-elements-->
-    <template id="secondary-button-dark">
-      <div class="solid-dark">
-      <button class="solid-button id-button-secondary">Button</button>
-    </div>
-    </template>
-    <!-- component/form-elements-->
-    <template id="secondary-button-light">
-      <div class="solid-light">
-      <button class="solid-button solid-button-secondary">Button</button>
-    </div>
-    </template>
-    <!-- component/header-toolbar-->
-    <template id="simply-toolbar-default">
-      <div class="simply-toolbar-title" data-simply-command="home">
-      <simply-render rel="logo"></simply-render>
-    </div>
-    <button class="ds-button simply-toolbar-button" data-simply-command="navigateLogin">
-      <svg class="ds-icon ds-icon-feather">
-        <use xlink:href="/assets/img/feather-sprite.svg#log-in">
-        </use></svg>
-      Login
-    </button>
-    <button class="ds-button simply-toolbar-button" data-simply-command="navigateRegister">
-      <svg class="ds-icon ds-icon-feather">
-        <use xlink:href="/assets/img/feather-sprite.svg#user-plus">
-        </use></svg>
-      Register
-    </button>
-    <span class="simply-toolbar-push-right"></span>
-    <button class="ds-button simply-toolbar-button" data-simply-command="navigateResetPassword">
-      <svg class="ds-icon ds-icon-feather">
-        <use xlink:href="/assets/img/feather-sprite.svg#meh">
-        </use></svg>
-      Reset password
-    </button>
-    <button class="ds-button simply-toolbar-button" data-simply-command="navigateDeleteAccount">
-      <svg class="ds-icon ds-icon-feather">
-        <use xlink:href="/assets/img/feather-sprite.svg#user-x">
-        </use></svg>
-      Delete account
-    </button>
-    
-    </template>
-    <!-- component/header-toolbar-->
-    <template id="simply-toolbar">
-      <nav class="simply-toolbar simply-toolbar-main" data-simply-field="page" data-simply-content="template" data-simply-default-template="default" data-simply-default-value="default">
-      <template data-simply-template="default" rel="simply-toolbar-default"></template>
-    </nav>
+    <!-- component/header-->
+    <template id="header">
+      <simply-render rel="solid-drawer"></simply-render>
     </template>
     <!-- component/login-->
-    <template id="login-password">
-      <section class="solid-form">
-      <h1>Log in</h1>
-      <form class="solid-form" data-simply-command="loginDone" action="#">
-        <input autofocus class="solid-input" name="password" data-simply-field="login.password" type="password" placeholder="Password" required>
+    <template id="login">
+      <div class="ds-dialog solid-dialog">
+      <h1>Login</h1>
+      <form class="solid-form" data-simply-command="login">
+        <label>
+          E-mail
+          <input type="email" data-simply-field="login.email" name="email" autofocus required>
+        </label>
+        <label>
+          Password
+          <input type="password" name="password">
+          <div class="ds-form-help solid-small">
+            <a href="/reset-password/" class="ds-align-right">
+              <svg class="solid-contacts-filter-icon ds-icon ds-icon-feather">
+                <use xlink:href="/assets/img/feather-sprite.svg#external-link"></use>
+              </svg>
+              Reset your password
+            </a>
+          </div>
+        </label>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">Login</button>
+          <div class="ds-align-right">
+            <a href="/register/" style="--ds-icon-height: var(--ds-button-line-height); line-height: var(--ds-button-line-height);">
+              <span>&#8230; or create a new account</span></a>
+          </div>
+        </div>
         <input type="hidden" name="username" data-simply-field="login.email">
         <input type="hidden" name="response_type" data-simply-field="loginParams.response_type">
         <input type="hidden" name="display" data-simply-field="loginParams.display">
@@ -1837,153 +2563,135 @@
         <input type="hidden" name="state" data-simply-field="loginParams.state">
         <input type="hidden" name="nonce" data-simply-field="loginParams.nonce">
         <input type="hidden" name="request" data-simply-field="loginParams.request">
-        <button class="solid-button solid-button-primary">
-          <h1>Log in</h1>
-        </button>
       </form>
-    </section>
-    </template>
-    <!-- component/login-->
-    <template id="login">
-      <section class="solid-form">
-      <h1>Log in</h1>
-      <form class="solid-form" data-simply-command="loginPassword" action="#">
-        <input autofocus class="solid-input" data-simply-field="login.email" type="text" placeholder="E-mail address" required>
-        <button class="solid-button solid-button-primary">
-          <h1>Next</h1>
-        </button>
-      </form>
-    </section>
-    </template>
-    <!-- component/main-form-->
-    <template id="main-form-buttons">
-      <div class="solid-form">
-      <button class="solid-button solid-button-primary" data-simply-command="navigateRegister">
-        <h1>Register</h1>
-        <p>Create a new account</p>
-      </button>
-      <button class="solid-button solid-button-primary" data-simply-command="navigateLogin">
-        <h1>Log in</h1>
-        <p>Use your existing account</p>
-      </button>
     </div>
-    </template>
-    <!-- component/main-form-->
-    <template id="main-form">
-      <section class="solid-form">
-      <h1>Welcome to Solid</h1>
-      <simply-render rel="main-form-buttons"></simply-render>
-    </section>
     
     </template>
-    <!-- component/register-->
-    <template id="register-password">
-      <section class="solid-form">
-      <h1>Register</h1>
-      <form class="solid-form" data-simply-command="registerVerify" action="#">
-        <input type="hidden" data-simply-field="register.email">
-        <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="register.password" type="password" placeholder="Choose your password" required>
-        <button class="solid-button solid-button-primary">
-          <h1>Next</h1>
-        </button>
-      </form>
-    </section>
+    <!-- component/login-->
+    <template id="logout">
+      <div class="ds-dialog solid-dialog">
+      <h1>Logged out</h1>
+      <p>You have been logged out.</p>
+      <p>
+        You can close this window, or return to the <a href="/">home page</a>
+      </p>
+      <div class="ds-form-buttons">
+        <a href="/" class="ds-button ds-button-support">Home</a>
+      </div>
+    </div>
     </template>
     <!-- component/register-->
     <template id="register-thanks">
-      <section class="solid-form">
+      <div class="ds-dialog solid-dialog">
       <h1>Welcome to Solid</h1>
-      <p>Your identity is ready to use</p>
-      <h2 data-simply-field="createdWebId"></h2>
-      <form action="#" class="solid-form" data-simply-command="registerCompleted">
-        <button class="solid-button solid-button-primary">
-          <h1>Continue</h1>
-        </button>
+      <p>Your identity is ready to use.</p>
+      <p class="solid-webid" data-simply-field="createdWebId">{created webid}</p>
+      <form class="solid-form" data-simply-command="registerCompleted">
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">Continue</button>
+        </div>
       </form>
-    </section>
+    </div>
+    
     </template>
     <!-- component/register-->
     <template id="register-verify">
-      <section class="solid-form">
-      <h1>Verify your e-mail</h1>
-      <form class="solid-form" data-simply-command="registerDone" action="#">
-        <p>Enter the code in your email to finish your registration</p>
-        <input autofocus class="solid-input" data-simply-field="register.confirm" type="text" placeholder="xxxxxx" required>
-        <button class="solid-button solid-button-primary">
-          <h1>Verify</h1>
-        </button>
+      <div class="ds-dialog solid-dialog">
+      <h1>Verify your E-mail</h1>
+      <form class="solid-form" data-simply-command="registerDone">
+        <label>
+          Enter the code in your email to finish your registration
+          <input autofocus data-simply-field="register.confirm" type="text" placeholder="xxxxxx" required>
+        </label>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">Verify</button>
+        </div>
       </form>
-    </section>
+    </div>
+    
     </template>
     <!-- component/register-->
     <template id="register">
-      <section class="solid-form">  <h1>Register</h1>
-      <form class="solid-form" data-simply-command="registerNext" action="#">
-        <p>What is your e-mail?</p>
-        <div class="solid-form-group">
-          <input autofocus class="solid-input" data-simply-field="register.email" type="text" placeholder="E-mail address" required>
+      <div class="ds-dialog solid-dialog">
+      <h1>Register</h1>
+      <form class="solid-form" data-simply-command="register">
+        <label>
+          E-mail
+          <input type="email" name="email" data-simply-field="register.email" autofocus required>
+        </label>
+        <simply-render rel="change-password"></simply-render>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">Register</button>
+          <div class="ds-align-right">
+            <a href="/login/" class="ds-button-inline-text">
+              <span>&#8230; or login with your account</span></a>
+          </div>
         </div>
-        <button class="solid-button solid-button-primary">
-          <h1>Next</h1>
-        </button>
       </form>
-    </section>
+    </div>
+    
     </template>
     <!-- component/reset-password-->
-    <template id="change-password">
-      <section class="solid-form">
-      <h1>Reset password</h1>
-      <form class="solid-form" data-simply-command="changePassword" action="#">
-        <p>Enter your new password</p>
-        <div class="solid-form-group">
-          <input data-simply-transformer="validateEntropy" autofocus class="solid-input" data-simply-field="reset.password" type="password" placeholder="Wachtwoord" required>
-        </div>
-        <button class="solid-button solid-button-primary">
-          <h1>Next</h1>
-        </button>
-      </form>
-    </section>
+    <template id="reset-change-password">
+      		<div class="ds-dialog solid-dialog">
+    			<h1>Reset your password</h1>
+    			<form class="solid-form" data-simply-command="resetChangePassword">
+    				<simply-render rel="change-password"></simply-render>
+    				<div class="ds-form-buttons">
+    					<button class="ds-button ds-button-primary">Reset</button>
+    					<a class="ds-button ds-button-support" href="/login/">Cancel</a>
+    				</div>
+    			</form>
+    		</div>
+    
     </template>
     <!-- component/reset-password-->
     <template id="reset-password-changed">
-      <section class="solid-form">
-      <h1>Reset password</h1>
+      <div class="ds-dialog solid-dialog">
+      <h1>Reset your password</h1>
       <form class="solid-form" action="#">
         <p class="solid-hint">Your password has been updated.</p>
+        <div class="ds-form-buttons">
+          <a href="/login/" class="ds-button ds-button-primary">Login</a>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/reset-password-->
     <template id="reset-password-sent">
-      <section class="solid-form">
-      <h1>Reset password</h1>
+      <div class="ds-dialog solid-dialog">
+      <h1>Reset your password</h1>
       <form class="solid-form">
-        <p class="solid-hint">Follow the instructions in your e-mail to complete the password reset.</p>
+        <p>Follow the instructions in your E-mail to complete the password reset.</p>
+        <div class="ds-form-buttons">
+          <a class="ds-button ds-button-support" href="/login/">Home</a>
+        </div>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/reset-password-->
     <template id="reset-password">
-      <section class="solid-form">
-      <h1>Reset password</h1>
-      <form class="solid-form" data-simply-command="resetPassword" action="#">
-        <p class="solid-hint">You will receive a link in your e-mail. Use the link to reset your password.</p>
-        <div class="solid-form-group">
-          <input autofocus class="solid-input" data-simply-field="reset.email" type="text" placeholder="E-mailadres" required>
+      <div class="ds-dialog solid-dialog">
+      <h1>Reset your password</h1>
+      <form class="solid-form" data-simply-command="reset">
+        <p>Enter your e-mail address and press Reset to receive a link that will allow you to reset your password.</p>
+        <label>
+          E-mail
+          <input type="email" name="email" autofocus data-simply-field="reset.email" required>
+        </label>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">Next</button>
+          <a class="ds-button ds-button-support" href="/login/">Cancel</a>
         </div>
-        <button class="solid-button solid-button-primary">
-          <h1>Next</h1>
-        </button>
       </form>
-    </section>
+    </div>
     </template>
     <!-- component/sharing-->
     <template id="sharing">
-      <section class="solid-form">
-      <h1>Allow access to your pod for <span data-simply-field="appOrigin" data-simply-transformer="appOrigin"></span>?</h1>
+      <div class="ds-dialog solid-dialog">
+      <h1>Allow access?</h1>
+      <p><span data-simply-field="appOrigin" data-simply-transformer="appOrigin"></span> wants to access your pod to:
       <form class="solid-form" data-simply-command="sharing" action="#">
-        <p>Choose what access others have on your data</p>
-        <p><strong data-simply-field="appOrigin" data-simply-transformer="appOrigin"></strong> will be allowed to:</p>
         <label>
           <input type="checkbox" name="access_mode" value="Read" checked>
           Read all data
@@ -1992,13 +2700,13 @@
           <input type="checkbox" name="access_mode" value="Append" checked>
           Add data
         </label>
-    	<label>    
+        <label>    
           <input type="checkbox" name="access_mode" value="Write" checked>
           Update or remove existing data
         </label>
         <label>
-            <input type="checkbox" name="access_mode" value="Control">
-            Let others grant or deny access to my pod
+          <input type="checkbox" name="access_mode" value="Control">
+          Let others grant or deny access to my pod
         </label>
         <input type="hidden" name="response_type" data-simply-field="sharingParams.response_type">
         <input type="hidden" name="display" data-simply-field="sharingParams.display">
@@ -2010,157 +2718,150 @@
         <input type="hidden" name="request" data-simply-field="sharingParams.request">
         <input type="hidden" name="returnUrl" data-simply-field="sharingParams.returnUrl">
         <input type="hidden" name="consent" value="true">
-        <button class="solid-button solid-button-primary">
-          <h1>Grant access</h1>
-        </button>
-        <button data-simply-command="cancel" class="solid-button solid-button-secondary">
-          <h1>Cancel</h1>
-        </button>
+        <div class="ds-form-buttons">
+          <button class="ds-button ds-button-primary">
+            Allow
+          </button>
+          <button data-simply-command="cancel" class="ds-button  ds-button-support">
+            Deny
+          </button>
+        </div>
       </form>
-    </section>
+    </div>
+    </template>
+    <!-- component/solid-drawer-darkmode-->
+    <template id="solid-drawer">
+      <img class="ds-background-image solid-darkbg" src="/assets/img/bg2.jpg" alt="">
+    <nav class="solid-drawer-position">
+    	<label class="ds-align-right ds-dropdown solid-drawer solid-darkmode-toggle">
+    		<button class="ds-button ds-button-naked" 
+                    data-simply-activate="darkmode"
+                    data-simply-command="darkmodeToggle" 
+                    data-simply-state="alt">
+    			<svg class="ds-icon ds-icon-feather" data-simply-state="default">
+    			    <use xlink:href="/assets/img/feather-sprite.svg#moon"></use>
+    			</svg>
+    			<svg class="ds-icon ds-icon-feather" data-simply-state="alt">
+    			    <use xlink:href="/assets/img/feather-sprite.svg#sun"></use>
+    			</svg>
+    		</button>
+    	</label>
+    </nav>
     </template>
     <!-- /Component HTML templates -->
-    <div class="main" data-simply-field="page" data-simply-content="template">
+    <div class="main ds-panels-panes ds-panels-center" data-simply-field="page" data-simply-content="template">
     <!-- Page HTML templates -->
     <!-- page/delete-account-->
     <template data-simply-template="delete-account-confirm">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account-confirm"></simply-render>
-    </main>
+    <simply-render rel="delete-account-confirm"></simply-render>
+    
     </template>
     <!-- page/delete-account-->
     <template data-simply-template="delete-account-done">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account-done"></simply-render>
-    </main>
+    <simply-render rel="delete-account-done"></simply-render>
+    
     </template>
     <!-- page/delete-account-->
     <template data-simply-template="delete-account-sent">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account-sent"></simply-render>
-    </main>
+    <simply-render rel="delete-account-sent"></simply-render>
+    
     </template>
     <!-- page/delete-account-->
     <template data-simply-template="delete-account">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="delete-account"></simply-render>
-    </main>
+    <simply-render rel="delete-account"></simply-render>
+    
     </template>
     <!-- page/home-->
     <template data-simply-template="home">
-      <main class="solid-main">
       <simply-render rel="header"></simply-render>
-      <simply-render rel="main-form"></simply-render>
-    </main>
-    
-    </template>
-    <!-- page/login-->
-    <template data-simply-template="login-done">
-      <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="login-done"></simply-render>
-    </main>
-    </template>
-    <!-- page/login-->
-    <template data-simply-template="login-password">
-      <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="login-password"></simply-render>
-    </main>
+    <div class="ds-dialog solid-dialog">
+      <h1 class="ds-center">Welcome to Solid</h1>
+      <a href="/login/" class="ds-button ds-button-multiline ds-button-wide ds-button-primary">
+        <p>
+          <span class="ds-button-title">Login</span><br>
+          Log in using your existing account
+        </p>
+      </a>
+      <a href="/register/" class="ds-button ds-button-multiline ds-button-wide ds-button-support">
+        <p>
+          <span class="ds-button-title">Register</span><br>
+          Register a new Web ID
+        </p>
+      </a>
+      <a href="/account/delete/" class="ds-button ds-button-multiline ds-button-wide ds-button-support">
+        <p>
+          <span class="ds-button-title">Request deletion</span><br>
+          Request removal of your existing account
+        </p>
+      </a>
+    </div>
     </template>
     <!-- page/login-->
     <template data-simply-template="login">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="login"></simply-render>
-    </main>
+    <simply-render rel="login"></simply-render>
     </template>
     <!-- page/logout-->
     <template data-simply-template="logout">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <section>
-        <h1>You have been logged out.</h1>
-        <p>
-          You can close this window, or return to the <a href="/">home page</a>
-        </p>
-      </section>
-    </main>
-    
-    </template>
-    <!-- page/register-->
-    <template data-simply-template="register-password">
-      <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="register-password"></simply-render>
-    </main>
+    <simply-render rel="logout"></simply-render>
     
     </template>
     <!-- page/register-->
     <template data-simply-template="register-thanks">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="register-thanks"></simply-render>
-    </main>
+    <simply-render rel="register-thanks"></simply-render>
     
     </template>
     <!-- page/register-->
     <template data-simply-template="register-verify">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="register-verify"></simply-render>
-    </main>
+    <simply-render rel="register-verify"></simply-render>
     
     </template>
     <!-- page/register-->
     <template data-simply-template="register">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="register"></simply-render>
-    </main>
+    <simply-render rel="register"></simply-render>
     
     </template>
     <!-- page/reset-password-->
     <template data-simply-template="change-password">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="change-password"></simply-render>
-    </main>
+    <simply-render rel="reset-change-password"></simply-render>
+    
     </template>
     <!-- page/reset-password-->
     <template data-simply-template="reset-password-changed">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="reset-password-changed"></simply-render>
-    </main>
+    <simply-render rel="reset-password-changed"></simply-render>
+    
     </template>
     <!-- page/reset-password-->
     <template data-simply-template="reset-password-sent">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="reset-password-sent"></simply-render>
-    </main>
+    <simply-render rel="reset-password-sent"></simply-render>
+    
     </template>
     <!-- page/reset-password-->
     <template data-simply-template="reset-password">
       <simply-render rel="header"></simply-render>
-    <main class="solid-main">
-      <simply-render rel="reset-password"></simply-render>
-    </main>
+    <simply-render rel="reset-password"></simply-render>
+    
     </template>
     <!-- page/sharing-->
     <template data-simply-template="sharing">
-      <main class="solid-main-wide">
-      <simply-render rel="sharing"></simply-render>
-    </main>
+      <simply-render rel="header"></simply-render>
+    <simply-render rel="sharing"></simply-render>
+    
     </template>
     <!-- /Page HTML templates -->
     </div>
-    <script src="https://unpkg.com/simplyview@2.1.1/dist/simply.everything.js"></script>
+    <script src="https://unpkg.com/simplyview@3.5.6/dist/simply.everything.js"></script>
     <script src="https://canary.simplyedit.io/1/simply-edit.js" data-simply-storage="none" data-api-key="simply-edit-0011"></script>
     <script>
       /* Transformers */
@@ -2215,6 +2916,32 @@
       });
     </script>
     <!-- Foot HTML -->
+    <!-- autofocus (baseComponent/autofocus) -->
+    <script>
+      document.addEventListener("simply-content-loaded", function() {
+        const focus = document.querySelector('[autofocus]')
+        if (focus) {
+          focus.focus();
+        }
+      });
+    </script>
+    <!-- darkmode-init (baseComponent/darkmode) -->
+    <script>
+      simply.activate.addListener('darkmode', function() {
+        if (document.body.classList.contains('ds-darkmode')) {
+          this.dataset.simplyState = 'default'
+        } else if (document.body.classList.contains('ds-darkmode-auto')) {
+          const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+          if (darkModeMql && darkModeMql.matches) {
+            this.dataset.simplyState = 'default'
+          } else {
+            this.dataset.simplyState = 'alt'
+          }
+        } else {
+          this.dataset.simplyState = 'alt'
+        }
+      })
+    </script>
     <!-- password-input (baseComponent/password-input) -->
     <script>
       editor.field.registerType(
