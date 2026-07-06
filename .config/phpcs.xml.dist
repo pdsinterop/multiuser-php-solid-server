@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ruleset
+    xsi:noNamespaceSchemaLocation="https://schema.phpcodesniffer.com/phpcs.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    name="PDS Interop PHP Solid Server"
+>
+    <description>PHP coding standards for the PDS Interop PHP Solid Server project</description>
+
+    <!-- Show sniff codes in all reports, and progress when running -->
+    <arg value="sp"/>
+
+    <!-- Strip the file paths down to the relevant bit. -->
+    <arg name="basepath" value="../"/>
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+
+    <file>.</file>
+    <exclude-pattern>*(.config|vendor)/*</exclude-pattern>
+
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="8.0-"/>
+
+    <!-- Set indent for `break` to 0 so it aligns with `case` and `default` -->
+    <rule ref="PSR2">
+        <exclude name="PSR2.ControlStructures.SwitchDeclaration"/>
+        <exclude name="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+    </rule>
+
+    <!-- Enforce the use of tabs for indentation -->
+    <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+
+    <!-- Include the whole PSR-12 standard -->
+    <rule ref="PSR12">
+        <!-- Enforce the use of tabs for indentation -->
+        <exclude name="Generic.WhiteSpace.DisallowTabIndent.NonIndentTabsUsed"/>
+        <exclude name="Generic.WhiteSpace.DisallowTabIndent.TabsUsed"/>
+
+        <!-- Do not align multiple statements, to reduce noise in diffs -->
+        <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSame"/>
+    </rule>
+
+    <!-- Have 12 chars padding maximum and always show as errors -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="maxPadding" value="12"/>
+            <property name="error" value="true"/>
+        </properties>
+    </rule>
+</ruleset>

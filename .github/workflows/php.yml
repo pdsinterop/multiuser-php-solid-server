@@ -51,7 +51,8 @@ jobs:
             --exclude vendor
             --no-progress
             .
-#  # 01.quality.php.validate.dependencies-file.yml
+
+  # 01.quality.php.validate.dependencies-file.yml
   validate-dependencies-file:
     name: Validate dependencies file
     runs-on: ubuntu-24.04
@@ -63,6 +64,7 @@ jobs:
             --no-plugins
             --no-scripts
             --strict
+
   # 02.test.php.test-unit.yml
   php-unittest:
     name: PHP Unit Tests
@@ -89,6 +91,7 @@ jobs:
         env:
           COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GITHUB_TOKEN }}"}}'
       - run: vendor/bin/phpunit --configuration tests/phpunit/phpunit.xml
+
   # 03.quality.php.scan.dependencies-vulnerabilities.yml
   scan-dependencies-vulnerabilities:
     name: Scan Dependencies Vulnerabilities
@@ -107,6 +110,24 @@ jobs:
           --no-dev
           --no-plugins
           --no-scripts
+
+
+  # 03.quality.php.lint-quality.yml
+  php-lint-quality:
+    needs:
+      - lint-php-syntax
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker://pipelinecomponents/php-codesniffer
+        with:
+          args: >-
+            phpcs
+            --standard=.config/phpcs.xml.dist
+            --report-full
+            --report-summary
+            .
+
   # 03.quality.php.lint-version-compatibility.yml
   php-check-version-compatibility:
     name: PHP Version Compatibility
