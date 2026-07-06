@@ -1,4 +1,5 @@
 <?php
+
 require_once(__DIR__ . "/../../config.php");
 require_once(__DIR__ . "/../../vendor/autoload.php");
 
@@ -19,10 +20,10 @@ function upgradeDatabase()
 		$pdo = new \PDO("sqlite:" . DBPATH);
 
 		// create tables
-		foreach($statements as $statement){
+		foreach ($statements as $statement) {
 			$pdo->exec($statement);
 		}
-	} catch(\PDOException $e) {
+	} catch (\PDOException $e) {
 		echo $e->getMessage();
 	}
 }
