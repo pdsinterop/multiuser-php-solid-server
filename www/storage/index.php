@@ -14,30 +14,34 @@ $request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 $method = $_SERVER['REQUEST_METHOD'];
 
 Middleware::cors();
-
-switch ($method) {
-	case "GET":
-		switch ($request) {
-			default:
-				header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
-			break;
-		}
-	break;
-	case "POST":
-		switch ($request) {
-			case "/api/storage":
-			case "/api/storage/":
-				SolidStorageProvider::respondToStorageNew();
-			break;
-			default:
-				header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
-			break;
-		}
-	break;
-	case "OPTIONS":
-	break;
-	case "PUT":
-	default:
-		header($_SERVER['SERVER_PROTOCOL'] . " 405 Method not allowed");
-	break;
+try {
+	switch ($method) {
+		case "GET":
+			switch ($request) {
+				default:
+					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
+				break;
+			}
+		break;
+		case "POST":
+			switch ($request) {
+				case "/api/storage":
+				case "/api/storage/":
+					SolidStorageProvider::respondToStorageNew();
+				break;
+				default:
+					header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
+				break;
+			}
+		break;
+		case "OPTIONS":
+		break;
+		case "PUT":
+		default:
+			header($_SERVER['SERVER_PROTOCOL'] . " 405 Method not allowed");
+		break;
+	}
+} catch (\Throwable $e) {
+	// Catch all so we don't leak information to the client.
+	header($_SERVER['SERVER_PROTOCOL'] . " 500 Internal server error");
 }

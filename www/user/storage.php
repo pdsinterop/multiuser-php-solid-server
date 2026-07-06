@@ -14,12 +14,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 Middleware::cors();
 Middleware::pubsub();
 
-switch ($method) {
-	case "OPTIONS":
-		echo "OK";
-		return;
-	break;
-	default:
-		SolidStorage::respondToStorage();
-	break;
+try {
+	switch ($method) {
+		case "OPTIONS":
+			echo "OK";
+			return;
+		break;
+		default:
+			SolidStorage::respondToStorage();
+		break;
+	}
+} catch (\Throwable $e) {
+	// Catch all so we don't leak information to the client.
+	header($_SERVER['SERVER_PROTOCOL'] . " 500 Internal server error");
 }
