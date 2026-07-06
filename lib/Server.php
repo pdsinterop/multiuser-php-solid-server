@@ -71,14 +71,16 @@ class Server
 		$clientId = $_GET['client_id'] ?? $_POST['client_id'] ?? null;
 		if ($clientId) {
 			$registeredClient = ClientRegistration::getRegistration($clientId);
-		}
-		if (isset($registeredClient)) {
-			return new ConfigClient(
-				$clientId,
-				$registeredClient['client_secret'] ?? '',
-				$registeredClient['redirect_uris'],
-				$registeredClient['client_name']
-			);
+			if (isset($registeredClient) && isset($registeredClient['redirect_uris'])) {
+				return new ConfigClient(
+					$clientId,
+					$registeredClient['client_secret'] ?? '',
+					$registeredClient['redirect_uris'],
+					$registeredClient['client_name']
+				);
+			} else {
+				throw new \Exception("Invalid client ID");
+			}
 		} else {
 			return new ConfigClient(
 				'',
