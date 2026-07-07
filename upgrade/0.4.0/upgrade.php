@@ -26,7 +26,7 @@ foreach (scandir(STORAGEBASE) as $dir) {
     // Create parent directories
     $parent = dirname($destination);
     if (!is_dir($parent)) {
-        mkdir($parent, 0777, true);
+        mkdir($parent, 0755, true);
     }
 
     $source = str_replace("//", "/", $source);
