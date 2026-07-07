@@ -132,7 +132,10 @@ class SolidIdp
 		$clientData['client_id_issued_at'] = time();
 		$clientData['client_id'] = $generatedClientId;
 		$clientData['origin'] = $origin;
-		if ($clientData['token_endpoint_auth_method'] !== 'none') { // generate and use secret if we have token endpoint authentication
+		if (
+			(!isset($clientData['token_endpoint_auth_method'])) || // if not set, assume we have to add a client secret;
+			($clientData['token_endpoint_auth_method'] !== 'none')
+		) { // generate and use secret if we have token endpoint authentication
 			$generatedClientSecret = bin2hex(random_bytes(32)); // and 64 chars for the client secret
 			$clientData['client_secret'] = $generatedClientSecret;
 		}
