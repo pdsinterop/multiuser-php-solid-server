@@ -28,7 +28,7 @@ docker compose exec -u www-data -i -w /opt/solid/ solid php init.php
 If you need dev user accounts bob and alice, also run this:
 
 ```sh
-docker compose exec -u www-data -i -w /opt/solid/ solid php init-devusers.php
+docker compose exec -u www-data -i -w /opt/solid/ solid php tests/testsuite/init-testsuite.php
 docker compose exec -w /opt/solid/ solid chown -R www-data:www-data keys pods profiles db # again
 ```
 
