@@ -81,7 +81,10 @@ class Server
 				the client_secret so we treat the client as
 				a public client
 			*/
-			if ($registeredClient['token_endpoint_auth_method'] === "none") {
+			if (
+				isset($registeredClient['token_endpoint_auth_method']) &&
+				($registeredClient['token_endpoint_auth_method'] === "none")
+			) {
 				unset($registeredClient['client_secret']);
 			}
 			return new ConfigClient(
