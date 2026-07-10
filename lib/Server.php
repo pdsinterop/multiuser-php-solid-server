@@ -73,6 +73,20 @@ class Server
 			$registeredClient = ClientRegistration::getRegistration($clientId);
 		}
 		if (isset($registeredClient)) {
+			/*
+				If the token_endpoint_auth_method is 'none',
+				this means we are dealing with a public
+				client that is not able to securely store
+				the client secret.  In that case, we remove
+				the client_secret so we treat the client as
+				a public client
+			*/
+			if (
+				isset($registeredClient['token_endpoint_auth_method']) &&
+				($registeredClient['token_endpoint_auth_method'] === "none")
+			) {
+				unset($registeredClient['client_secret']);
+			}
 			return new ConfigClient(
 				$clientId,
 				$registeredClient['client_secret'] ?? '',

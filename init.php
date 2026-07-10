@@ -24,7 +24,7 @@ function initDatabase()
 		clientData TEXT NOT NULL
 		)',
 		'CREATE TABLE IF NOT EXISTS allowedClients (
-		userId VARCHAR(255) NOT NULL PRIMARY KEY,
+		userId VARCHAR(255) NOT NULL,
 		clientId VARCHAR(255) NOT NULL
 		)',
 		'CREATE TABLE IF NOT EXISTS userStorage (

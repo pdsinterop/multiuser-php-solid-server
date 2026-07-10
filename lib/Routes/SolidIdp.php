@@ -128,12 +128,17 @@ class SolidIdp
 
 
 		$generatedClientId = bin2hex(random_bytes(16)); // 32 chars for the client Id
-		$generatedClientSecret = bin2hex(random_bytes(32)); // and 64 chars for the client secret
 
 		$clientData['client_id_issued_at'] = time();
 		$clientData['client_id'] = $generatedClientId;
-		$clientData['client_secret'] = $generatedClientSecret;
 		$clientData['origin'] = $origin;
+		if (
+			(!isset($clientData['token_endpoint_auth_method'])) || // if not set, assume we have to add a client secret;
+			($clientData['token_endpoint_auth_method'] !== 'none')
+		) { // generate and use secret if we have token endpoint authentication
+			$generatedClientSecret = bin2hex(random_bytes(32)); // and 64 chars for the client secret
+			$clientData['client_secret'] = $generatedClientSecret;
+		}
 		ClientRegistration::saveClientRegistration($clientData);
 
 		$client = ClientRegistration::getRegistration($generatedClientId);
@@ -141,16 +146,20 @@ class SolidIdp
 		$responseData = array(
 			'redirect_uris' => $client['redirect_uris'],
 			'client_id' => $client['client_id'],
-			'client_secret' => $client['client_secret'],
 			'response_types' => array('code'),
 			'grant_types' => array('authorization_code', 'refresh_token'),
 			'application_type' => $client['application_type'] ?? 'web',
 			'client_name' => $client['client_name'] ?? $client['client_id'],
 			'id_token_signed_response_alg' => 'RS256',
-			'token_endpoint_auth_method' => 'client_secret_basic',
-			'client_id_issued_at' => $client['client_id_issued_at'],
-			'client_secret_expires_at' => 0
+			'client_id_issued_at' => $client['client_id_issued_at']
 		);
+		if (isset($client['client_secret'])) {
+			$responseData['client_secret'] = $client['client_secret'];
+			$responseData['token_endpoint_auth_method'] = 'client_secret_basic';
+			$responseData['client_secret_expires_at'] = 0;
+		} else {
+			$responseData['token_endpoint_auth_method'] = 'none'; // No client secret means we can't authenticate on the token endpoint;
+		}
 		header("HTTP/1.1 201 Created");
 		header("Content-type: application/json");
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
