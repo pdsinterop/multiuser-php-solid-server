@@ -1,0 +1,3 @@
+This version has a change to store directories split out over subdirectories, to make sure we stay navigatable when the number of pod grows.
+
+The upgrade script moves the existing directories from the 32 character directories in 1 directory, to multiple subdirectories.
