@@ -34,4 +34,27 @@ class SolidStorageProvider
 		header("Content-type: application/json");
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
+	public static function respondToPodCount()
+	{
+		if (!defined('POD_COUNT_KEY')) {
+			header("HTTP/1.1 404 Not found");
+			exit();
+		}
+		if (!isset($_SERVER['HTTP_POD_COUNT_KEY'])) {
+			header("HTTP/1.1 404 Not found");
+			exit();
+		}
+		if ($_SERVER['HTTP_POD_COUNT_KEY'] !== POD_COUNT_KEY) {
+			header("HTTP/1.1 400 Bad Request");
+			exit();
+		}
+
+		$podCount = StorageServer::getPodCount();
+		$responseData = array(
+			"count" => $podCount
+		);
+		header("HTTP/1.1 200 OK");
+		header("Content-type: application/json");
+		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+	}
 }
