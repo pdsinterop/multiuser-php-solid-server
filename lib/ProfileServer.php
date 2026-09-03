@@ -15,7 +15,7 @@ class ProfileServer extends Server
 		if (is_dir(PROFILEBASE . "$profileId/")) { // backwards compatiblity check
 			$profilePath = $profileId;
 		} else {
-			$profilePath = implode("/", str_split($storageId, 4));
+			$profilePath = implode("/", str_split($profileId, 4));
 		}
 		// The internal adapter
 		$adapter = new \League\Flysystem\Adapter\Local(
