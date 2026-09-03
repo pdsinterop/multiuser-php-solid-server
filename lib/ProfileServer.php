@@ -12,10 +12,15 @@ class ProfileServer extends Server
 	{
 		$profileId = self::getProfileId();
 
+		if (is_dir(PROFILEBASE . "$profileId/")) { // backwards compatiblity check
+			$profilePath = $profileId;
+		} else {
+			$profilePath = implode("/", str_split($profileId, 4));
+		}
 		// The internal adapter
 		$adapter = new \League\Flysystem\Adapter\Local(
 			// Determine root directory
-			PROFILEBASE . "$profileId/"
+			PROFILEBASE . $profilePath
 		);
 
 		$graph = new \EasyRdf\Graph();
