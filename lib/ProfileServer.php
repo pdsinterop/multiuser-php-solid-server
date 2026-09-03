@@ -20,7 +20,7 @@ class ProfileServer extends Server
 		// The internal adapter
 		$adapter = new \League\Flysystem\Adapter\Local(
 			// Determine root directory
-			$profilePath
+			PROFILEBASE . $profilePath
 		);
 
 		$graph = new \EasyRdf\Graph();
