@@ -24,6 +24,14 @@ class ClientRegistration
 			if (!isset($clientData['origin']) && isset($clientData['client_uri'])) {
 				$clientData['origin'] = rtrim($clientData['client_uri'], '/');
 			}
+			if (!isset($clientData['origin'])) {
+				$parsedOrigin = parse_url($clientId);
+				$origin = $parsedOrigin['scheme'] . '://' . $parsedOrigin['host'];
+				if (isset($parsedOrigin['port'])) {
+					$origin .= ":" . $parsedOrigin['port'];
+				}
+				$clientData['origin'] = $origin;
+			}
 			self::saveClientRegistration($clientData);
 			return $clientData;
 		}
