@@ -111,26 +111,33 @@ class User
 		if (!self::validatePasswordStrength($newUser['password'])) {
 			return false;
 		}
-		$generatedUserId = bin2hex(random_bytes(16));
-		while (self::userIdExists($generatedUserId)) {
+
+		if (! isset($newUser['userId'])) {
 			$generatedUserId = bin2hex(random_bytes(16));
+
+			while (self::userIdExists($generatedUserId)) {
+				$generatedUserId = bin2hex(random_bytes(16));
+			}
+
+			$newUser['userId'] = $generatedUserId;
 		}
+
 		$query = Db::$pdo->prepare(
 			'INSERT INTO users VALUES (:userId, :email, :passwordHash, :data)'
 		);
 
 		$queryParams = [];
-		$queryParams[':userId'] = $generatedUserId;
+		$queryParams[':userId'] = $newUser['userId'];
 		$queryParams[':email'] = $newUser['email'];
 		$queryParams[':passwordHash'] = password_hash($newUser['password'], PASSWORD_BCRYPT);
 		unset($newUser['password']);
 
-		$newUser['webId'] = "https://id-" . $generatedUserId . "." . BASEDOMAIN . "/#me";
+		$newUser['webId'] = "https://id-" . $newUser['userId'] . "." . BASEDOMAIN . "/#me";
 		$queryParams[':data'] = json_encode($newUser);
 		$query->execute($queryParams);
 
 		return [
-			"userId" => $generatedUserId,
+			"userId" => $newUser['userId'],
 			"email" => $newUser['email'],
 			"webId" => $newUser['webId']
 		];
