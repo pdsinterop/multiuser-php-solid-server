@@ -21,9 +21,19 @@ class ClientRegistration
 		}
 		if (preg_match("/^http(s)?:/", $clientId)) {
 			$clientData = self::getRemoteRegistration($clientId);
-			if (!isset($clientData['origin']) && isset($clientData['client_uri'])) {
-				$clientData['origin'] = rtrim($clientData['client_uri'], '/');
+
+			if (! isset($clientData['origin'])) {
+				if (isset($clientData['client_uri'])) {
+					$clientData['origin'] = rtrim($clientData['client_uri'], '/');
+				} else {
+					// In the OIDC Dynamic Client Registration spec 'client_uri' is optional.
+					// @see https://openid.net/specs/openid-connect-registration-1_0.html
+					// If it has not been provided, we fall back to the Client ID URI basedomain
+					$url = parse_url($clientId);
+					$clientData['origin'] = $url['scheme'] . '://' . $url['host'];
+				}
 			}
+
 			self::saveClientRegistration($clientData);
 			return $clientData;
 		}
