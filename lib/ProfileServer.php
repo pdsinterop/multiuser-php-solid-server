@@ -90,16 +90,20 @@ class ProfileServer extends Server
 
 	public static function initializeProfile()
 	{
-		$filesystem = self::getFilesystem();
-		if (!$filesystem->has("/.acl")) {
-			$defaultAcl = self::generateDefaultAcl();
-			$filesystem->write("/.acl", $defaultAcl);
-		}
+		$user = self::getOwner();
 
-		// Generate default folders and ACLs:
-		if (!$filesystem->has("/profile.ttl")) {
-			$profile = self::generateDefaultProfile();
-			$filesystem->write("/profile.ttl", $profile);
+		if ($user) {
+			$filesystem = self::getFilesystem();
+			if (!$filesystem->has("/.acl")) {
+				$defaultAcl = self::generateDefaultAcl();
+				$filesystem->write("/.acl", $defaultAcl);
+			}
+
+			// Generate default folders and ACLs:
+			if (!$filesystem->has("/profile.ttl")) {
+				$profile = self::generateDefaultProfile($user);
+				$filesystem->write("/profile.ttl", $profile);
+			}
 		}
 	}
 
@@ -137,9 +141,8 @@ EOF;
 		return $acl;
 	}
 
-	public static function generateDefaultProfile()
+	public static function generateDefaultProfile($user)
 	{
-		$user = self::getOwner();
 		if (!isset($user['storage']) || !$user['storage']) {
 			$user['storage'] = "https://storage-" . self::getProfileId() . "." . BASEDOMAIN . "/";
 		}
