@@ -17,7 +17,7 @@ const MAILER = [
 
 const MAILSTYLES = [];
 
-const BASEURL = "https://example.com";
+defined('BASEURL') || define('BASEURL', "https://example.com");
 
 class MailerMock
 {
@@ -25,10 +25,16 @@ class MailerMock
 	public $Body;
 	public $AltBody;
 	public $addresses = [];
+	public $ErrorInfo = '';
 
 	public function addAddress($address)
 	{
 		$this->addresses[] = $address;
+	}
+
+	public function isError()
+	{
+		return $this->ErrorInfo !== '';
 	}
 
 	public function send()
@@ -77,7 +83,7 @@ class MailerTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals("Welcome to Solid!", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
 	}
 
-	public function testVerify()
+	public function testVerifySucces()
 	{
 		Mailer::$mailer = new MailerMock();
 		Mailer::sendVerify([
@@ -97,6 +103,18 @@ class MailerTest extends \PHPUnit\Framework\TestCase
 		$doc = new \DOMDocument();
 		$doc->loadHTML(Mailer::$mailer->Body);
 		$this->assertEquals("Confirm your e-mail", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
+	}
+
+	public function testVerifyFailure()
+	{
+		$this->expectException(\Exception::class);
+
+		Mailer::$mailer = new MailerMock();
+		Mailer::$mailer->ErrorInfo = 'Mock Error';
+		Mailer::sendVerify([
+			'email' => 'alice@example.com',
+			'code' => '654321'
+		]);
 	}
 
 	public function testResetPassword()

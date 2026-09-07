@@ -4,7 +4,8 @@ namespace Pdsinterop\PhpSolid;
 
 use Pdsinterop\PhpSolid\Db;
 
-const DBPATH = ":memory:";
+defined('DBPATH') || define('DBPATH', ":memory:");
+
 class DbTest extends \PHPUnit\Framework\TestCase
 {
 	public function testConnect()
