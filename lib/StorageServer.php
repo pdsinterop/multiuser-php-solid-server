@@ -33,23 +33,30 @@ class StorageServer extends Server
 		]);
 	}
 
-	public static function createStorage($ownerWebId)
+	public static function createStorage($ownerWebId, $storageId = null)
 	{
-		$generatedStorageId = bin2hex(random_bytes(16));
-		while (self::storageIdExists($generatedStorageId)) {
+		if (empty($storageId)) {
 			$generatedStorageId = bin2hex(random_bytes(16));
+
+			while (self::storageIdExists($generatedStorageId)) {
+				$generatedStorageId = bin2hex(random_bytes(16));
+			}
+
+			$storageId = $generatedStorageId;
 		}
+
 		Db::connect();
 		$query = Db::$pdo->prepare(
 			'INSERT OR REPLACE INTO storage VALUES(:storageId, :owner)'
 		);
 		$query->execute([
-			':storageId' => $generatedStorageId,
-			':owner' => $ownerWebId
+			':storageId' => $storageId,
+			':owner' => $ownerWebId,
 		]);
+
 		return [
-			"storageId" => $generatedStorageId,
-			"storageUrl" => "https://storage-" . $generatedStorageId . "." . BASEDOMAIN . "/"
+			"storageId" => $storageId,
+			"storageUrl" => "https://storage-" . $storageId . "." . BASEDOMAIN . "/",
 		];
 	}
 
