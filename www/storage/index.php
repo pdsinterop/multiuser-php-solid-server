@@ -11,6 +11,7 @@ use Pdsinterop\PhpSolid\Middleware;
 use Pdsinterop\PhpSolid\Routes\SolidStorageProvider;
 
 $request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
+$request = rtrim($request, '/');
 $method = $_SERVER['REQUEST_METHOD'];
 
 Middleware::cors();
@@ -26,11 +27,9 @@ switch ($method) {
 	case "POST":
 		switch ($request) {
 			case "/api/storage":
-			case "/api/storage/":
 				SolidStorageProvider::respondToStorageNew();
 			break;
 			case "/api/podcount":
-			case "/api/podcount/":
 				SolidStorageProvider::respondToPodCount();
 			break;
 			default:
