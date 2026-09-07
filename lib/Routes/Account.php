@@ -52,10 +52,23 @@ class Account
 		];
 
 		$verifyToken = User::saveVerifyToken('verify', $verifyData);
-		Mailer::sendVerify($verifyToken);
 
-		$responseData = "OK";
-		header("HTTP/1.1 201 Created");
+		try {
+			Mailer::sendVerify($verifyToken);
+
+			$responseCode = 201;
+			$responseData = "OK";
+		} catch (\Throwable $e) {
+			error_log('Could not send verification email (' . get_class($e) . '):' . $e->getMessage());
+
+			$responseCode = 502;
+			$responseData = [
+				'title' => 'Mail could not be sent',
+				'errors' => [['detail' => 'Failed to send verification email']]
+			];
+		}
+
+		http_response_code($responseCode);
 		header("Content-type: application/json");
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}

@@ -88,7 +88,13 @@ class Mailer
 		$mailer->Body = $mailHtmlBody;
 		$mailer->AltBody = $mailPlainBody;
 
-		return $mailer->send();
+		$result = $mailer->send();
+
+		if ($result === false || $mailer->isError()) {
+			throw new \Exception($mailer->ErrorInfo);
+		}
+
+		return $result;
 	}
 
 	public static function sendResetPassword($data)
