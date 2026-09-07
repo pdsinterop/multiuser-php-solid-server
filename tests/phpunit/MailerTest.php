@@ -17,7 +17,7 @@ const MAILER = [
 
 const MAILSTYLES = [];
 
-const BASEURL = "https://example.com";
+defined('BASEURL') || define('BASEURL', "https://example.com");
 
 class MailerMock
 {
