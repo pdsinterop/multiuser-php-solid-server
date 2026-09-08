@@ -74,6 +74,10 @@ switch ($method) {
 			case "/api/accounts/new":
 				Account::respondToAccountNew();
 			break;
+			case "/api/accounts/create":
+				Account::requireApiAuthentication();
+				Account::respondToApiCreate();
+			break;
 			case "/api/accounts/reset-password":
 				Account::respondToAccountResetPassword();
 			break;
