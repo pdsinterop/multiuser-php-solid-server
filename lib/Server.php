@@ -11,9 +11,6 @@ use Pdsinterop\Solid\Auth\Utils\ReplayDetector;
 use Pdsinterop\Solid\Auth\Utils\DPop;
 use Pdsinterop\Solid\Auth\Utils\Bearer;
 use Pdsinterop\Solid\Auth\Utils\JtiValidator;
-use Pdsinterop\Solid\Auth\TokenGenerator;
-use Pdsinterop\PhpSolid\ClientRegistration;
-use Pdsinterop\PhpSolid\JtiStore;
 
 class Server
 {
