@@ -42,8 +42,16 @@ class SolidStorage
 		try {
 			$webId = StorageServer::getWebId($rawRequest);
 		} catch (\Exception $e) {
-			$response = $resourceServer->getResponse()
-				-> withStatus(400, "Bad request");
+			$message = vsprintf(
+				'{"title": "Storage failed", "errors": [{"detail": "%s"}]}',
+				[$e->getMessage()]
+			);
+
+			$response = $resourceServer->getResponse()->withStatus(400, 'Bad request');
+
+			$body = $response->getBody();
+			$body->write($message);
+
 			StorageServer::respond($response);
 			exit();
 		}

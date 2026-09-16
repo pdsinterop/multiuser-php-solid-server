@@ -41,13 +41,32 @@ class ClientRegistration
 	public static function getRemoteRegistration($url)
 	{
 		$clientDocument = file_get_contents($url);
-		$clientRegistration = json_decode($clientDocument, true);
-		if (!isset($clientRegistration['client_id'])) {
-			throw new \Exception("No client ID found in client document");
+
+		if ($clientDocument === false && error_get_last() !== null) {
+			throw new \Exception(vsprintf('Unable to fetch URL: %s: ', [$url, var_export(error_get_last(), true),]));
+		} elseif (! is_string($clientDocument) || $clientDocument === '') {
+			throw new \Exception('Unable to fetch URL: ' . $url);
 		}
-		if (!isset($clientRegistration['redirect_uris'])) {
-			throw new \Exception("No redirect URIs found in client document");
+
+		try {
+			$clientRegistration = json_decode($clientDocument, true, 512, JSON_THROW_ON_ERROR);
+		} catch (\Throwable $e) {
+			$message = vsprintf('Could not JSON decode payload from URL "%s": %s (%s)', [
+				$url,
+				$e->getMessage(),
+				$e->getCode()
+			]);
+			throw new \Exception($message);
 		}
+
+		if (! is_array($clientRegistration)) {
+			throw new \Exception('Invalid JSON payload from URL: ' . $url);
+		} elseif (! isset($clientRegistration['client_id'])) {
+			throw new \Exception('No client ID found in client document');
+		} elseif (! isset($clientRegistration['redirect_uris'])) {
+			throw new \Exception('No redirect URIs found in client document');
+		}
+
 		return $clientRegistration;
 	}
 
