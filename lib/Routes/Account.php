@@ -178,7 +178,15 @@ JSON;
 			if (! $user) {
 				http_response_code(404);
 				header('Content-type: application/json');
-				echo '{"title":"Unknown WebID","errors":[{"detail":"No account exists for provided WebID '.$webId.'"}]}';
+				echo <<<JSON
+{
+    "title": "Unknown WebID",
+    "errors": [{
+		"detail": "No account exists for provided WebID '$webId' "
+	}]
+}
+
+JSON;
 				exit();
 			} else {
 				$responseData = self::createApiTokens($user['userId'], $user['webId'], $clientId);
