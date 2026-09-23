@@ -7,11 +7,13 @@ namespace Pdsinterop\PhpSolid;
 
 class TokenGenerator extends \Pdsinterop\Solid\Auth\TokenGenerator
 {
+	public const REFRESH_TOKEN_TTL = 30 * 24 * 3600;
+
 	public function createRefreshToken(string $clientId, string $userId, array $scopes): string
 	{
 		$payload = [
 			'client_id' => $clientId,
-			'expire_time' => time() + 30 * 24 * 3600,
+			'expire_time' => time() + self::REFRESH_TOKEN_TTL,
 			'refresh_token_id' => bin2hex(random_bytes(16)),
 			'scopes' => $scopes,
 			'user_id' => $userId,

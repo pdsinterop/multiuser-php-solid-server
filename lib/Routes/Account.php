@@ -169,7 +169,26 @@ JSON;
 
 		// @TODO: Replace x-form-encode / multipart with JSON ?
 
-		if (empty($_POST['password'])) {
+		if (! empty($_POST['web_id']) && ! empty($_POST['client_id'])) {
+			$webId = $_POST['web_id'];
+			$clientId = $_POST['client_id'];
+
+			$user = User::getUserByWebId($webId);
+
+			if (! $user) {
+				http_response_code(404);
+				header('Content-type: application/json');
+				echo '{"title":"Unknown WebID","errors":[{"detail":"No account exists for provided WebID '.$webId.'"}]}';
+				exit();
+			} else {
+				$responseData = self::createApiTokens($user['userId'], $user['webId'], $clientId);
+
+				http_response_code(200);
+				header('Content-type: application/json');
+				echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+				exit();
+			}
+		} elseif (empty($_POST['password'])) {
 			http_response_code(400); // Bad Request
 			header('Content-type: application/json');
 			echo <<<'JSON'
@@ -272,39 +291,17 @@ JSON;
 JSON;
 				exit();
 			} else {
-				// @TODO: (?) Add the user-id specific code to StorageServer (see closed MR).
-				$createdStorage = StorageServer::createStorage($createdUser['webId']/*, $userId*/);
+				$createdStorage = StorageServer::createStorage($createdUser['webId']);
 				User::setStorage($createdUser['userId'], $createdStorage['storageUrl']);
 
 				$clientId = $_POST['client_id'];
 
-				$tokenGenerator = \Pdsinterop\PhpSolid\Server::getTokenGenerator();
+				$responseData = self::createApiTokens($createdUser['userId'], $createdUser['webId'], $clientId);
 
-				$accessTokenPayload = $tokenGenerator->generateAccessToken($clientId, $createdUser['webId']);
-				$accessToken = $tokenGenerator->signToken($accessTokenPayload);
+				$responseData['email'] = $email;
+				$responseData['storageUrl'] = $createdStorage['storageUrl'];
 
-				$idTokenPayload = $tokenGenerator->generateIdToken($clientId, $createdUser['webId']);
-				$idTokenPayload = $tokenGenerator->bindAccessToken($accessToken, $idTokenPayload);
-				$idToken = $tokenGenerator->signToken($idTokenPayload);
-
-				$refreshToken = $tokenGenerator->createRefreshToken(
-					$clientId,
-					$createdUser['userId'],
-					['openid', 'webid', 'offline_access']
-				);
-
-				$responseData = [
-					'access_token' => $accessToken,
-					'email' => $email,
-					'expires_in' => 3600,
-					'id_token' => $idToken,
-					'refresh_token' => $refreshToken,
-					'storageUrl' => $createdStorage['storageUrl'],
-					'token_type' => 'Bearer',
-					'webId' => $createdUser['webId'],
-				];
-
-				http_response_code(201);
+				http_response_code(201); // Created
 				header('Content-type: application/json');
 				header('Location: ' . $createdUser['webId']);
 				echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
@@ -451,5 +448,33 @@ JSON;
 			IpAttempts::logFailedAttempt($_SERVER['REMOTE_ADDR'], "login", time() + 3600);
 			header("Location: /login/");
 		}
+	}
+
+	private static function createApiTokens($userId, $webId, $clientId): array
+	{
+		$tokenGenerator = \Pdsinterop\PhpSolid\Server::getTokenGenerator();
+
+		$accessTokenPayload = $tokenGenerator->generateAccessToken($clientId, $webId);
+		$accessToken = $tokenGenerator->signToken($accessTokenPayload);
+
+		$idTokenPayload = $tokenGenerator->generateIdToken($clientId, $webId);
+		$idTokenPayload = $tokenGenerator->bindAccessToken($accessToken, $idTokenPayload);
+		$idToken = $tokenGenerator->signToken($idTokenPayload);
+
+		$refreshToken = $tokenGenerator->createRefreshToken(
+			$clientId,
+			$userId,
+			['openid', 'webid', 'offline_access']
+		);
+
+		return [
+			'access_token' => $accessToken,
+			'expires_in' => 3600,
+			'id_token' => $idToken,
+			'refresh_expires_in' => \Pdsinterop\PhpSolid\TokenGenerator::REFRESH_TOKEN_TTL,
+			'refresh_token' => $refreshToken,
+			'token_type' => 'Bearer',
+			'webId' => $webId,
+		];
 	}
 }
