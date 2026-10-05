@@ -40,15 +40,15 @@ class SolidStorageProvider
 			header("HTTP/1.1 404 Not found");
 			exit();
 		}
-		if (!isset($_SERVER['HTTP_POD_COUNT_KEY'])) {
-			header("HTTP/1.1 404 Not found");
-			exit();
-		}
-		if ($_SERVER['HTTP_POD_COUNT_KEY'] !== POD_COUNT_KEY) {
-			header("HTTP/1.1 400 Bad Request");
-			exit();
-		}
-
+                $podCountKey = $_POST['POD_COUNT_KEY'] ?? null;
+                if (!isset($podCountKey)) {
+                        header("HTTP/1.1 404 Not found");
+                        exit();
+                }
+                if ($podCountKey !== POD_COUNT_KEY) {
+                        header("HTTP/1.1 400 Bad Request");
+                        exit();
+                }
 		$podCount = StorageServer::getPodCount();
 		$responseData = array(
 			"count" => $podCount
