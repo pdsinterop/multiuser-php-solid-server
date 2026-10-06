@@ -8,7 +8,7 @@ use Pdsinterop\PhpSolid\Util;
 
 class ProfileServer extends Server
 {
-	public static function getFileSystem()
+	public static function getRdfAdapter()
 	{
 		$profileId = self::getProfileId();
 
@@ -17,6 +17,7 @@ class ProfileServer extends Server
 		} else {
 			$profilePath = implode("/", str_split($profileId, 4));
 		}
+
 		// The internal adapter
 		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
@@ -29,12 +30,12 @@ class ProfileServer extends Server
 		$serverUri = Util::getServerUri();
 
 		// Create the RDF Adapter
-		$rdfAdapter = new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+	}
 
+	public static function getFileSystem($rdfAdapter)
+	{
 		$filesystem = new \League\Flysystem\Filesystem($rdfAdapter);
-		$filesystem->addPlugin(new \Pdsinterop\Rdf\Flysystem\Plugin\AsMime($formats));
-		$plugin = new \Pdsinterop\Rdf\Flysystem\Plugin\ReadRdf($graph);
-		$filesystem->addPlugin($plugin);
 		return $filesystem;
 	}
 

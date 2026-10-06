@@ -101,8 +101,8 @@ class StorageServer extends Server
 		return false;
 	}
 
-	public static function getFileSystem()
-	{
+        public static function getRdfAdapter()
+        {
 		$storageId = self::getStorageId();
 		if (!self::storageIdExists($storageId)) {
 			throw new \Exception("Storage does not exist");
@@ -113,24 +113,24 @@ class StorageServer extends Server
 			$storagePath = implode("/", str_split($storageId, 4));
 		}
 
-		// The internal adapter
-		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
-			// Determine root directory
-			STORAGEBASE . "$storagePath/"
-		);
+                // The internal adapter
+                $adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
+                        // Determine root directory
+                        STORAGEBASE . "$storagePath/"
+                );
 
-		$graph = new \EasyRdf\Graph();
-		// Create Formats objects
-		$formats = new \Pdsinterop\Rdf\Formats();
-		$serverUri = Util::getServerUri();
+                $graph = new \EasyRdf\Graph();
+                // Create Formats objects
+                $formats = new \Pdsinterop\Rdf\Formats();
+                $serverUri = Util::getServerUri();
 
-		// Create the RDF Adapter
-		$rdfAdapter = new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+                // Create the RDF Adapter
+                return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+        }
 
+	public static function getFileSystem($rdfAdapter)
+	{
 		$filesystem = new \League\Flysystem\Filesystem($rdfAdapter);
-		$filesystem->addPlugin(new \Pdsinterop\Rdf\Flysystem\Plugin\AsMime($formats));
-		$plugin = new \Pdsinterop\Rdf\Flysystem\Plugin\ReadRdf($graph);
-		$filesystem->addPlugin($plugin);
 		return $filesystem;
 	}
 

@@ -66,7 +66,8 @@ class StorageServerTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetFileSystem()
 	{
-		$filesystem = StorageServer::getFileSystem();
+		$rdfAdapter = StorageServer::getRdfAdapter();
+		$filesystem = StorageServer::getFileSystem($rdfAdapter);
 		$this->assertInstanceOf('\League\Flysystem\Filesystem', $filesystem);
 	}
 
