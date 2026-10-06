@@ -8,18 +8,20 @@ use Pdsinterop\PhpSolid\Util;
 
 class ProfileServer extends Server
 {
-	public function getMimeDetector()
+	public static function getMimeDetector()
 	{
 		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
-		    new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
-		    [
-			'acl' => 'text/turtle',
-		    ],
+			new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
+			[
+				'acl' => 'text/turtle'
+			]
 		);
 
 		$mimeTypeDetector = new \League\MimeTypeDetection\FinfoMimeTypeDetector(
-		    customExtensionMap: $extensionMap,
+			'',
+			$extensionMap
 		);
+		return $mimeTypeDetector;
 	}
 
 	public static function getRdfAdapter()
@@ -36,7 +38,10 @@ class ProfileServer extends Server
 		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
 			PROFILEBASE . $profilePath,
-			self::getMimeDetector()
+                        null, // visibilityConverter
+                        LOCK_EX, // writeFlags
+                        0002, // DISALLOW LINks
+                        self::getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();

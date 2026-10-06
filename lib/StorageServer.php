@@ -102,18 +102,20 @@ class StorageServer extends Server
 		return false;
 	}
 
-	public function getMimeDetector()
+	public static function getMimeDetector()
 	{
 		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
-		    new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
-		    [
-			'acl' => 'text/turtle',
-		    ],
+			new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
+			[
+				'acl' => 'text/turtle'
+			]
 		);
 
 		$mimeTypeDetector = new \League\MimeTypeDetection\FinfoMimeTypeDetector(
-		    customExtensionMap: $extensionMap,
+			'',
+			$extensionMap
 		);
+		return $mimeTypeDetector;
 	}
 
 	public static function getRdfAdapter()
@@ -132,6 +134,9 @@ class StorageServer extends Server
 		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
 			STORAGEBASE . "$storagePath/",
+			null, // visibilityConverter
+			LOCK_EX, // writeFlags
+			0002, // DISALLOW LINks
 			self::getMimeDetector()
 		);
 
