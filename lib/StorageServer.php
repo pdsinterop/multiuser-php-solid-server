@@ -114,7 +114,7 @@ class StorageServer extends Server
 		}
 
 		// The internal adapter
-		$adapter = new \League\Flysystem\Adapter\Local(
+		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
 			STORAGEBASE . "$storagePath/"
 		);

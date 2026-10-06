@@ -18,7 +18,7 @@ class ProfileServer extends Server
 			$profilePath = implode("/", str_split($profileId, 4));
 		}
 		// The internal adapter
-		$adapter = new \League\Flysystem\Adapter\Local(
+		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
 			PROFILEBASE . $profilePath
 		);
