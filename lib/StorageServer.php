@@ -7,6 +7,7 @@ use Pdsinterop\PhpSolid\User;
 use Pdsinterop\PhpSolid\Util;
 use Pdsinterop\PhpSolid\Db;
 
+
 class StorageServer extends Server
 {
 	public static function getStorage($storageId)
@@ -101,6 +102,20 @@ class StorageServer extends Server
 		return false;
 	}
 
+	public function getMimeDetector()
+	{
+		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
+		    new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
+		    [
+			'acl' => 'text/turtle',
+		    ],
+		);
+
+		$mimeTypeDetector = new \League\MimeTypeDetection\FinfoMimeTypeDetector(
+		    customExtensionMap: $extensionMap,
+		);
+	}
+
 	public static function getRdfAdapter()
 	{
 		$storageId = self::getStorageId();
@@ -116,7 +131,8 @@ class StorageServer extends Server
 		// The internal adapter
 		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
-			STORAGEBASE . "$storagePath/"
+			STORAGEBASE . "$storagePath/",
+			self::getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();
