@@ -174,7 +174,8 @@ class StorageServer extends Server
 
 	public static function initializeStorage()
 	{
-		$filesystem = self::getFilesystem();
+		$rdfAdapter = self::getRdfAdapter();
+		$filesystem = self::getFilesystem($rdfAdapter);
 		if (!$filesystem->has("/.acl")) {
 			$defaultAcl = self::generateDefaultAcl();
 			$filesystem->write("/.acl", $defaultAcl);

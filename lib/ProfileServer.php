@@ -94,7 +94,8 @@ class ProfileServer extends Server
 		$user = self::getOwner();
 
 		if ($user) {
-			$filesystem = self::getFilesystem();
+			$rdfAdapter = self::getRdfAdapter();
+			$filesystem = self::getFilesystem($rdfAdapter);
 			if (!$filesystem->has("/.acl")) {
 				$defaultAcl = self::generateDefaultAcl();
 				$filesystem->write("/.acl", $defaultAcl);
