@@ -7,6 +7,7 @@ use Pdsinterop\PhpSolid\User;
 use Pdsinterop\PhpSolid\Util;
 use Pdsinterop\PhpSolid\Db;
 
+
 class StorageServer extends Server
 {
 	public static function getStorage($storageId)
@@ -101,7 +102,21 @@ class StorageServer extends Server
 		return false;
 	}
 
-	public static function getFileSystem()
+	public function getMimeDetector()
+	{
+		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
+		    new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
+		    [
+			'acl' => 'text/turtle',
+		    ],
+		);
+
+		$mimeTypeDetector = new \League\MimeTypeDetection\FinfoMimeTypeDetector(
+		    customExtensionMap: $extensionMap,
+		);
+	}
+
+	public static function getRdfAdapter()
 	{
 		$storageId = self::getStorageId();
 		if (!self::storageIdExists($storageId)) {
@@ -114,9 +129,10 @@ class StorageServer extends Server
 		}
 
 		// The internal adapter
-		$adapter = new \League\Flysystem\Adapter\Local(
+		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
-			STORAGEBASE . "$storagePath/"
+			STORAGEBASE . "$storagePath/",
+			self::getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();
@@ -125,12 +141,12 @@ class StorageServer extends Server
 		$serverUri = Util::getServerUri();
 
 		// Create the RDF Adapter
-		$rdfAdapter = new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+	}
 
+	public static function getFileSystem($rdfAdapter)
+	{
 		$filesystem = new \League\Flysystem\Filesystem($rdfAdapter);
-		$filesystem->addPlugin(new \Pdsinterop\Rdf\Flysystem\Plugin\AsMime($formats));
-		$plugin = new \Pdsinterop\Rdf\Flysystem\Plugin\ReadRdf($graph);
-		$filesystem->addPlugin($plugin);
 		return $filesystem;
 	}
 
@@ -174,7 +190,8 @@ class StorageServer extends Server
 
 	public static function initializeStorage()
 	{
-		$filesystem = self::getFilesystem();
+		$rdfAdapter = self::getRdfAdapter();
+		$filesystem = self::getFilesystem($rdfAdapter);
 		if (!$filesystem->has("/.acl")) {
 			$defaultAcl = self::generateDefaultAcl();
 			$filesystem->write("/.acl", $defaultAcl);

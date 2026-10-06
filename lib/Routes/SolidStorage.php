@@ -21,7 +21,8 @@ class SolidStorage
 
 		try {
 			StorageServer::initializeStorage();
-			$filesystem = StorageServer::getFileSystem();
+			$rdfAdapter = StorageServer::getRdfAdapter();
+			$filesystem = StorageServer::getFileSystem($rdfAdapter);
 		} catch (\Exception $e) {
 			$response = new Response();
 			$response = $response->withStatus(404, "Not found");
@@ -29,11 +30,11 @@ class SolidStorage
 			exit();
 		}
 
-		$resourceServer = new ResourceServer($filesystem, new Response(), null);
+		$resourceServer = new ResourceServer($filesystem, $rdfAdapter, new Response(), null);
 		$solidNotifications = new SolidNotifications();
 		$resourceServer->setNotifications($solidNotifications);
 
-		$wac = new WAC($filesystem);
+		$wac = new WAC($filesystem, $rdfAdapter);
 
 		$baseUrl = Util::getServerBaseUrl();
 		$resourceServer->setBaseUrl($baseUrl);
