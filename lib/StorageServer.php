@@ -119,14 +119,14 @@ class StorageServer extends Server
                         STORAGEBASE . "$storagePath/"
                 );
 
-                $graph = new \EasyRdf\Graph();
-                // Create Formats objects
-                $formats = new \Pdsinterop\Rdf\Formats();
-                $serverUri = Util::getServerUri();
+		$graph = new \EasyRdf\Graph();
+		// Create Formats objects
+		$formats = new \Pdsinterop\Rdf\Formats();
+		$serverUri = Util::getServerUri();
 
-                // Create the RDF Adapter
-                return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
-        }
+		// Create the RDF Adapter
+		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+	}
 
 	public static function getFileSystem($rdfAdapter)
 	{
