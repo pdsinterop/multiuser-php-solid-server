@@ -99,7 +99,7 @@ class User
 		$entropy = PasswordValidator::getEntropy($password, BANNED_PASSWORDS);
 		$minimumEntropy = MINIMUM_PASSWORD_ENTROPY;
 		if ($entropy < $minimumEntropy) {
-			error_log("Entered pasword does not satisfy minimum entropy");
+			error_log("Entered password does not satisfy minimum entropy");
 			return false;
 		}
 		return true;
