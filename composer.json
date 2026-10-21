@@ -25,5 +25,15 @@
     "require-dev": {
         "phpunit/phpunit": "^9 || ^10 || ^11 || ^12",
         "phpstan/phpstan": "^2.1"
+    },
+    "config": {
+        "policy": {
+            "advisories": {
+                "ignore-id": [
+                    "PKSA-w9tt-7782-78jx",
+                    "PKSA-pwh8-d4fr-nywn"
+                ]
+            }
+        }
     }
 }
