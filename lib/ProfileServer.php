@@ -8,7 +8,21 @@ use Pdsinterop\PhpSolid\Util;
 
 class ProfileServer extends Server
 {
-	public static function getFileSystem()
+	public function getMimeDetector()
+	{
+		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
+		    new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
+		    [
+			'acl' => 'text/turtle',
+		    ],
+		);
+
+		$mimeTypeDetector = new \League\MimeTypeDetection\FinfoMimeTypeDetector(
+		    customExtensionMap: $extensionMap,
+		);
+	}
+
+	public static function getRdfAdapter()
 	{
 		$profileId = self::getProfileId();
 
@@ -17,10 +31,12 @@ class ProfileServer extends Server
 		} else {
 			$profilePath = implode("/", str_split($profileId, 4));
 		}
+
 		// The internal adapter
-		$adapter = new \League\Flysystem\Adapter\Local(
+		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
-			PROFILEBASE . $profilePath
+			PROFILEBASE . $profilePath,
+			self::getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();
@@ -29,12 +45,12 @@ class ProfileServer extends Server
 		$serverUri = Util::getServerUri();
 
 		// Create the RDF Adapter
-		$rdfAdapter = new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+	}
 
+	public static function getFileSystem($rdfAdapter)
+	{
 		$filesystem = new \League\Flysystem\Filesystem($rdfAdapter);
-		$filesystem->addPlugin(new \Pdsinterop\Rdf\Flysystem\Plugin\AsMime($formats));
-		$plugin = new \Pdsinterop\Rdf\Flysystem\Plugin\ReadRdf($graph);
-		$filesystem->addPlugin($plugin);
 		return $filesystem;
 	}
 
@@ -93,7 +109,8 @@ class ProfileServer extends Server
 		$user = self::getOwner();
 
 		if ($user) {
-			$filesystem = self::getFilesystem();
+			$rdfAdapter = self::getRdfAdapter();
+			$filesystem = self::getFilesystem($rdfAdapter);
 			if (!$filesystem->has("/.acl")) {
 				$defaultAcl = self::generateDefaultAcl();
 				$filesystem->write("/.acl", $defaultAcl);
