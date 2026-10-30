@@ -7,7 +7,6 @@ use Pdsinterop\PhpSolid\User;
 use Pdsinterop\PhpSolid\Util;
 use Pdsinterop\PhpSolid\Db;
 
-
 class StorageServer extends Server
 {
 	public static function getStorage($storageId)
