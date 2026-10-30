@@ -38,10 +38,10 @@ class ProfileServer extends Server
 		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
 			PROFILEBASE . $profilePath,
-                        null, // visibilityConverter
-                        LOCK_EX, // writeFlags
-                        0002, // DISALLOW LINks
-                        self::getMimeDetector()
+			null, // visibilityConverter
+			LOCK_EX, // writeFlags
+			0002, // disallow links
+			self::getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();

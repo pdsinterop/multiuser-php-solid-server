@@ -136,7 +136,7 @@ class StorageServer extends Server
 			STORAGEBASE . "$storagePath/",
 			null, // visibilityConverter
 			LOCK_EX, // writeFlags
-			0002, // DISALLOW LINks
+			0002, // disallow links
 			self::getMimeDetector()
 		);
 
