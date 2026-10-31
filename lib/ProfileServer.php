@@ -116,13 +116,13 @@ class ProfileServer extends Server
 		if ($user) {
 			$rdfAdapter = self::getRdfAdapter();
 			$filesystem = self::getFilesystem($rdfAdapter);
-			if (!$filesystem->has("/.acl")) {
+			if (!$filesystem->fileExists("/.acl")) {
 				$defaultAcl = self::generateDefaultAcl();
 				$filesystem->write("/.acl", $defaultAcl);
 			}
 
 			// Generate default folders and ACLs:
-			if (!$filesystem->has("/profile.ttl")) {
+			if (!$filesystem->fileExists("/profile.ttl")) {
 				$profile = self::generateDefaultProfile($user);
 				$filesystem->write("/profile.ttl", $profile);
 			}

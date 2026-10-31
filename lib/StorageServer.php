@@ -196,43 +196,43 @@ class StorageServer extends Server
 	{
 		$rdfAdapter = self::getRdfAdapter();
 		$filesystem = self::getFilesystem($rdfAdapter);
-		if (!$filesystem->has("/.acl")) {
+		if (!$filesystem->fileExists("/.acl")) {
 			$defaultAcl = self::generateDefaultAcl();
 			$filesystem->write("/.acl", $defaultAcl);
 		}
 
 		// Generate default folders and ACLs:
-		if (!$filesystem->has("/inbox")) {
-			$filesystem->createDir("/inbox");
+		if (!$filesystem->directoryExists("/inbox")) {
+			$filesystem->createDirectory("/inbox");
 		}
-		if (!$filesystem->has("/inbox/.acl")) {
+		if (!$filesystem->fileExists("/inbox/.acl")) {
 			$inboxAcl = self::generatePublicAppendAcl();
 			$filesystem->write("/inbox/.acl", $inboxAcl);
 		}
-		if (!$filesystem->has("/settings")) {
-			$filesystem->createDir("/settings");
+		if (!$filesystem->directoryExists("/settings")) {
+			$filesystem->createDirectory("/settings");
 		}
-		if (!$filesystem->has("/settings/privateTypeIndex.ttl")) {
+		if (!$filesystem->fileExists("/settings/privateTypeIndex.ttl")) {
 			$privateTypeIndex = self::generateDefaultPrivateTypeIndex();
 			$filesystem->write("/settings/privateTypeIndex.ttl", $privateTypeIndex);
 		}
-		if (!$filesystem->has("/settings/publicTypeIndex.ttl")) {
+		if (!$filesystem->fileExists("/settings/publicTypeIndex.ttl")) {
 			$publicTypeIndex = self::generateDefaultPublicTypeIndex();
 			$filesystem->write("/settings/publicTypeIndex.ttl", $publicTypeIndex);
 		}
-		if (!$filesystem->has("/settings/preferences.ttl")) {
+		if (!$filesystem->fileExists("/settings/preferences.ttl")) {
 			$preferences = self::generateDefaultPreferences();
 			$filesystem->write("/settings/preferences.ttl", $preferences);
 		}
-		if (!$filesystem->has("/public")) {
-			$filesystem->createDir("/public");
+		if (!$filesystem->directoryExists("/public")) {
+			$filesystem->createDirectory("/public");
 		}
-		if (!$filesystem->has("/public/.acl")) {
+		if (!$filesystem->fileExists("/public/.acl")) {
 			$publicAcl = self::generatePublicReadAcl();
 			$filesystem->write("/public/.acl", $publicAcl);
 		}
-		if (!$filesystem->has("/private")) {
-			$filesystem->createDir("/private");
+		if (!$filesystem->directoryExists("/private")) {
+			$filesystem->createDirectory("/private");
 		}
 	}
 
