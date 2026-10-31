@@ -101,7 +101,23 @@ class StorageServer extends Server
 		return false;
 	}
 
-	public static function getFileSystem()
+	public static function getMimeDetector()
+	{
+		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
+			new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
+			[
+				'acl' => 'text/turtle'
+			]
+		);
+
+		$mimeTypeDetector = new \League\MimeTypeDetection\FinfoMimeTypeDetector(
+			'',
+			$extensionMap
+		);
+		return $mimeTypeDetector;
+	}
+
+	public static function getRdfAdapter()
 	{
 		$storageId = self::getStorageId();
 		if (!self::storageIdExists($storageId)) {
@@ -114,9 +130,13 @@ class StorageServer extends Server
 		}
 
 		// The internal adapter
-		$adapter = new \League\Flysystem\Adapter\Local(
+		$adapter = new \League\Flysystem\Local\LocalFilesystemAdapter(
 			// Determine root directory
-			STORAGEBASE . "$storagePath/"
+			STORAGEBASE . "$storagePath/",
+			null, // visibilityConverter
+			LOCK_EX, // writeFlags
+			0002, // disallow links
+			self::getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();
@@ -125,12 +145,12 @@ class StorageServer extends Server
 		$serverUri = Util::getServerUri();
 
 		// Create the RDF Adapter
-		$rdfAdapter = new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
+	}
 
+	public static function getFileSystem($rdfAdapter)
+	{
 		$filesystem = new \League\Flysystem\Filesystem($rdfAdapter);
-		$filesystem->addPlugin(new \Pdsinterop\Rdf\Flysystem\Plugin\AsMime($formats));
-		$plugin = new \Pdsinterop\Rdf\Flysystem\Plugin\ReadRdf($graph);
-		$filesystem->addPlugin($plugin);
 		return $filesystem;
 	}
 
@@ -174,44 +194,45 @@ class StorageServer extends Server
 
 	public static function initializeStorage()
 	{
-		$filesystem = self::getFilesystem();
-		if (!$filesystem->has("/.acl")) {
+		$rdfAdapter = self::getRdfAdapter();
+		$filesystem = self::getFilesystem($rdfAdapter);
+		if (!$filesystem->fileExists("/.acl")) {
 			$defaultAcl = self::generateDefaultAcl();
 			$filesystem->write("/.acl", $defaultAcl);
 		}
 
 		// Generate default folders and ACLs:
-		if (!$filesystem->has("/inbox")) {
-			$filesystem->createDir("/inbox");
+		if (!$filesystem->directoryExists("/inbox")) {
+			$filesystem->createDirectory("/inbox");
 		}
-		if (!$filesystem->has("/inbox/.acl")) {
+		if (!$filesystem->fileExists("/inbox/.acl")) {
 			$inboxAcl = self::generatePublicAppendAcl();
 			$filesystem->write("/inbox/.acl", $inboxAcl);
 		}
-		if (!$filesystem->has("/settings")) {
-			$filesystem->createDir("/settings");
+		if (!$filesystem->directoryExists("/settings")) {
+			$filesystem->createDirectory("/settings");
 		}
-		if (!$filesystem->has("/settings/privateTypeIndex.ttl")) {
+		if (!$filesystem->fileExists("/settings/privateTypeIndex.ttl")) {
 			$privateTypeIndex = self::generateDefaultPrivateTypeIndex();
 			$filesystem->write("/settings/privateTypeIndex.ttl", $privateTypeIndex);
 		}
-		if (!$filesystem->has("/settings/publicTypeIndex.ttl")) {
+		if (!$filesystem->fileExists("/settings/publicTypeIndex.ttl")) {
 			$publicTypeIndex = self::generateDefaultPublicTypeIndex();
 			$filesystem->write("/settings/publicTypeIndex.ttl", $publicTypeIndex);
 		}
-		if (!$filesystem->has("/settings/preferences.ttl")) {
+		if (!$filesystem->fileExists("/settings/preferences.ttl")) {
 			$preferences = self::generateDefaultPreferences();
 			$filesystem->write("/settings/preferences.ttl", $preferences);
 		}
-		if (!$filesystem->has("/public")) {
-			$filesystem->createDir("/public");
+		if (!$filesystem->directoryExists("/public")) {
+			$filesystem->createDirectory("/public");
 		}
-		if (!$filesystem->has("/public/.acl")) {
+		if (!$filesystem->fileExists("/public/.acl")) {
 			$publicAcl = self::generatePublicReadAcl();
 			$filesystem->write("/public/.acl", $publicAcl);
 		}
-		if (!$filesystem->has("/private")) {
-			$filesystem->createDir("/private");
+		if (!$filesystem->directoryExists("/private")) {
+			$filesystem->createDirectory("/private");
 		}
 	}
 

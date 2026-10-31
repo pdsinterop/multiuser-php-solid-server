@@ -20,13 +20,14 @@ class SolidUserProfile
 
 		$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 		ProfileServer::initializeProfile();
-		$filesystem = ProfileServer::getFileSystem();
+		$rdfAdapter = ProfileServer::getRdfAdapter();
+		$filesystem = ProfileServer::getFileSystem($rdfAdapter);
 
-		$resourceServer = new ResourceServer($filesystem, new Response(), null);
+		$resourceServer = new ResourceServer($filesystem, $rdfAdapter, new Response(), null);
 		$solidNotifications = new SolidNotifications();
 		$resourceServer->setNotifications($solidNotifications);
 
-		$wac = new WAC($filesystem);
+		$wac = new WAC($filesystem, $rdfAdapter);
 
 		$baseUrl = Util::getServerBaseUrl();
 		$resourceServer->setBaseUrl($baseUrl);
