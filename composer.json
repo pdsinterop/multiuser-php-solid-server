@@ -15,8 +15,8 @@
         }
     ],
     "require": {
-        "pdsinterop/solid-auth": "dev-main",
-        "pdsinterop/solid-crud": "dev-main",
+        "pdsinterop/solid-auth": "v0.16.0",
+        "pdsinterop/solid-crud": "v0.10.0",
         "phpmailer/phpmailer": "^6.10",
         "sweetrdf/easyrdf": ">=1.15.0 <1.16.0",
         "phpseclib/bcmath_compat": "^2.0",
