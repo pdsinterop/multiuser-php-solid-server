@@ -15,8 +15,8 @@
         }
     ],
     "require": {
-        "pdsinterop/solid-auth": "dev-fix/flysystem-3-mpss",
-        "pdsinterop/solid-crud": "dev-fix/flysystem-3-mpss",
+        "pdsinterop/solid-auth": "dev-main",
+        "pdsinterop/solid-crud": "dev-main",
         "phpmailer/phpmailer": "^6.10",
         "sweetrdf/easyrdf": ">=1.15.0 <1.16.0",
         "phpseclib/bcmath_compat": "^2.0",
