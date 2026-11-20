@@ -2,8 +2,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\Db;
-
 class ClientRegistration
 {
 	public static function getRegistration($clientId)

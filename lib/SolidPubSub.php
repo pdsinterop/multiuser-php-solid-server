@@ -2,8 +2,8 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use WebSocket\Client;
 use Pdsinterop\Solid\SolidNotifications\SolidNotificationsInterface;
+use WebSocket\Client;
 
 class SolidPubSub implements SolidNotificationsInterface
 {

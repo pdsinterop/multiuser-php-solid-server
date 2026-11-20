@@ -4,9 +4,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\PasswordValidator;
-use Pdsinterop\PhpSolid\Db;
-
 class User
 {
 	private static function generateTokenCode()

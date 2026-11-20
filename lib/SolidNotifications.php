@@ -2,7 +2,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\SolidPubSub;
 use Pdsinterop\Solid\SolidNotifications\SolidNotificationsInterface;
 
 class SolidNotifications implements SolidNotificationsInterface
