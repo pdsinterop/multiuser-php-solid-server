@@ -70,7 +70,8 @@ class Server
 	{
 		$clientId = $_GET['client_id'] ?? $_POST['client_id'] ?? null;
 		if ($clientId) {
-			$registeredClient = ClientRegistration::getRegistration($clientId);
+			$clientRegistration = new ClientRegistration();
+			$registeredClient = $clientRegistration::getRegistration($clientId);
 			if (isset($registeredClient) && isset($registeredClient['redirect_uris'])) {
 				/*
 					If the token_endpoint_auth_method is 'none',
@@ -109,10 +110,11 @@ class Server
 	{
 		$replayDetector = new ReplayDetector(
 			function ($jti, $targetUri) {
-				if (JtiStore::hasJti($jti)) {
+				$jtiStore = new JtiStore();
+				if ($jtiStore::hasJti($jti)) {
 					return true;
 				} else {
-					JtiStore::saveJti($jti);
+					$jtiStore::saveJti($jti);
 					return false;
 				}
 				return false;
@@ -126,10 +128,11 @@ class Server
 	{
 		$replayDetector = new ReplayDetector(
 			function ($jti, $targetUri) {
-				if (JtiStore::hasJti($jti)) {
+				$jtiStore = new JtiStore();
+				if ($jtiStore::hasJti($jti)) {
 					return true;
 				} else {
-					JtiStore::saveJti($jti);
+					$jtiStore::saveJti($jti);
 					return false;
 				}
 				return false;

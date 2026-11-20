@@ -8,8 +8,9 @@ class ClientRegistration
 {
 	public static function getRegistration($clientId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT clientData FROM clients WHERE clientId=:clientId'
 		);
 		$query->execute([
@@ -53,11 +54,12 @@ class ClientRegistration
 
 	public static function saveClientRegistration($clientData)
 	{
-		Db::connect();
+		$db = new Db();
+		$db::connect();
 		if (!isset($clientData['client_name'])) {
 			$clientData['client_name'] = $clientData['origin'];
 		}
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'INSERT INTO clients VALUES(:clientId, :origin, :clientData)'
 		);
 		$query->execute([
@@ -69,8 +71,9 @@ class ClientRegistration
 
 	public static function getClientByOrigin($origin)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT clientData FROM clients WHERE origin=:origin'
 		);
 		$query->execute([

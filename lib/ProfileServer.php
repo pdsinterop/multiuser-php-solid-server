@@ -47,7 +47,8 @@ class ProfileServer extends Server
 		$graph = new \EasyRdf\Graph();
 		// Create Formats objects
 		$formats = new \Pdsinterop\Rdf\Formats();
-		$serverUri = Util::getServerUri();
+		$util = new Util();
+		$serverUri = $util::getServerUri();
 
 		// Create the RDF Adapter
 		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
@@ -91,7 +92,8 @@ class ProfileServer extends Server
 
 	private static function getProfileId()
 	{
-		$serverName = Util::getServerName();
+		$util = new Util();
+		$serverName = $util::getServerName();
 		$idParts = explode(".", $serverName, 2);
 		$profileId = preg_replace("/^id-/", "", $idParts[0]);
 		return $profileId;
@@ -100,7 +102,9 @@ class ProfileServer extends Server
 	public static function getOwner()
 	{
 		$profileId = self::getProfileId();
-		return User::getUserById($profileId);
+		$user = new User();
+
+		return $user::getUserById($profileId);
 	}
 
 	public static function getOwnerWebId()

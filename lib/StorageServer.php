@@ -11,8 +11,9 @@ class StorageServer extends Server
 {
 	public static function getStorage($storageId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT * FROM storage WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -23,8 +24,9 @@ class StorageServer extends Server
 
 	public static function setStorageOwner($storageId, $owner)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'UPDATE storage SET owner=:owner WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -39,8 +41,9 @@ class StorageServer extends Server
 		while (self::storageIdExists($generatedStorageId)) {
 			$generatedStorageId = bin2hex(random_bytes(16));
 		}
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'INSERT OR REPLACE INTO storage VALUES(:storageId, :owner)'
 		);
 		$query->execute([
@@ -55,8 +58,9 @@ class StorageServer extends Server
 
 	public static function getPodCount()
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT count(storage_id) as podCount FROM storage'
 		);
 		$query->execute();
@@ -70,8 +74,9 @@ class StorageServer extends Server
 
 	public static function storageIdExists($storageId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT storage_id FROM storage WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -87,8 +92,9 @@ class StorageServer extends Server
 	public static function getOwnerWebId()
 	{
 		$storageId = self::getStorageId();
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT owner FROM storage WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -142,7 +148,8 @@ class StorageServer extends Server
 		$graph = new \EasyRdf\Graph();
 		// Create Formats objects
 		$formats = new \Pdsinterop\Rdf\Formats();
-		$serverUri = Util::getServerUri();
+		$util = new Util();
+		$serverUri = $util::getServerUri();
 
 		// Create the RDF Adapter
 		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
@@ -186,7 +193,8 @@ class StorageServer extends Server
 
 	private static function getStorageId()
 	{
-		$serverName = Util::getServerName();
+		$util = new Util();
+		$serverName = $util::getServerName();
 		$idParts = explode(".", $serverName, 2);
 		$storageId = preg_replace("/^storage-/", "", $idParts[0]);
 		return $storageId;

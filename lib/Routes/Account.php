@@ -14,7 +14,9 @@ class Account
 {
 	public function requireLoggedInUser()
 	{
-		$user = User::getUser(Session::getLoggedInUser());
+		$userObject = new User();
+		$session = new Session();
+		$user = $userObject::getUser($session::getLoggedInUser());
 		if (!$user) {
 			switch ($_SERVER['REQUEST_METHOD']) {
 				case "GET":
@@ -31,13 +33,17 @@ class Account
 
 	public function respondToDashboard()
 	{
-		$user = User::getUser(Session::getLoggedInUser());
+		$userObject = new User();
+		$session = new Session();
+		$user = $userObject::getUser($session::getLoggedInUser());
 		include_once(FRONTENDDIR . "bootloader.html");
 	}
 
 	public function respondToLogout()
 	{
-		$user = User::getUser(Session::getLoggedInUser());
+		$userObject = new User();
+		$session = new Session();
+		$user = $userObject::getUser($session::getLoggedInUser());
 		if ($user) {
 			session_destroy();
 		}
@@ -51,10 +57,12 @@ class Account
 			'email' => $_POST['email']
 		];
 
-		$verifyToken = User::saveVerifyToken('verify', $verifyData);
+		$user = new User();
+		$verifyToken = $user::saveVerifyToken('verify', $verifyData);
 
 		try {
-			Mailer::sendVerify($verifyToken);
+			$mailer = new Mailer();
+			$mailer::sendVerify($verifyToken);
 
 			$responseCode = 201;
 			$responseData = "OK";
@@ -75,7 +83,8 @@ class Account
 
 	public function respondToAccountNew()
 	{
-		$verifyToken = User::getVerifyToken($_POST['confirm']);
+		$user = new User();
+		$verifyToken = $user::getVerifyToken($_POST['confirm']);
 		if (!$verifyToken) {
 			error_log("Could not read verify token");
 			header("HTTP/1.1 400 Bad Request");
@@ -86,7 +95,7 @@ class Account
 			header("HTTP/1.1 400 Bad Request");
 			exit();
 		}
-		if (User::userEmailExists($_POST['email'])) {
+		if ($user::userEmailExists($_POST['email'])) {
 			error_log("Account already exists");
 			header("HTTP/1.1 400 Bad Request");
 			exit();
@@ -102,16 +111,18 @@ class Account
 			"password" => $_POST['password']
 		];
 
-		$createdUser = User::createUser($newUser);
+		$createdUser = $user::createUser($newUser);
 		if (!$createdUser) {
 			error_log("Failed to create user");
 			header("HTTP/1.1 400 Bad Request");
 			exit();
 		}
-		$createdStorage = StorageServer::createStorage($createdUser['webId']);
-		User::setStorage($createdUser['userId'], $createdStorage['storageUrl']);
+		$storageServer = new StorageServer();
+		$createdStorage = $storageServer::createStorage($createdUser['webId']);
+		$user::setStorage($createdUser['userId'], $createdStorage['storageUrl']);
 
-		Mailer::sendAccountCreated($createdUser);
+		$mailer = new Mailer();
+		$mailer::sendAccountCreated($createdUser);
 
 		$responseData = array(
 			"webId" => $createdUser['webId'],
@@ -120,13 +131,15 @@ class Account
 
 		header("HTTP/1.1 201 Created");
 		header("Content-type: application/json");
-		Session::start($_POST['email']);
+		$session = new Session();
+		$session::start($_POST['email']);
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
 
 	public function respondToAccountResetPassword()
 	{
-		if (!User::userEmailExists($_POST['email'])) {
+		$user = new User();
+		if (! $user::userEmailExists($_POST['email'])) {
 			header("HTTP/1.1 200 OK"); // Return OK even when user is not found;
 			header("Content-type: application/json");
 			echo json_encode("OK");
@@ -136,8 +149,9 @@ class Account
 			'email' => $_POST['email']
 		];
 
-		$verifyToken = User::saveVerifyToken('passwordReset', $verifyData);
-		Mailer::sendResetPassword($verifyToken);
+		$verifyToken = $user::saveVerifyToken('passwordReset', $verifyData);
+		$mailer = new Mailer();
+		$mailer::sendResetPassword($verifyToken);
 		header("HTTP/1.1 200 OK");
 		header("Content-type: application/json");
 		echo json_encode("OK");
@@ -145,12 +159,13 @@ class Account
 
 	public function respondToAccountChangePassword()
 	{
-		$verifyToken = User::getVerifyToken($_POST['token']);
+		$user = new User();
+		$verifyToken = $user::getVerifyToken($_POST['token']);
 		if (!$verifyToken) {
 			header("HTTP/1.1 400 Bad Request");
 			exit();
 		}
-		$result = User::setUserPassword($verifyToken['email'], $_POST['newPassword']);
+		$result = $user::setUserPassword($verifyToken['email'], $_POST['newPassword']);
 		if (!$result) {
 			header("HTTP/1.1 400 Bad Request");
 			exit();
@@ -162,7 +177,8 @@ class Account
 
 	public function respondToAccountDelete()
 	{
-		if (!User::userEmailExists($_POST['email'])) {
+		$user = new User();
+		if (! $user::userEmailExists($_POST['email'])) {
 			header("HTTP/1.1 200 OK"); // Return OK even when user is not found;
 			header("Content-type: application/json");
 			echo json_encode("OK");
@@ -172,8 +188,9 @@ class Account
 			'email' => $_POST['email']
 		];
 
-		$verifyToken = User::saveVerifyToken('deleteAccount', $verifyData);
-		Mailer::sendDeleteAccount($verifyToken);
+		$verifyToken = $user::saveVerifyToken('deleteAccount', $verifyData);
+		$mailer = new Mailer();
+		$mailer::sendDeleteAccount($verifyToken);
 		header("HTTP/1.1 200 OK");
 		header("Content-type: application/json");
 		echo json_encode("OK");
@@ -181,12 +198,13 @@ class Account
 
 	public function respondToAccountDeleteConfirm()
 	{
-		$verifyToken = User::getVerifyToken($_POST['token']);
+		$user = new User();
+		$verifyToken = $user::getVerifyToken($_POST['token']);
 		if (!$verifyToken) {
 			header("HTTP/1.1 400 Bad Request");
 			exit();
 		}
-		User::deleteAccount($verifyToken['email']);
+		$user::deleteAccount($verifyToken['email']);
 		header("HTTP/1.1 200 OK");
 		header("Content-type: application/json");
 		echo json_encode("OK");
@@ -194,21 +212,24 @@ class Account
 
 	public function respondToLogin()
 	{
-		$failureCount = IpAttempts::getAttemptsCount($_SERVER['REMOTE_ADDR'], "login");
+		$ipAttempts = new IpAttempts();
+		$failureCount = $ipAttempts::getAttemptsCount($_SERVER['REMOTE_ADDR'], "login");
 		if ($failureCount > 5) {
 			header("HTTP/1.1 400 Bad Request");
 			exit();
 		}
-		if (User::checkPassword($_POST['username'], $_POST['password'])) {
-			Session::start($_POST['username']);
-			$user = User::getUser($_POST['username']);
+		$userObject = new User();
+		if ($userObject::checkPassword($_POST['username'], $_POST['password'])) {
+			$session = new Session();
+			$session::start($_POST['username']);
+			$user = $userObject::getUser($_POST['username']);
 			if (!isset($_POST['redirect_uri']) || $_POST['redirect_uri'] === '') {
 				header("Location: /dashboard/#autologin/" . urlencode($user['webId']));
 				exit();
 			}
 			header("Location: " . urldecode($_POST['redirect_uri'])); // FIXME: Do we need to harden this?
 		} else {
-			IpAttempts::logFailedAttempt($_SERVER['REMOTE_ADDR'], "login", time() + 3600);
+			$ipAttempts::logFailedAttempt($_SERVER['REMOTE_ADDR'], "login", time() + 3600);
 			header("Location: /login/");
 		}
 	}

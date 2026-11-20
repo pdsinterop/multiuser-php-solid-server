@@ -34,7 +34,8 @@ class Mailer
 
 	public static function sendAccountCreated($data)
 	{
-		$mailTemplate = MailTemplates::accountCreated();
+		$mailTemplates = new MailTemplates();
+		$mailTemplate = $mailTemplates::accountCreated();
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
 		$mailPlainBody = $mailTemplate["mailPlainBody"];
@@ -63,7 +64,8 @@ class Mailer
 
 	public static function sendVerify($data)
 	{
-		$mailTemplate = MailTemplates::verify();
+		$mailTemplates = new MailTemplates();
+		$mailTemplate = $mailTemplates::verify();
 
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
@@ -99,7 +101,8 @@ class Mailer
 
 	public static function sendResetPassword($data)
 	{
-		$mailTemplate = MailTemplates::resetPassword();
+		$mailTemplates = new MailTemplates();
+		$mailTemplate = $mailTemplates::resetPassword();
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
 		$mailPlainBody = $mailTemplate["mailPlainBody"];
@@ -128,7 +131,8 @@ class Mailer
 
 	public static function sendDeleteAccount($data)
 	{
-		$mailTemplate = MailTemplates::deleteAccount();
+		$mailTemplates = new MailTemplates();
+		$mailTemplate = $mailTemplates::deleteAccount();
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
 		$mailPlainBody = $mailTemplate["mailPlainBody"];

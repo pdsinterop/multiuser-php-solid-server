@@ -54,8 +54,9 @@ class User
 			break;
 		}
 
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'INSERT INTO verify VALUES(:code, :data)'
 		);
 		$query->execute([
@@ -67,8 +68,9 @@ class User
 
 	public static function getVerifyToken($code)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT data FROM verify WHERE code=:code'
 		);
 		$query->execute([
@@ -96,7 +98,8 @@ class User
 
 	public static function validatePasswordStrength($password)
 	{
-		$entropy = PasswordValidator::getEntropy($password, BANNED_PASSWORDS);
+		$passwordValidator = new PasswordValidator();
+		$entropy = $passwordValidator::getEntropy($password, BANNED_PASSWORDS);
 		$minimumEntropy = MINIMUM_PASSWORD_ENTROPY;
 		if ($entropy < $minimumEntropy) {
 			error_log("Entered password does not satisfy minimum entropy");
@@ -107,7 +110,8 @@ class User
 
 	public static function createUser($newUser)
 	{
-		Db::connect();
+		$db = new Db();
+		$db::connect();
 		if (!self::validatePasswordStrength($newUser['password'])) {
 			return false;
 		}
@@ -115,7 +119,7 @@ class User
 		while (self::userIdExists($generatedUserId)) {
 			$generatedUserId = bin2hex(random_bytes(16));
 		}
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'INSERT INTO users VALUES (:userId, :email, :passwordHash, :data)'
 		);
 
@@ -144,8 +148,9 @@ class User
 		if (!self::validatePasswordStrength($newPassword)) {
 			return false;
 		}
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'UPDATE users SET password=:passwordHash WHERE email=:email'
 		);
 		$queryParams = [];
@@ -158,8 +163,9 @@ class User
 
 	public static function allowClientForUser($clientId, $userId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'INSERT OR REPLACE INTO allowedClients VALUES(:userId, :clientId)'
 		);
 		$query->execute([
@@ -171,8 +177,9 @@ class User
 
 	public static function getAllowedClients($userId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT clientId FROM allowedClients WHERE userId=:userId'
 		);
 		$query->execute([
@@ -187,8 +194,9 @@ class User
 
 	public static function getAllowedOrigins($userId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT origin from clients LEFT JOIN allowedClients ON clients.clientId=allowedClients.clientId where allowedClients.userId=:userId'
 		);
 		$query->execute([
@@ -203,8 +211,9 @@ class User
 
 	public static function getStorage($userId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT storageUrl FROM userStorage WHERE userId=:userId'
 		);
 		$query->execute([
@@ -219,8 +228,9 @@ class User
 
 	public static function setStorage($userId, $storageUrl)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'INSERT OR REPLACE INTO userStorage VALUES(:userId, :storageUrl)'
 		);
 		$query->execute([
@@ -234,8 +244,9 @@ class User
 		if (!isset($email)) {
 			return false;
 		}
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT user_id, data FROM users WHERE email=:email'
 		);
 		$query->execute([
@@ -262,8 +273,9 @@ class User
 
 	public static function getUserById($userId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT user_id, data FROM users WHERE user_id=:userId'
 		);
 		$query->execute([
@@ -302,8 +314,9 @@ class User
 
 	public static function checkPassword($email, $password)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT password FROM users WHERE email=:email'
 		);
 		$query->execute([
@@ -320,8 +333,9 @@ class User
 
 	public static function userIdExists($userId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT user_id FROM users WHERE user_id=:userId'
 		);
 		$query->execute([
@@ -336,8 +350,9 @@ class User
 
 	public static function userEmailExists($email)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT user_id FROM users WHERE email=:email'
 		);
 		$query->execute([
@@ -352,8 +367,9 @@ class User
 
 	private static function deleteUser($email)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'DELETE FROM users WHERE email=:email'
 		);
 		$query->execute([
@@ -368,8 +384,9 @@ class User
 			return;
 		}
 
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'DELETE FROM allowedClients WHERE userId=:userId'
 		);
 		$query->execute([
@@ -389,10 +406,11 @@ class User
 
 	public static function cleanupTokens()
 	{
-		Db::connect();
+		$db = new Db();
+		$db::connect();
 
 		$now = new \DateTime();
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'DELETE FROM verify WHERE json_extract(data, \'$.expires\') < :now'
 		);
 		$query->execute([
@@ -402,8 +420,9 @@ class User
 
 	public static function getExistingVerifyTokens()
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db::connect();
+		$query = $db::$pdo->prepare(
 			'SELECT code FROM verify'
 		);
 		$query->execute();

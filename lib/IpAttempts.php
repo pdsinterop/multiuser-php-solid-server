@@ -12,9 +12,10 @@ class IpAttempts
 			return;
 		}
 
-		Db::connect();
+		$db = new Db();
+		$db::connect();
 
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'INSERT INTO ipAttempts VALUES(:ip, :type, :expires)'
 		);
 		$query->execute([
@@ -30,10 +31,11 @@ class IpAttempts
 			return 0;
 		}
 
-		Db::connect();
+		$db = new Db();
+		$db::connect();
 
 		$now = new \DateTime();
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'SELECT count(ip) as count FROM ipAttempts WHERE ip=:ip AND type=:type AND expires > :now'
 		);
 		$query->execute([
@@ -49,10 +51,11 @@ class IpAttempts
 	}
 	public static function cleanupAttempts()
 	{
-		Db::connect();
+		$db = new Db();
+		$db::connect();
 
 		$now = new \DateTime();
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'DELETE FROM ipAttempts WHERE expires < :now'
 		);
 		$query->execute([
