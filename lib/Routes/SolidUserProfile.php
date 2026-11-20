@@ -2,14 +2,13 @@
 
 namespace Pdsinterop\PhpSolid\Routes;
 
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequestFactory;
 use Pdsinterop\PhpSolid\ProfileServer;
-use Pdsinterop\PhpSolid\ClientRegistration;
 use Pdsinterop\PhpSolid\SolidNotifications;
 use Pdsinterop\PhpSolid\Util;
 use Pdsinterop\Solid\Auth\WAC;
 use Pdsinterop\Solid\Resources\Server as ResourceServer;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\Diactoros\Response;
 
 class SolidUserProfile
 {

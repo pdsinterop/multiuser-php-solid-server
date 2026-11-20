@@ -2,15 +2,14 @@
 
 namespace Pdsinterop\PhpSolid\Routes;
 
-use Pdsinterop\PhpSolid\User;
-use Pdsinterop\PhpSolid\StorageServer;
-use Pdsinterop\PhpSolid\ClientRegistration;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequestFactory;
 use Pdsinterop\PhpSolid\SolidNotifications;
+use Pdsinterop\PhpSolid\StorageServer;
+use Pdsinterop\PhpSolid\User;
 use Pdsinterop\PhpSolid\Util;
 use Pdsinterop\Solid\Auth\WAC;
 use Pdsinterop\Solid\Resources\Server as ResourceServer;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\Diactoros\Response;
 
 class SolidStorage
 {

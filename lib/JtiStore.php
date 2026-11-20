@@ -2,8 +2,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\Db;
-
 class JtiStore
 {
 	public static function hasJti($jti)

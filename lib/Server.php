@@ -2,18 +2,16 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\Solid\Auth\Factory\AuthorizationServerFactory;
 use Laminas\Diactoros\Response;
-use Pdsinterop\Solid\Auth\Server as SolidAuthServer;
-use Pdsinterop\Solid\Auth\Factory\ConfigFactory;
 use Pdsinterop\Solid\Auth\Config\Client as ConfigClient;
-use Pdsinterop\Solid\Auth\Utils\ReplayDetector;
-use Pdsinterop\Solid\Auth\Utils\DPop;
-use Pdsinterop\Solid\Auth\Utils\Bearer;
-use Pdsinterop\Solid\Auth\Utils\JtiValidator;
+use Pdsinterop\Solid\Auth\Factory\AuthorizationServerFactory;
+use Pdsinterop\Solid\Auth\Factory\ConfigFactory;
+use Pdsinterop\Solid\Auth\Server as SolidAuthServer;
 use Pdsinterop\Solid\Auth\TokenGenerator;
-use Pdsinterop\PhpSolid\ClientRegistration;
-use Pdsinterop\PhpSolid\JtiStore;
+use Pdsinterop\Solid\Auth\Utils\Bearer;
+use Pdsinterop\Solid\Auth\Utils\DPop;
+use Pdsinterop\Solid\Auth\Utils\JtiValidator;
+use Pdsinterop\Solid\Auth\Utils\ReplayDetector;
 
 class Server
 {
