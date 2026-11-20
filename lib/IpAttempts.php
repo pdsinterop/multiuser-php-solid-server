@@ -6,14 +6,14 @@ use Pdsinterop\PhpSolid\Db;
 
 class IpAttempts
 {
-	public static function logFailedAttempt($ip, $type, $expires)
+	public function logFailedAttempt($ip, $type, $expires)
 	{
 		if (in_array($ip, TRUSTED_IPS)) {
 			return;
 		}
 
 		$db = new Db();
-		$db::connect();
+		$db->connect();
 
 		$query = $db::$pdo->prepare(
 			'INSERT INTO ipAttempts VALUES(:ip, :type, :expires)'
@@ -25,14 +25,14 @@ class IpAttempts
 		]);
 	}
 
-	public static function getAttemptsCount($ip, $type)
+	public function getAttemptsCount($ip, $type)
 	{
 		if (in_array($ip, TRUSTED_IPS)) {
 			return 0;
 		}
 
 		$db = new Db();
-		$db::connect();
+		$db->connect();
 
 		$now = new \DateTime();
 		$query = $db::$pdo->prepare(
@@ -49,10 +49,10 @@ class IpAttempts
 		}
 		return 0;
 	}
-	public static function cleanupAttempts()
+	public function cleanupAttempts()
 	{
 		$db = new Db();
-		$db::connect();
+		$db->connect();
 
 		$now = new \DateTime();
 		$query = $db::$pdo->prepare(

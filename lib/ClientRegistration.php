@@ -6,10 +6,10 @@ use Pdsinterop\PhpSolid\Db;
 
 class ClientRegistration
 {
-	public static function getRegistration($clientId)
+	public function getRegistration($clientId)
 	{
 		$db = new Db();
-		$db::connect();
+		$db->connect();
 		$query = $db::$pdo->prepare(
 			'SELECT clientData FROM clients WHERE clientId=:clientId'
 		);
@@ -21,7 +21,7 @@ class ClientRegistration
 			return json_decode($result[0]['clientData'], true);
 		}
 		if (preg_match("/^http(s)?:/", $clientId)) {
-			$clientData = self::getRemoteRegistration($clientId);
+			$clientData = $this->getRemoteRegistration($clientId);
 			if (!isset($clientData['origin']) && isset($clientData['client_uri'])) {
 				$clientData['origin'] = rtrim($clientData['client_uri'], '/');
 			}
@@ -33,13 +33,13 @@ class ClientRegistration
 				}
 				$clientData['origin'] = $origin;
 			}
-			self::saveClientRegistration($clientData);
+			$this->saveClientRegistration($clientData);
 			return $clientData;
 		}
 		return false;
 	}
 
-	public static function getRemoteRegistration($url)
+	public function getRemoteRegistration($url)
 	{
 		$clientDocument = file_get_contents($url);
 		$clientRegistration = json_decode($clientDocument, true);
@@ -52,10 +52,10 @@ class ClientRegistration
 		return $clientRegistration;
 	}
 
-	public static function saveClientRegistration($clientData)
+	public function saveClientRegistration($clientData)
 	{
 		$db = new Db();
-		$db::connect();
+		$db->connect();
 		if (!isset($clientData['client_name'])) {
 			$clientData['client_name'] = $clientData['origin'];
 		}
@@ -69,10 +69,10 @@ class ClientRegistration
 		]);
 	}
 
-	public static function getClientByOrigin($origin)
+	public function getClientByOrigin($origin)
 	{
 		$db = new Db();
-		$db::connect();
+		$db->connect();
 		$query = $db::$pdo->prepare(
 			'SELECT clientData FROM clients WHERE origin=:origin'
 		);

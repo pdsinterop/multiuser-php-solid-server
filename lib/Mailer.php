@@ -7,12 +7,12 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer
 {
-	public static $mailer = null;
+	public $mailer = null;
 
-	public static function getMailer()
+	public function getMailer()
 	{
-		if (self::$mailer) {
-			return self::$mailer;
+		if ($this->mailer) {
+			return $this->mailer;
 		}
 		$mailer = new PHPMailer();
 		// Settings
@@ -32,10 +32,10 @@ class Mailer
 		return $mailer;
 	}
 
-	public static function sendAccountCreated($data)
+	public function sendAccountCreated($data)
 	{
 		$mailTemplates = new MailTemplates();
-		$mailTemplate = $mailTemplates::accountCreated();
+		$mailTemplate = $mailTemplates->accountCreated();
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
 		$mailPlainBody = $mailTemplate["mailPlainBody"];
@@ -51,7 +51,7 @@ class Mailer
 
 		//	$emailCheck = "#^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})" . '$#';
 
-		$mailer = self::getMailer();
+		$mailer = $this->getMailer();
 		// Content
 		$mailer->addAddress($mailTo);
 
@@ -62,10 +62,10 @@ class Mailer
 		return $mailer->send();
 	}
 
-	public static function sendVerify($data)
+	public function sendVerify($data)
 	{
 		$mailTemplates = new MailTemplates();
-		$mailTemplate = $mailTemplates::verify();
+		$mailTemplate = $mailTemplates->verify();
 
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
@@ -82,7 +82,7 @@ class Mailer
 
 		//	$emailCheck = "#^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})" . '$#';
 
-		$mailer = self::getMailer();
+		$mailer = $this->getMailer();
 		// Content
 		$mailer->addAddress($mailTo);
 
@@ -99,10 +99,10 @@ class Mailer
 		return $result;
 	}
 
-	public static function sendResetPassword($data)
+	public function sendResetPassword($data)
 	{
 		$mailTemplates = new MailTemplates();
-		$mailTemplate = $mailTemplates::resetPassword();
+		$mailTemplate = $mailTemplates->resetPassword();
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
 		$mailPlainBody = $mailTemplate["mailPlainBody"];
@@ -118,7 +118,7 @@ class Mailer
 
 		//	$emailCheck = "#^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})" . '$#';
 
-		$mailer = self::getMailer();
+		$mailer = $this->getMailer();
 		// Content
 		$mailer->addAddress($mailTo);
 
@@ -129,10 +129,10 @@ class Mailer
 		return $mailer->send();
 	}
 
-	public static function sendDeleteAccount($data)
+	public function sendDeleteAccount($data)
 	{
 		$mailTemplates = new MailTemplates();
-		$mailTemplate = $mailTemplates::deleteAccount();
+		$mailTemplate = $mailTemplates->deleteAccount();
 		$mailSubject = $mailTemplate["mailSubject"];
 		$mailHtmlBody = $mailTemplate["mailHtmlBody"];
 		$mailPlainBody = $mailTemplate["mailPlainBody"];
@@ -148,7 +148,7 @@ class Mailer
 
 		//	$emailCheck = "#^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})" . '$#';
 
-		$mailer = self::getMailer();
+		$mailer = $this->getMailer();
 		// Content
 		$mailer->addAddress($mailTo);
 

@@ -22,11 +22,12 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 		)'
 		];
 
-		Db::connect();
+		$db = new Db();
+		$db->connect();
 		try {
 			// create tables
 			foreach ($statements as $statement) {
-				Db::$pdo->exec($statement);
+				$db::$pdo->exec($statement);
 			}
 		} catch (\PDOException $e) {
 			echo $e->getMessage();
@@ -36,7 +37,8 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	public function testGetAttemptsCountZero()
 	{
 		$ip = "10.0.0.1";
-		$count = IpAttempts::getAttemptsCount($ip, "test");
+		$ipAttempts = new IpAttempts();
+		$count = $ipAttempts->getAttemptsCount($ip, "test");
 		$this->assertEquals(0, $count);
 	}
 
@@ -44,8 +46,9 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	{
 		$ip = "10.0.0.1";
 
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
-		$count = IpAttempts::getAttemptsCount($ip, "test");
+		$ipAttempts = new IpAttempts();
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
+		$count = $ipAttempts->getAttemptsCount($ip, "test");
 		$this->assertEquals(1, $count);
 	}
 
@@ -53,10 +56,11 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	{
 		$ip = "10.0.0.1";
 
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts = new IpAttempts();
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
 
-		$count = IpAttempts::getAttemptsCount($ip, "test");
+		$count = $ipAttempts->getAttemptsCount($ip, "test");
 		$this->assertEquals(2, $count);
 	}
 
@@ -64,10 +68,11 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	{
 		$ip = "10.0.0.1";
 
-		IpAttempts::logFailedAttempt($ip, "test", time() - 1);
-		IpAttempts::logFailedAttempt($ip, "test", time() - 1);
+		$ipAttempts = new IpAttempts();
+		$ipAttempts->logFailedAttempt($ip, "test", time() - 1);
+		$ipAttempts->logFailedAttempt($ip, "test", time() - 1);
 
-		$count = IpAttempts::getAttemptsCount($ip, "test");
+		$count = $ipAttempts->getAttemptsCount($ip, "test");
 		$this->assertEquals(0, $count);
 	}
 
@@ -75,10 +80,11 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	{
 		$ip = "10.0.0.1";
 
-		IpAttempts::logFailedAttempt($ip, "test", time() + 10);
-		IpAttempts::logFailedAttempt($ip, "test", time() - 1);
+		$ipAttempts = new IpAttempts();
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 10);
+		$ipAttempts->logFailedAttempt($ip, "test", time() - 1);
 
-		$count = IpAttempts::getAttemptsCount($ip, "test");
+		$count = $ipAttempts->getAttemptsCount($ip, "test");
 		$this->assertEquals(1, $count);
 	}
 
@@ -86,20 +92,22 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	{
 		$ip = "10.0.0.1";
 
-		IpAttempts::logFailedAttempt($ip, "test", time() - 1);
-		IpAttempts::logFailedAttempt($ip, "test", time() - 1);
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts = new IpAttempts();
+		$ipAttempts->logFailedAttempt($ip, "test", time() - 1);
+		$ipAttempts->logFailedAttempt($ip, "test", time() - 1);
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
 
-		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM ipAttempts');
+		$db = new Db();
+		$query = $db::$pdo->prepare('SELECT count(*) AS count FROM ipAttempts');
 		$query->execute();
 		$result = $query->fetchAll();
 		$beforeCleanup = $result[0]['count'];
 
 		$this->assertEquals(4, $beforeCleanup);
 
-		IpAttempts::cleanupAttempts();
-		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM ipAttempts');
+		$ipAttempts->cleanupAttempts();
+		$query = $db::$pdo->prepare('SELECT count(*) AS count FROM ipAttempts');
 		$query->execute();
 		$result = $query->fetchAll();
 		$afterCleanup = $result[0]['count'];
@@ -111,10 +119,11 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	{
 		$ip = "127.0.0.100"; // trusted IP
 
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts = new IpAttempts();
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
 
-		$count = IpAttempts::getAttemptsCount($ip, "test");
+		$count = $ipAttempts->getAttemptsCount($ip, "test");
 		$this->assertEquals(0, $count);
 	}
 
@@ -122,10 +131,12 @@ class IpAttemptsTest extends \PHPUnit\Framework\TestCase
 	{
 		$ip = "127.0.0.100"; // trusted IP
 
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
-		IpAttempts::logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts = new IpAttempts();
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
+		$ipAttempts->logFailedAttempt($ip, "test", time() + 3600);
 
-		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM ipAttempts');
+		$db = new Db();
+		$query = $db::$pdo->prepare('SELECT count(*) AS count FROM ipAttempts');
 		$query->execute();
 		$result = $query->fetchAll();
 		$count = $result[0]['count'];

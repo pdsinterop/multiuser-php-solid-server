@@ -10,7 +10,7 @@ use Pdsinterop\PhpSolid\Server;
 function initKeys()
 {
 	$server = new Server();
-	$keys = $server::generateKeySet();
+	$keys = $server->generateKeySet();
 	file_put_contents(KEYDIR . "public.key", $keys['publicKey']);
 	file_put_contents(KEYDIR . "private.key", $keys['privateKey']);
 	file_put_contents(KEYDIR . "encryption.key", $keys['encryptionKey']);

@@ -24,17 +24,19 @@ class ServerTest extends \PHPUnit\Framework\TestCase
 			)'
 		];
 
-		Db::connect();
+		$db = new Db();
+		$db->connect();
 		try {
 			// create tables
 			foreach ($statements as $statement) {
-				Db::$pdo->exec($statement);
+				$db::$pdo->exec($statement);
 			}
 		} catch (\PDOException $e) {
 			echo $e->getMessage();
 		}
 
-		ClientRegistration::saveClientRegistration([
+		$clientRegistration = new ClientRegistration();
+		$clientRegistration->saveClientRegistration([
 			"client_id" => "1234",
 			"origin" => "https://example.com",
 			"redirect_uris" => ["https://example.com"],
@@ -44,7 +46,8 @@ class ServerTest extends \PHPUnit\Framework\TestCase
 
 	public function testGenerateKeySet()
 	{
-		$keys = Server::generateKeySet();
+		$server = new Server();
+		$keys = $server->generateKeySet();
 		$this->assertTrue(isset($keys['encryptionKey']));
 		$this->assertTrue(isset($keys['publicKey']));
 		$this->assertTrue(isset($keys['privateKey']));
@@ -55,48 +58,56 @@ class ServerTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetAuthServer()
 	{
-		$authServer = Server::getAuthServer();
+		$server = new Server();
+		$authServer = $server->getAuthServer();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\Server', $authServer);
 	}
 
 	public function testGetAuthServerConfig()
 	{
-		$authServerConfig = Server::getAuthServerConfig();
+		$server = new Server();
+		$authServerConfig = $server->getAuthServerConfig();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\Config', $authServerConfig);
 	}
 
 	public function testGetConfigClient()
 	{
-		$configClient = Server::getConfigClient();
+		$server = new Server();
+		$configClient = $server->getConfigClient();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\Config\Client', $configClient);
 	}
 
 	public function testGetConfigClientWithGetId()
 	{
 		$_GET['client_id'] = '1234';
-		$configClient = Server::getConfigClient();
+		$server = new Server();
+		$configClient = $server->getConfigClient();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\Config\Client', $configClient);
 	}
 
 	public function testGetConfigClientWithPostd()
 	{
 		$_POST['client_id'] = '1234';
-		$configClient = Server::getConfigClient();
+		$server = new Server();
+		$configClient = $server->getConfigClient();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\Config\Client', $configClient);
 	}
 	public function testGetDpop()
 	{
-		$dpop = Server::getDpop();
+		$server = new Server();
+		$dpop = $server->getDpop();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\Utils\Dpop', $dpop);
 	}
 	public function testGetBearer()
 	{
-		$bearer = Server::getBearer();
+		$server = new Server();
+		$bearer = $server->getBearer();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\Utils\Bearer', $bearer);
 	}
 	public function testGetEndpoints()
 	{
-		$endpoints = Server::getEndpoints();
+		$server = new Server();
+		$endpoints = $server->getEndpoints();
 		$this->assertEquals($endpoints["issuer"], "https://solid.example.com");
 		$this->assertEquals($endpoints["jwks_uri"], "https://solid.example.com/jwks/");
 		$this->assertEquals($endpoints["check_session_iframe"], "https://solid.example.com/session/");
@@ -109,7 +120,8 @@ class ServerTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetKeys()
 	{
-		$keys = Server::getKeys();
+		$server = new Server();
+		$keys = $server->getKeys();
 		$this->assertTrue(isset($keys['encryptionKey']));
 		$this->assertTrue(isset($keys['publicKey']));
 		$this->assertTrue(isset($keys['privateKey']));
@@ -119,7 +131,8 @@ class ServerTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetTokenGenerator()
 	{
-		$tokenGenerator = Server::getTokenGenerator();
+		$server = new Server();
+		$tokenGenerator = $server->getTokenGenerator();
 		$this->assertInstanceOf('\Pdsinterop\Solid\Auth\TokenGenerator', $tokenGenerator);
 	}
 
@@ -127,7 +140,8 @@ class ServerTest extends \PHPUnit\Framework\TestCase
 	{
 		$response = new MockResponse();
 		ob_start();
-		Server::respond($response);
+		$server = new Server();
+		$server->respond($response);
 		$sentBody = ob_get_contents();
 		ob_end_clean();
 		$this->assertTrue(in_array("HTTP/1.1 200", ServerTest::$headers));

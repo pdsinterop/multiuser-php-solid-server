@@ -41,11 +41,12 @@ class StorageServerTest extends \PHPUnit\Framework\TestCase
 			)',
 		];
 
-		Db::connect();
+		$db = new Db();
+		$db->connect();
 		try {
 			// create tables
 			foreach ($statements as $statement) {
-				Db::$pdo->exec($statement);
+				$db::$pdo->exec($statement);
 			}
 		} catch (\PDOException $e) {
 			echo $e->getMessage();
@@ -56,8 +57,10 @@ class StorageServerTest extends \PHPUnit\Framework\TestCase
 			"email" => "alice@example.com",
 			"hello" => "world"
 		];
-		self::$createdUser = User::createUser($newUser);
-		self::$createdStorage = StorageServer::createStorage(self::$createdUser['webId']);
+		$user = new User();
+		self::$createdUser = $user->createUser($newUser);
+		$storageServer = new StorageServer();
+		self::$createdStorage = $storageServer->createStorage(self::$createdUser['webId']);
 
 		$_SERVER['REQUEST_URI'] = "/test/";
 		$_SERVER['REQUEST_SCHEME'] = "https";
@@ -66,8 +69,9 @@ class StorageServerTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetFileSystem()
 	{
-		$rdfAdapter = StorageServer::getRdfAdapter();
-		$filesystem = StorageServer::getFileSystem($rdfAdapter);
+		$storageServer = new StorageServer();
+		$rdfAdapter = $storageServer->getRdfAdapter();
+		$filesystem = $storageServer->getFileSystem($rdfAdapter);
 		$this->assertInstanceOf('\League\Flysystem\Filesystem', $filesystem);
 	}
 
@@ -75,7 +79,8 @@ class StorageServerTest extends \PHPUnit\Framework\TestCase
 	{
 		$response = new MockResponse();
 		ob_start();
-		StorageServer::respond($response);
+		$storageServer = new StorageServer();
+		$storageServer->respond($response);
 		$sentBody = ob_get_contents();
 		ob_end_clean();
 		$this->assertTrue(in_array("HTTP/1.1 200", StorageServerTest::$headers));
@@ -87,48 +92,55 @@ class StorageServerTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetOwnerWebId()
 	{
-		$webId = StorageServer::getOwnerWebId();
+		$storageServer = new StorageServer();
+		$webId = $storageServer->getOwnerWebId();
 		$this->assertEquals(self::$createdUser['webId'], $webId);
 	}
 
 	public function testGenerateDefaultAcl()
 	{
-		$defaultAcl = StorageServer::generateDefaultAcl();
+		$storageServer = new StorageServer();
+		$defaultAcl = $storageServer->generateDefaultAcl();
 		$this->assertTrue(strpos($defaultAcl, self::$createdUser['webId']) > 0);
 		$this->assertMatchesRegularExpression("/@prefix/", $defaultAcl);
 	}
 
 	public function testGeneratePublicAppendAcl()
 	{
-		$publicAppendAcl = StorageServer::generatePublicAppendAcl();
+		$storageServer = new StorageServer();
+		$publicAppendAcl = $storageServer->generatePublicAppendAcl();
 		$this->assertTrue(strpos($publicAppendAcl, self::$createdUser['webId']) > 0);
 		$this->assertMatchesRegularExpression("/@prefix/", $publicAppendAcl);
 	}
 
 	public function testGeneratePublicReadAcl()
 	{
-		$publicReadAcl = StorageServer::generatePublicReadAcl();
+		$storageServer = new StorageServer();
+		$publicReadAcl = $storageServer->generatePublicReadAcl();
 		$this->assertTrue(strpos($publicReadAcl, self::$createdUser['webId']) > 0);
 		$this->assertMatchesRegularExpression("/@prefix/", $publicReadAcl);
 	}
 
 	public function testGenerateDefaultPrivateTypeIndex()
 	{
-		$privateTypeIndex = StorageServer::generateDefaultPrivateTypeIndex();
+		$storageServer = new StorageServer();
+		$privateTypeIndex = $storageServer->generateDefaultPrivateTypeIndex();
 		$this->assertTrue(strpos($privateTypeIndex, "UnlistedDocument") > 0);
 		$this->assertMatchesRegularExpression("/@prefix/", $privateTypeIndex);
 	}
 
 	public function testGenerateDefaultPublicTypeIndex()
 	{
-		$publicTypeIndex = StorageServer::generateDefaultPublicTypeIndex();
+		$storageServer = new StorageServer();
+		$publicTypeIndex = $storageServer->generateDefaultPublicTypeIndex();
 		$this->assertTrue(strpos($publicTypeIndex, "ListedDocument") > 0);
 		$this->assertMatchesRegularExpression("/@prefix/", $publicTypeIndex);
 	}
 
 	public function testGenerateDefaultPreferences()
 	{
-		$preferences = StorageServer::generateDefaultPreferences();
+		$storageServer = new StorageServer();
+		$preferences = $storageServer->generateDefaultPreferences();
 		$this->assertTrue(strpos($preferences, "ConfigurationFile") > 0);
 		$this->assertMatchesRegularExpression("/@prefix/", $preferences);
 	}

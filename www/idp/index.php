@@ -120,7 +120,7 @@ if (!file_exists(CLEANUP_FILE) || (filemtime(CLEANUP_FILE) < time())) {
 	$jtiStore = new JtiStore();
 	$user = new User();
 
-	$user::cleanupTokens();
-	$ipAttempts::cleanupAttempts();
-	$jtiStore::cleanupJti();
+	$user->cleanupTokens();
+	$ipAttempts->cleanupAttempts();
+	$jtiStore->cleanupJti();
 }

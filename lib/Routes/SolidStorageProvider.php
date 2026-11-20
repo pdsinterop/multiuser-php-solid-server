@@ -12,7 +12,7 @@ class SolidStorageProvider
 		$requestFactory = new ServerRequestFactory();
 		$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 		$storageServer = new StorageServer();
-		$webId = $storageServer::getWebId($rawRequest);
+		$webId = $storageServer->getWebId($rawRequest);
 
 		if (!isset($webId) || $webId === "public") {
 			header("HTTP/1.1 400 Bad Request");
@@ -21,7 +21,7 @@ class SolidStorageProvider
 
 		// FIXME: Get the webID issuer and validate that we allow storage creation for that issuer
 
-		$createdStorage = $storageServer::createStorage($webId);
+		$createdStorage = $storageServer->createStorage($webId);
 		if (!$createdStorage) {
 			error_log("Failed to create storage");
 			header("HTTP/1.1 400 Bad Request");
@@ -51,7 +51,7 @@ class SolidStorageProvider
 			exit();
 		}
 		$storageServer = new StorageServer();
-		$podCount = $storageServer::getPodCount();
+		$podCount = $storageServer->getPodCount();
 		$responseData = array(
 			"count" => $podCount
 		);

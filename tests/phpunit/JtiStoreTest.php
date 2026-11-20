@@ -21,11 +21,12 @@ class JtiStoreTest extends \PHPUnit\Framework\TestCase
 		)'
 		];
 
-		Db::connect();
+		$db = new Db();
+		$db->connect();
 		try {
 			// create tables
 			foreach ($statements as $statement) {
-				Db::$pdo->exec($statement);
+				$db::$pdo->exec($statement);
 			}
 		} catch (\PDOException $e) {
 			echo $e->getMessage();
@@ -35,56 +36,62 @@ class JtiStoreTest extends \PHPUnit\Framework\TestCase
 	public function testNonExistingJti()
 	{
 		$jti = "123";
-		$found = JtiStore::hasJti($jti);
+		$jtiStore = new JtiStore();
+		$found = $jtiStore->hasJti($jti);
 		$this->assertFalse($found);
 	}
 
 	public function testExistingJti()
 	{
 		$jti = "123";
-		JtiStore::saveJti($jti, time() + 3600);
-		$found = JtiStore::hasJti($jti);
+		$jtiStore = new JtiStore();
+		$jtiStore->saveJti($jti, time() + 3600);
+		$found = $jtiStore->hasJti($jti);
 		$this->assertTrue($found);
 	}
 
 	public function testExpiredJti()
 	{
 		$jti = "123";
-		JtiStore::saveJti($jti);
-		$query = Db::$pdo->prepare('UPDATE jti SET expires=:expires WHERE jti=:jti');
+		$jtiStore = new JtiStore();
+		$jtiStore->saveJti($jti);
+		$db = new Db();
+		$query = $db::$pdo->prepare('UPDATE jti SET expires=:expires WHERE jti=:jti');
 		$query->execute([
 			'expires' => time() - 10,
 			'jti' => $jti
 		]);
-		$found = JtiStore::hasJti($jti);
+		$found = $jtiStore->hasJti($jti);
 		$this->assertFalse($found);
 	}
 
 	public function testCleanup()
 	{
-		JtiStore::saveJti("123");
-		JtiStore::saveJti("234");
+		$jtiStore = new JtiStore();
+		$jtiStore->saveJti("123");
+		$jtiStore->saveJti("234");
 
-		$query = Db::$pdo->prepare('UPDATE jti SET expires=:expires WHERE jti=:jti');
+		$db = new Db();
+		$query = $db::$pdo->prepare('UPDATE jti SET expires=:expires WHERE jti=:jti');
 		$query->execute([
 			'expires' => time() - 10,
 			'jti' => "123"
 		]);
-		$query = Db::$pdo->prepare('UPDATE jti SET expires=:expires WHERE jti=:jti');
+		$query = $db::$pdo->prepare('UPDATE jti SET expires=:expires WHERE jti=:jti');
 		$query->execute([
 			'expires' => time() - 10,
 			'jti' => "234"
 		]);
 
-		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM jti');
+		$query = $db::$pdo->prepare('SELECT count(*) AS count FROM jti');
 		$query->execute();
 		$result = $query->fetchAll();
 		$beforeCleanup = $result[0]['count'];
 		$this->assertEquals(2, $beforeCleanup);
 
 
-		JtiStore::cleanupJti();
-		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM jti');
+		$jtiStore->cleanupJti();
+		$query = $db::$pdo->prepare('SELECT count(*) AS count FROM jti');
 		$query->execute();
 		$result = $query->fetchAll();
 		$afterCleanup = $result[0]['count'];

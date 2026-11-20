@@ -20,9 +20,9 @@ class SolidUserProfile
 
 		$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 		$profileServer = new ProfileServer();
-		$profileServer::initializeProfile();
-		$rdfAdapter = $profileServer::getRdfAdapter();
-		$filesystem = $profileServer::getFileSystem($rdfAdapter);
+		$profileServer->initializeProfile();
+		$rdfAdapter = $profileServer->getRdfAdapter();
+		$filesystem = $profileServer->getFileSystem($rdfAdapter);
 
 		$resourceServer = new ResourceServer($filesystem, $rdfAdapter, new Response(), null);
 		$solidNotifications = new SolidNotifications();
@@ -31,25 +31,25 @@ class SolidUserProfile
 		$wac = new WAC($filesystem, $rdfAdapter);
 
 		$util = new Util();
-		$baseUrl = $util::getServerBaseUrl();
+		$baseUrl = $util->getServerBaseUrl();
 		$resourceServer->setBaseUrl($baseUrl);
 		$resourceServer->lockToPath("/profile.ttl");
 		$wac->setBaseUrl($baseUrl);
 
 		// use the original $_SERVER without modified path, otherwise the htu check for DPOP will fail
-		$webId = $profileServer::getWebId($requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES));
+		$webId = $profileServer->getWebId($requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES));
 
 		if (!isset($webId)) {
 			$response = $resourceServer->getResponse()
 				->withStatus(409, "Invalid token");
-			$profileServer::respond($response);
+			$profileServer->respond($response);
 			exit();
 		}
 
 		$origin = $rawRequest->getHeaderLine("Origin");
 
 		// FIXME: Read allowed clients from the profile instead;
-		$owner = $profileServer::getOwner();
+		$owner = $profileServer->getOwner();
 
 		$allowedClients = $owner['allowedClients'] ?? [];
 		$allowedOrigins = array_merge(
@@ -65,12 +65,12 @@ class SolidUserProfile
 		if (!$wac->isAllowed($rawRequest, $webId, $origin, $allowedOrigins)) {
 			$response = new Response();
 			$response = $response->withStatus(403, "Access denied!");
-			$profileServer::respond($response);
+			$profileServer->respond($response);
 			exit();
 		}
 
 		$response = $resourceServer->respondToRequest($rawRequest);
 		$response = $wac->addWACHeaders($rawRequest, $response, $webId);
-		$profileServer::respond($response);
+		$profileServer->respond($response);
 	}
 }

@@ -21,13 +21,13 @@ class SolidStorage
 
 		$storageServer = new StorageServer();
 		try {
-			$storageServer::initializeStorage();
-			$rdfAdapter = $storageServer::getRdfAdapter();
-			$filesystem = $storageServer::getFileSystem($rdfAdapter);
+			$storageServer->initializeStorage();
+			$rdfAdapter = $storageServer->getRdfAdapter();
+			$filesystem = $storageServer->getFileSystem($rdfAdapter);
 		} catch (\Exception $e) {
 			$response = new Response();
 			$response = $response->withStatus(404, "Not found");
-			$storageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
@@ -38,23 +38,23 @@ class SolidStorage
 		$wac = new WAC($filesystem, $rdfAdapter);
 
 		$util = new Util();
-		$baseUrl = $util::getServerBaseUrl();
+		$baseUrl = $util->getServerBaseUrl();
 		$resourceServer->setBaseUrl($baseUrl);
 		$wac->setBaseUrl($baseUrl);
 
 		try {
-			$webId = $storageServer::getWebId($rawRequest);
+			$webId = $storageServer->getWebId($rawRequest);
 		} catch (\Exception $e) {
 			$response = $resourceServer->getResponse()
 				-> withStatus(400, "Bad request");
-			$storageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
 		if (!isset($webId)) {
 			$response = $resourceServer->getResponse()
 				->withStatus(409, "Invalid token");
-			$storageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
@@ -62,9 +62,9 @@ class SolidStorage
 
 		// FIXME: Read allowed clients from the profile instead;
 
-		$ownerWebId = $storageServer::getOwnerWebId();
+		$ownerWebId = $storageServer->getOwnerWebId();
 		$user = new User();
-		$owner = $user::getUserByWebId($ownerWebId);
+		$owner = $user->getUserByWebId($ownerWebId);
 
 		$allowedClients = $owner['allowedClients'] ?? [];
 		$allowedOrigins = array_merge(
@@ -81,12 +81,12 @@ class SolidStorage
 		if (!$wac->isAllowed($rawRequest, $webId, $origin, $allowedOrigins)) {
 			$response = new Response();
 			$response = $response->withStatus(403, "Access denied!");
-			$storageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
 		$response = $resourceServer->respondToRequest($rawRequest);
 		$response = $wac->addWACHeaders($rawRequest, $response, $webId);
-		$storageServer::respond($response);
+		$storageServer->respond($response);
 	}
 }
