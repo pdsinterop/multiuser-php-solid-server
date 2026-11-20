@@ -11,23 +11,27 @@ use Pdsinterop\PhpSolid\Session;
 
 class SolidIdp
 {
-	public static function respondToJwks()
+	public function respondToJwks()
 	{
-		$authServer = Server::getAuthServer();
+		$server = new Server();
+		$authServer = $server->getAuthServer();
 		$response = $authServer->respondToJwksMetadataRequest();
-		Server::respond($response);
+		$server->respond($response);
 	}
 
-	public static function respondToWellKnownOpenIdConfiguration()
+	public function respondToWellKnownOpenIdConfiguration()
 	{
-		$authServer = Server::getAuthServer();
+		$server = new Server();
+		$authServer = $server->getAuthServer();
 		$response = $authServer->respondToOpenIdMetadataRequest();
-		Server::respond($response);
+		$server->respond($response);
 	}
 
-	public static function respondToAuthorize()
+	public function respondToAuthorize()
 	{
-		$user = User::getUser(Session::getLoggedInUser());
+		$userObject = new User();
+		$session = new Session();
+		$user = $userObject->getUser($session->getLoggedInUser());
 
 		$clientId = $_GET['client_id'];
 		$getVars = $_GET;
@@ -43,7 +47,8 @@ class SolidIdp
 			$getVars['response_type'] = "code";
 		}
 
-		$keys = Server::getKeys();
+		$server = new Server();
+		$keys = $server->getKeys();
 		if (isset($_GET['request'])) {
 			$jwtConfig = \Lcobucci\JWT\Configuration::forSymmetricSigner(
 				new \Lcobucci\JWT\Signer\Rsa\Sha256(),
@@ -67,14 +72,15 @@ class SolidIdp
 		$requestFactory = new \Laminas\Diactoros\ServerRequestFactory();
 		$request = $requestFactory->fromGlobals($_SERVER, $getVars, $_POST, $_COOKIE, $_FILES);
 
-		$authServer = Server::getAuthServer();
+		$authServer = $server->getAuthServer();
 
 		$approval = false;
 		// check clientId approval for the user
 		if (in_array($clientId, ($user['allowedClients'] ?? []))) {
 			$approval = true;
 		} else {
-			$clientRegistration = ClientRegistration::getRegistration($clientId);
+			$clientRegistrationObject = new ClientRegistration();
+			$clientRegistration = $clientRegistrationObject->getRegistration($clientId);
 			if (isset($clientRegistration['origin']) && in_array($clientRegistration['origin'], TRUSTED_APPS)) {
 				$approval = true;
 			}
@@ -98,21 +104,21 @@ class SolidIdp
 		$response = $authServer->respondToAuthorizationRequest($request, $user, $approval);
 
 		if (in_array("id_token", $requestedResponseTypes)) {
-			$tokenGenerator = Server::getTokenGenerator();
+			$tokenGenerator = $server->getTokenGenerator();
 
 			$response = $tokenGenerator->addIdTokenToResponse(
 				$response,
 				$clientId,
 				$webId,
 				$_SESSION['nonce'] ?? '',
-				Server::getKeys()["privateKey"]
+				$server->getKeys()["privateKey"]
 			);
 		}
 
-		Server::respond($response);
+		$server->respond($response);
 	}
 
-	public static function respondToRegister()
+	public function respondToRegister()
 	{
 		$postData = file_get_contents("php://input");
 		$clientData = json_decode($postData, true);
@@ -139,9 +145,10 @@ class SolidIdp
 			$generatedClientSecret = bin2hex(random_bytes(32)); // and 64 chars for the client secret
 			$clientData['client_secret'] = $generatedClientSecret;
 		}
-		ClientRegistration::saveClientRegistration($clientData);
+		$clientRegistration = new ClientRegistration();
+		$clientRegistration->saveClientRegistration($clientData);
 
-		$client = ClientRegistration::getRegistration($generatedClientId);
+		$client = $clientRegistration->getRegistration($generatedClientId);
 
 		$responseData = array(
 			'redirect_uris' => $client['redirect_uris'],
@@ -165,22 +172,25 @@ class SolidIdp
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
 
-	public static function respondToSharing()
+	public function respondToSharing()
 	{
-		$user = User::getUser(Session::getLoggedInUser());
+		$userObject = new User();
+		$session = new Session();
+		$user = $userObject->getUser($session->getLoggedInUser());
 		$clientId = $_POST['client_id'];
 		$userId = $user['userId'];
 		if ($_POST['consent'] === 'true') {
-			User::allowClientForUser($clientId, $userId);
+			$userObject->allowClientForUser($clientId, $userId);
 		}
 		$returnUrl = urldecode($_POST['returnUrl']);
 		header("Location: $returnUrl");
 	}
 
-	public static function respondToToken()
+	public function respondToToken()
 	{
-		$authServer = Server::getAuthServer();
-		$tokenGenerator = Server::getTokenGenerator();
+		$server = new Server();
+		$authServer = $server->getAuthServer();
+		$tokenGenerator = $server->getTokenGenerator();
 
 		$requestFactory = new \Laminas\Diactoros\ServerRequestFactory();
 		$request = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
@@ -220,7 +230,7 @@ class SolidIdp
 				$clientId,
 				$userId,
 				($_SESSION['nonce'] ?? ''),
-				Server::getKeys()['privateKey'],
+				$server->getKeys()['privateKey'],
 				$httpDpop
 			);
 		}
@@ -231,9 +241,9 @@ class SolidIdp
 			$responseBody = $response->getBody()->getContents();
 			$body = json_decode($responseBody, true);
 			$body['refresh_token'] = str_repeat('a', 209); // Podpro doesn't like refresh tokens longer than 209 characters; Sad.
-			Server::respondPodPro($response, $body);
+			$server->respondPodPro($response, $body);
 		} else {
-			Server::respond($response);
+			$server->respond($response);
 		}
 	}
 }

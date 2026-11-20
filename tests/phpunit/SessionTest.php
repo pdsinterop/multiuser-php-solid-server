@@ -14,15 +14,17 @@ class SessionTest extends \PHPUnit\Framework\TestCase
 	public static $sessionOptions = [];
 	public function testStart()
 	{
-		Session::start("alice");
+		$session = new Session();
+		$session->start("alice");
 		$this->assertEquals($_SESSION['username'], "alice");
 		$this->assertEquals(self::$sessionOptions, ['cookie_lifetime' => 86400]);
 	}
 
 	public function testGetLoggedInUser()
 	{
-		Session::start("alice");
-		$user = Session::getLoggedInUser();
+		$session = new Session();
+		$session->start("alice");
+		$user = $session->getLoggedInUser();
 		$this->assertEquals($user, "alice");
 	}
 }

@@ -31,7 +31,8 @@ function file_get_contents($file)
 {
 	if (class_exists('Pdsinterop\PhpSolid\ServerTest')) {
 		if (! isset(ServerTest::$keys)) {
-			ServerTest::$keys = Server::generateKeySet();
+			$server = new Server;
+			ServerTest::$keys = $server->generateKeySet();
 		}
 		if (preg_match("/encryption/", $file)) {
 			return ServerTest::$keys['encryptionKey'];

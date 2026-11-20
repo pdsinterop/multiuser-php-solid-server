@@ -6,7 +6,7 @@ namespace Pdsinterop\PhpSolid;
 
 class Middleware
 {
-	public static function cors()
+	public function cors()
 	{
 		$corsMethods = "GET, PUT, POST, OPTIONS, DELETE, PATCH";
 		$corsAllowedHeaders = "*, allow, accept, authorization, content-type, dpop, slug, link";
@@ -29,7 +29,7 @@ class Middleware
 		header('Accept-Patch: text/n3');
 	}
 
-	public static function pubsub()
+	public function pubsub()
 	{
 		$pubsub = PUBSUB_SERVER;
 		if ($pubsub) {

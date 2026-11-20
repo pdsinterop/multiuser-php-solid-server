@@ -9,10 +9,11 @@ use Pdsinterop\PhpSolid\Db;
 
 class StorageServer extends Server
 {
-	public static function getStorage($storageId)
+	public function getStorage($storageId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db->connect();
+		$query = $db::$pdo->prepare(
 			'SELECT * FROM storage WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -21,10 +22,11 @@ class StorageServer extends Server
 		return $query->fetchAll();
 	}
 
-	public static function setStorageOwner($storageId, $owner)
+	public function setStorageOwner($storageId, $owner)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db->connect();
+		$query = $db::$pdo->prepare(
 			'UPDATE storage SET owner=:owner WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -33,14 +35,15 @@ class StorageServer extends Server
 		]);
 	}
 
-	public static function createStorage($ownerWebId)
+	public function createStorage($ownerWebId)
 	{
 		$generatedStorageId = bin2hex(random_bytes(16));
-		while (self::storageIdExists($generatedStorageId)) {
+		while ($this->storageIdExists($generatedStorageId)) {
 			$generatedStorageId = bin2hex(random_bytes(16));
 		}
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db->connect();
+		$query = $db::$pdo->prepare(
 			'INSERT OR REPLACE INTO storage VALUES(:storageId, :owner)'
 		);
 		$query->execute([
@@ -53,10 +56,11 @@ class StorageServer extends Server
 		];
 	}
 
-	public static function getPodCount()
+	public function getPodCount()
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db->connect();
+		$query = $db::$pdo->prepare(
 			'SELECT count(storage_id) as podCount FROM storage'
 		);
 		$query->execute();
@@ -68,10 +72,11 @@ class StorageServer extends Server
 		return 0;
 	}
 
-	public static function storageIdExists($storageId)
+	public function storageIdExists($storageId)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db->connect();
+		$query = $db::$pdo->prepare(
 			'SELECT storage_id FROM storage WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -84,11 +89,12 @@ class StorageServer extends Server
 		return false;
 	}
 
-	public static function getOwnerWebId()
+	public function getOwnerWebId()
 	{
-		$storageId = self::getStorageId();
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$storageId = $this->getStorageId();
+		$db = new Db();
+		$db->connect();
+		$query = $db::$pdo->prepare(
 			'SELECT owner FROM storage WHERE storage_id=:storageId'
 		);
 		$query->execute([
@@ -101,7 +107,7 @@ class StorageServer extends Server
 		return false;
 	}
 
-	public static function getMimeDetector()
+	public function getMimeDetector()
 	{
 		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
 			new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
@@ -117,10 +123,10 @@ class StorageServer extends Server
 		return $mimeTypeDetector;
 	}
 
-	public static function getRdfAdapter()
+	public function getRdfAdapter()
 	{
-		$storageId = self::getStorageId();
-		if (!self::storageIdExists($storageId)) {
+		$storageId = $this->getStorageId();
+		if (! $this->storageIdExists($storageId)) {
 			throw new \Exception("Storage does not exist");
 		}
 		if (is_dir(STORAGEBASE . "$storageId/")) { // backwards compatiblity check
@@ -136,25 +142,26 @@ class StorageServer extends Server
 			null, // visibilityConverter
 			LOCK_EX, // writeFlags
 			0002, // disallow links
-			self::getMimeDetector()
+			$this->getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();
 		// Create Formats objects
 		$formats = new \Pdsinterop\Rdf\Formats();
-		$serverUri = Util::getServerUri();
+		$util = new Util();
+		$serverUri = $util->getServerUri();
 
 		// Create the RDF Adapter
 		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
 	}
 
-	public static function getFileSystem($rdfAdapter)
+	public function getFileSystem($rdfAdapter)
 	{
 		$filesystem = new \League\Flysystem\Filesystem($rdfAdapter);
 		return $filesystem;
 	}
 
-	public static function respond($response)
+	public function respond($response)
 	{
 		$statusCode = $response->getStatusCode();
 		$response->getBody()->rewind();
@@ -173,31 +180,32 @@ class StorageServer extends Server
 		echo $body;
 	}
 
-	public static function getWebId($rawRequest)
+	public function getWebId($rawRequest)
 	{
-		$dpop = self::getDpop();
+		$dpop = $this->getDpop();
 		$webId = $dpop->getWebId($rawRequest);
 		if (!isset($webId)) {
-			$bearer = self::getBearer();
+			$bearer = $this->getBearer();
 			$webId = $bearer->getWebId($rawRequest);
 		}
 		return $webId;
 	}
 
-	private static function getStorageId()
+	private function getStorageId()
 	{
-		$serverName = Util::getServerName();
+		$util = new Util();
+		$serverName = $util->getServerName();
 		$idParts = explode(".", $serverName, 2);
 		$storageId = preg_replace("/^storage-/", "", $idParts[0]);
 		return $storageId;
 	}
 
-	public static function initializeStorage()
+	public function initializeStorage()
 	{
-		$rdfAdapter = self::getRdfAdapter();
-		$filesystem = self::getFilesystem($rdfAdapter);
+		$rdfAdapter = $this->getRdfAdapter();
+		$filesystem = $this->getFilesystem($rdfAdapter);
 		if (!$filesystem->fileExists("/.acl")) {
-			$defaultAcl = self::generateDefaultAcl();
+			$defaultAcl = $this->generateDefaultAcl();
 			$filesystem->write("/.acl", $defaultAcl);
 		}
 
@@ -206,29 +214,29 @@ class StorageServer extends Server
 			$filesystem->createDirectory("/inbox");
 		}
 		if (!$filesystem->fileExists("/inbox/.acl")) {
-			$inboxAcl = self::generatePublicAppendAcl();
+			$inboxAcl = $this->generatePublicAppendAcl();
 			$filesystem->write("/inbox/.acl", $inboxAcl);
 		}
 		if (!$filesystem->directoryExists("/settings")) {
 			$filesystem->createDirectory("/settings");
 		}
 		if (!$filesystem->fileExists("/settings/privateTypeIndex.ttl")) {
-			$privateTypeIndex = self::generateDefaultPrivateTypeIndex();
+			$privateTypeIndex = $this->generateDefaultPrivateTypeIndex();
 			$filesystem->write("/settings/privateTypeIndex.ttl", $privateTypeIndex);
 		}
 		if (!$filesystem->fileExists("/settings/publicTypeIndex.ttl")) {
-			$publicTypeIndex = self::generateDefaultPublicTypeIndex();
+			$publicTypeIndex = $this->generateDefaultPublicTypeIndex();
 			$filesystem->write("/settings/publicTypeIndex.ttl", $publicTypeIndex);
 		}
 		if (!$filesystem->fileExists("/settings/preferences.ttl")) {
-			$preferences = self::generateDefaultPreferences();
+			$preferences = $this->generateDefaultPreferences();
 			$filesystem->write("/settings/preferences.ttl", $preferences);
 		}
 		if (!$filesystem->directoryExists("/public")) {
 			$filesystem->createDirectory("/public");
 		}
 		if (!$filesystem->fileExists("/public/.acl")) {
-			$publicAcl = self::generatePublicReadAcl();
+			$publicAcl = $this->generatePublicReadAcl();
 			$filesystem->write("/public/.acl", $publicAcl);
 		}
 		if (!$filesystem->directoryExists("/private")) {
@@ -236,9 +244,9 @@ class StorageServer extends Server
 		}
 	}
 
-	public static function generateDefaultAcl()
+	public function generateDefaultAcl()
 	{
-		$webId = self::getOwnerWebId();
+		$webId = $this->getOwnerWebId();
 		if (!$webId) {
 			throw new \Exception("No owner found for storage");
 		}
@@ -271,9 +279,9 @@ EOF;
 		return $acl;
 	}
 
-	public static function generatePublicAppendAcl()
+	public function generatePublicAppendAcl()
 	{
-		$webId = self::getOwnerWebId();
+		$webId = $this->getOwnerWebId();
 		if (!$webId) {
 			throw new \Exception("No owner found for storage ID");
 		}
@@ -304,9 +312,9 @@ EOF;
 		return $acl;
 	}
 
-	public static function generatePublicReadAcl()
+	public function generatePublicReadAcl()
 	{
-		$webId = self::getOwnerWebId();
+		$webId = $this->getOwnerWebId();
 		if (!$webId) {
 			throw new \Exception("No owner found for storage ID");
 		}
@@ -337,7 +345,7 @@ EOF;
 		return $acl;
 	}
 
-	public static function generateDefaultPrivateTypeIndex()
+	public function generateDefaultPrivateTypeIndex()
 	{
 		$typeIndex = <<< "EOF"
 # Private type index
@@ -350,7 +358,7 @@ EOF;
 		return $typeIndex;
 	}
 
-	public static function generateDefaultPublicTypeIndex()
+	public function generateDefaultPublicTypeIndex()
 	{
 		$typeIndex = <<< "EOF"
 # Public type index
@@ -363,9 +371,9 @@ EOF;
 		return $typeIndex;
 	}
 
-	public static function generateDefaultPreferences()
+	public function generateDefaultPreferences()
 	{
-		$webId = self::getOwnerWebId();
+		$webId = $this->getOwnerWebId();
 		$preferences = <<< "EOF"
 # Preferences
 @prefix : <#>.

@@ -7,7 +7,7 @@
 
 class MailTemplateGenerator
 {
-	public static function mailtemplate($mailTokens)
+	public function mailtemplate($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['container']['backgroundColor'] ?? "#eeeeee";
 		ob_start();
@@ -35,17 +35,17 @@ class MailTemplateGenerator
        <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
          <td valign="top">
-          <?php self::mailTemplateHeader($mailTokens); ?>
+          <?php $this->mailTemplateHeader($mailTokens); ?>
          </td>
         </tr>
         <tr>
          <td valign="top">
-          <?php self::mailTemplateCallToAction($mailTokens); ?>
+          <?php $this->mailTemplateCallToAction($mailTokens); ?>
          </td>
         </tr>
         <tr>
          <td valign="top">
-          <?php self::mailTemplateFooter($mailTokens); ?>
+          <?php $this->mailTemplateFooter($mailTokens); ?>
          </td>
         </tr>
        </table>
@@ -64,7 +64,7 @@ class MailTemplateGenerator
 		return $mailTemplate;
 	}
 
-	private static function mailTemplateHeader($mailTokens)
+	private function mailTemplateHeader($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['header']['backgroundColor'] ?? "#3b3b3b";
 		?>
@@ -86,7 +86,7 @@ class MailTemplateGenerator
 		<?php
 	}
 
-	private static function mailTemplateCallToAction($mailTokens)
+	private function mailTemplateCallToAction($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
 		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
@@ -98,15 +98,15 @@ class MailTemplateGenerator
    <tr>
     <td valign="top" style="padding: 40px 60px 40px 60px; height: unset; background-color: <?php echo $backgroundColor; ?>;" bgcolor="<?php echo $backgroundColor; ?>">
 		<?php
-					self::mailTemplateCallToActionTitle($mailTokens);
+					$this->mailTemplateCallToActionTitle($mailTokens);
 		if (isset($mailTokens['buttonText'])) {
 			if (isset($mailTokens['buttonLink'])) {
-				self::mailTemplateCallToActionButton($mailTokens);
+				$this->mailTemplateCallToActionButton($mailTokens);
 			} else {
-				self::mailTemplateCallToActionButtonNoLink($mailTokens);
+				$this->mailTemplateCallToActionButtonNoLink($mailTokens);
 			}
 		}
-		self::mailTemplateCallToActionDescription($mailTokens);
+		$this->mailTemplateCallToActionDescription($mailTokens);
 		?>
     </td>
    </tr>
@@ -115,7 +115,7 @@ class MailTemplateGenerator
 		<?php
 	}
 
-	private static function mailTemplateCallToActionButton($mailTokens)
+	private function mailTemplateCallToActionButton($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
 		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
@@ -134,7 +134,7 @@ class MailTemplateGenerator
 		<?php
 	}
 
-	private static function mailTemplateCallToActionButtonNoLink($mailTokens)
+	private function mailTemplateCallToActionButtonNoLink($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
 		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
@@ -153,7 +153,7 @@ class MailTemplateGenerator
 		<?php
 	}
 
-	private static function mailTemplateCallToActionTitle($mailTokens)
+	private function mailTemplateCallToActionTitle($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
 		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
@@ -181,7 +181,7 @@ class MailTemplateGenerator
 		<?php
 	}
 
-	private static function mailTemplateCallToActionDescription($mailTokens)
+	private function mailTemplateCallToActionDescription($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['call-to-action']['backgroundColor'] ?? "#ffffff";
 		$color = MAILSTYLES['call-to-action']['color'] ?? "#181818";
@@ -209,7 +209,7 @@ class MailTemplateGenerator
 		<?php
 	}
 
-	private static function mailTemplateFooter($mailTokens)
+	private function mailTemplateFooter($mailTokens)
 	{
 		$backgroundColor = MAILSTYLES['footer']['backgroundColor'] ?? "#3b3b3b";
 		$color = MAILSTYLES['footer']['color'] ?? "#e8ecf0";

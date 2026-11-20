@@ -14,7 +14,8 @@ $request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 $request = rtrim($request, '/');
 $method = $_SERVER['REQUEST_METHOD'];
 
-Middleware::cors();
+$middleware = new Middleware();
+$middleware->cors();
 
 switch ($method) {
 	case "GET":
@@ -25,12 +26,13 @@ switch ($method) {
 		}
 	break;
 	case "POST":
+		$solidStorageProvider = new SolidStorageProvider();
 		switch ($request) {
 			case "/api/storage":
-				SolidStorageProvider::respondToStorageNew();
+				$solidStorageProvider->respondToStorageNew();
 			break;
 			case "/api/podcount":
-				SolidStorageProvider::respondToPodCount();
+				$solidStorageProvider->respondToPodCount();
 			break;
 			default:
 				header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
