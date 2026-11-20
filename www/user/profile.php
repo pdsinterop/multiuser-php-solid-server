@@ -14,13 +14,15 @@
 	$request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 	$method = $_SERVER['REQUEST_METHOD'];
 
-	Middleware::cors();
+	$middleware = new Middleware();
+	$middleware::cors();
 
 	switch ($method) {
 		case "GET":
 		case "PUT":
 		case "PATCH":
-			SolidUserProfile::respondToProfile();
+			$solidUserProfile = new SolidUserProfile();
+			$solidUserProfile::respondToProfile();
 		break;
 		case "OPTIONS":
 			echo "OK";
