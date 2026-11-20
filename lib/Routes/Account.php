@@ -12,7 +12,7 @@ use Pdsinterop\PhpSolid\StorageServer;
 
 class Account
 {
-	public static function requireLoggedInUser()
+	public function requireLoggedInUser()
 	{
 		$user = User::getUser(Session::getLoggedInUser());
 		if (!$user) {
@@ -29,13 +29,13 @@ class Account
 		}
 	}
 
-	public static function respondToDashboard()
+	public function respondToDashboard()
 	{
 		$user = User::getUser(Session::getLoggedInUser());
 		include_once(FRONTENDDIR . "bootloader.html");
 	}
 
-	public static function respondToLogout()
+	public function respondToLogout()
 	{
 		$user = User::getUser(Session::getLoggedInUser());
 		if ($user) {
@@ -45,7 +45,7 @@ class Account
 		exit();
 	}
 
-	public static function respondToAccountVerify()
+	public function respondToAccountVerify()
 	{
 		$verifyData = [
 			'email' => $_POST['email']
@@ -73,7 +73,7 @@ class Account
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
 
-	public static function respondToAccountNew()
+	public function respondToAccountNew()
 	{
 		$verifyToken = User::getVerifyToken($_POST['confirm']);
 		if (!$verifyToken) {
@@ -124,7 +124,7 @@ class Account
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
 
-	public static function respondToAccountResetPassword()
+	public function respondToAccountResetPassword()
 	{
 		if (!User::userEmailExists($_POST['email'])) {
 			header("HTTP/1.1 200 OK"); // Return OK even when user is not found;
@@ -143,7 +143,7 @@ class Account
 		echo json_encode("OK");
 	}
 
-	public static function respondToAccountChangePassword()
+	public function respondToAccountChangePassword()
 	{
 		$verifyToken = User::getVerifyToken($_POST['token']);
 		if (!$verifyToken) {
@@ -160,7 +160,7 @@ class Account
 		echo json_encode("OK");
 	}
 
-	public static function respondToAccountDelete()
+	public function respondToAccountDelete()
 	{
 		if (!User::userEmailExists($_POST['email'])) {
 			header("HTTP/1.1 200 OK"); // Return OK even when user is not found;
@@ -179,7 +179,7 @@ class Account
 		echo json_encode("OK");
 	}
 
-	public static function respondToAccountDeleteConfirm()
+	public function respondToAccountDeleteConfirm()
 	{
 		$verifyToken = User::getVerifyToken($_POST['token']);
 		if (!$verifyToken) {
@@ -192,7 +192,7 @@ class Account
 		echo json_encode("OK");
 	}
 
-	public static function respondToLogin()
+	public function respondToLogin()
 	{
 		$failureCount = IpAttempts::getAttemptsCount($_SERVER['REMOTE_ADDR'], "login");
 		if ($failureCount > 5) {

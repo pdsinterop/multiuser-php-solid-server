@@ -14,7 +14,7 @@ use Laminas\Diactoros\Response;
 
 class SolidStorage
 {
-	public static function respondToStorage()
+	public function respondToStorage()
 	{
 		$requestFactory = new ServerRequestFactory();
 		$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);

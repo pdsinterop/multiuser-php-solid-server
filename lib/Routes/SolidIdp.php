@@ -11,21 +11,21 @@ use Pdsinterop\PhpSolid\Session;
 
 class SolidIdp
 {
-	public static function respondToJwks()
+	public function respondToJwks()
 	{
 		$authServer = Server::getAuthServer();
 		$response = $authServer->respondToJwksMetadataRequest();
 		Server::respond($response);
 	}
 
-	public static function respondToWellKnownOpenIdConfiguration()
+	public function respondToWellKnownOpenIdConfiguration()
 	{
 		$authServer = Server::getAuthServer();
 		$response = $authServer->respondToOpenIdMetadataRequest();
 		Server::respond($response);
 	}
 
-	public static function respondToAuthorize()
+	public function respondToAuthorize()
 	{
 		$user = User::getUser(Session::getLoggedInUser());
 
@@ -112,7 +112,7 @@ class SolidIdp
 		Server::respond($response);
 	}
 
-	public static function respondToRegister()
+	public function respondToRegister()
 	{
 		$postData = file_get_contents("php://input");
 		$clientData = json_decode($postData, true);
@@ -165,7 +165,7 @@ class SolidIdp
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
 
-	public static function respondToSharing()
+	public function respondToSharing()
 	{
 		$user = User::getUser(Session::getLoggedInUser());
 		$clientId = $_POST['client_id'];
@@ -177,7 +177,7 @@ class SolidIdp
 		header("Location: $returnUrl");
 	}
 
-	public static function respondToToken()
+	public function respondToToken()
 	{
 		$authServer = Server::getAuthServer();
 		$tokenGenerator = Server::getTokenGenerator();

@@ -7,7 +7,7 @@ use Laminas\Diactoros\ServerRequestFactory;
 
 class SolidStorageProvider
 {
-	public static function respondToStorageNew()
+	public function respondToStorageNew()
 	{
 		$requestFactory = new ServerRequestFactory();
 		$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
@@ -34,7 +34,7 @@ class SolidStorageProvider
 		header("Content-type: application/json");
 		echo json_encode($responseData, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
-	public static function respondToPodCount()
+	public function respondToPodCount()
 	{
 		if (!defined('POD_COUNT_KEY')) {
 			header("HTTP/1.1 404 Not found");

@@ -29,21 +29,21 @@ switch ($method) {
 	case "GET":
 		switch ($request) {
 			case "/jwks":
-				$solidIdp::respondToJwks();
+				$solidIdp->respondToJwks();
 			break;
 			case "/.well-known/openid-configuration":
-				$solidIdp::respondToWellKnownOpenIdConfiguration();
+				$solidIdp->respondToWellKnownOpenIdConfiguration();
 			break;
 			case "/authorize":
-				$account::requireLoggedInUser();
-				$solidIdp::respondToAuthorize();
+				$account->requireLoggedInUser();
+				$solidIdp->respondToAuthorize();
 			break;
 			case "/dashboard":
-				$account::requireLoggedInUser();
-				$account::respondToDashboard();
+				$account->requireLoggedInUser();
+				$account->respondToDashboard();
 			break;
 			case "/logout":
-				$account::respondToLogout();
+				$account->respondToLogout();
 			break;
 			case "/login/password":
 				header("Location: /dashboard/");
@@ -58,7 +58,7 @@ switch ($method) {
 				include_once(FRONTENDDIR . "generated.html");
 			break;
 			case "/sharing":
-				$account::requireLoggedInUser();
+				$account->requireLoggedInUser();
 				include_once(FRONTENDDIR . "generated.html");
 			break;
 			case '/session':
@@ -73,34 +73,34 @@ switch ($method) {
 	case "POST":
 		switch ($request) {
 			case "/api/accounts/verify":
-				$account::respondToAccountVerify();
+				$account->respondToAccountVerify();
 			break;
 			case "/api/accounts/new":
-				$account::respondToAccountNew();
+				$account->respondToAccountNew();
 			break;
 			case "/api/accounts/reset-password":
-				$account::respondToAccountResetPassword();
+				$account->respondToAccountResetPassword();
 			break;
 			case "/api/accounts/change-password":
-				$account::respondToAccountChangePassword();
+				$account->respondToAccountChangePassword();
 			break;
 			case "/api/accounts/delete":
-				$account::respondToAccountDelete();
+				$account->respondToAccountDelete();
 			break;
 			case "/api/accounts/delete/confirm":
-				$account::respondToAccountDeleteConfirm();
+				$account->respondToAccountDeleteConfirm();
 			break;
 			case "/login/password":
-				$account::respondToLogin();
+				$account->respondToLogin();
 			break;
 			case "/register":
-				$solidIdp::respondToRegister();
+				$solidIdp->respondToRegister();
 			break;
 			case "/api/sharing":
-				$solidIdp::respondToSharing();
+				$solidIdp->respondToSharing();
 			break;
 			case "/token":
-				$solidIdp::respondToToken();
+				$solidIdp->respondToToken();
 			break;
 			default:
 				header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");

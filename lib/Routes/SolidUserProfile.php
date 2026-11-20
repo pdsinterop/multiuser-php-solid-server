@@ -13,7 +13,7 @@ use Laminas\Diactoros\Response;
 
 class SolidUserProfile
 {
-	public static function respondToProfile()
+	public function respondToProfile()
 	{
 		$requestFactory = new ServerRequestFactory();
 		$serverData = $_SERVER;

@@ -29,10 +29,10 @@ switch ($method) {
 		$solidStorageProvider = new SolidStorageProvider();
 		switch ($request) {
 			case "/api/storage":
-				$solidStorageProvider::respondToStorageNew();
+				$solidStorageProvider->respondToStorageNew();
 			break;
 			case "/api/podcount":
-				($solidStorageProvider)::respondToPodCount();
+				$solidStorageProvider->respondToPodCount();
 			break;
 			default:
 				header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");

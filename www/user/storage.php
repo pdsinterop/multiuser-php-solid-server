@@ -22,6 +22,6 @@ switch ($method) {
 	break;
 	default:
 		$solidStorage = new SolidStorage();
-		$solidStorage::respondToStorage();
+		$solidStorage->respondToStorage();
 	break;
 }

@@ -22,7 +22,7 @@
 		case "PUT":
 		case "PATCH":
 			$solidUserProfile = new SolidUserProfile();
-			$solidUserProfile::respondToProfile();
+			$solidUserProfile->respondToProfile();
 		break;
 		case "OPTIONS":
 			echo "OK";
