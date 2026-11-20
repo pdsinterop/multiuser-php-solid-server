@@ -23,7 +23,7 @@ $account = new Account();
 $middleware = new Middleware();
 $solidIdp = new SolidIdp();
 
-$middleware::cors();
+$middleware->cors();
 
 switch ($method) {
 	case "GET":

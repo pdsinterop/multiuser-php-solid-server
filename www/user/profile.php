@@ -15,7 +15,7 @@
 	$method = $_SERVER['REQUEST_METHOD'];
 
 	$middleware = new Middleware();
-	$middleware::cors();
+	$middleware->cors();
 
 	switch ($method) {
 		case "GET":
