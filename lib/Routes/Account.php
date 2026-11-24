@@ -2,13 +2,11 @@
 
 namespace Pdsinterop\PhpSolid\Routes;
 
-use Pdsinterop\PhpSolid\Server;
-use Pdsinterop\PhpSolid\ClientRegistration;
-use Pdsinterop\PhpSolid\User;
-use Pdsinterop\PhpSolid\Session;
-use Pdsinterop\PhpSolid\Mailer;
 use Pdsinterop\PhpSolid\IpAttempts;
+use Pdsinterop\PhpSolid\Mailer;
+use Pdsinterop\PhpSolid\Session;
 use Pdsinterop\PhpSolid\StorageServer;
+use Pdsinterop\PhpSolid\User;
 
 class Account
 {

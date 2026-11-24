@@ -2,10 +2,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\Server;
-use Pdsinterop\PhpSolid\User;
-use Pdsinterop\PhpSolid\Util;
-
 class ProfileServer extends Server
 {
 	public static function getMimeDetector()

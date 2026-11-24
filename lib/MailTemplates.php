@@ -4,8 +4,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\MailTemplateGenerator;
-
 class MailTemplates
 {
 	public static function verify()

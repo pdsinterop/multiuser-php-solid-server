@@ -2,8 +2,8 @@
 
 namespace Pdsinterop\PhpSolid\Routes;
 
-use Pdsinterop\PhpSolid\StorageServer;
 use Laminas\Diactoros\ServerRequestFactory;
+use Pdsinterop\PhpSolid\StorageServer;
 
 class SolidStorageProvider
 {

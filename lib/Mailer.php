@@ -2,7 +2,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\MailTemplates;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer

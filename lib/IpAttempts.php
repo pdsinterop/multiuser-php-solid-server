@@ -2,8 +2,6 @@
 
 namespace Pdsinterop\PhpSolid;
 
-use Pdsinterop\PhpSolid\Db;
-
 class IpAttempts
 {
 	public static function logFailedAttempt($ip, $type, $expires)
