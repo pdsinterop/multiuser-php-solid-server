@@ -14,7 +14,7 @@ class MiddlewareTest extends \PHPUnit\Framework\TestCase
 	public static $headers = [];
 	public function testCors()
 	{
-		$middleware = new Middleware;
+		$middleware = new Middleware();
 		$middleware->cors();
 		$this->assertTrue(in_array("Access-Control-Allow-Origin: *", self::$headers));
 		$this->assertTrue(in_array("Access-Control-Allow-Headers: *, allow, accept, authorization, content-type, dpop, slug, link", self::$headers));
@@ -30,7 +30,7 @@ class MiddlewareTest extends \PHPUnit\Framework\TestCase
 		$origin = "https://example.com";
 		$_REQUEST['HTTP_ORIGIN'] = $origin;
 
-		$middleware = new Middleware;
+		$middleware = new Middleware();
 		$middleware->cors();
 		$this->assertTrue(in_array("Access-Control-Allow-Origin: $origin", self::$headers));
 		$this->assertTrue(in_array("Access-Control-Allow-Headers: *, allow, accept, authorization, content-type, dpop, slug, link", self::$headers));
@@ -43,7 +43,7 @@ class MiddlewareTest extends \PHPUnit\Framework\TestCase
 
 	public function testPubSub()
 	{
-		$middleware = new Middleware;
+		$middleware = new Middleware();
 		$middleware->pubsub();
 		$this->assertTrue(in_array("updates-via: " . PUBSUB_SERVER, self::$headers));
 	}

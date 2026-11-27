@@ -18,7 +18,7 @@ class MailTemplates
 		);
 
 		$mailSubject = "Confirm your e-mail: {code}";
-		$mailTemplateGenerator = new MailTemplateGenerator;
+		$mailTemplateGenerator = new MailTemplateGenerator();
 		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
@@ -52,7 +52,7 @@ class MailTemplates
 			"buttonLink" => BASEURL . "/change-password/?token={code}"
 		);
 
-		$mailTemplateGenerator = new MailTemplateGenerator;
+		$mailTemplateGenerator = new MailTemplateGenerator();
 		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
@@ -87,7 +87,7 @@ class MailTemplates
 			"buttonLink" => BASEURL . "/account/delete/confirm/?token={code}"
 		);
 
-		$mailTemplateGenerator = new MailTemplateGenerator;
+		$mailTemplateGenerator = new MailTemplateGenerator();
 		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
@@ -121,7 +121,7 @@ class MailTemplates
 
 		$mailSubject = "Welcome to Solid!";
 
-		$mailTemplateGenerator = new MailTemplateGenerator;
+		$mailTemplateGenerator = new MailTemplateGenerator();
 		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
