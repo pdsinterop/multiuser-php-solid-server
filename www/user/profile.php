@@ -2,8 +2,9 @@
 
 // phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 
-	ini_set("log_errors", 1);
+	ini_set('display_errors', 'off');
 	ini_set('expose_php', 'off');
+	ini_set('log_errors', 1);
 
 	require_once(__DIR__ . "/../../config.php");
 	require_once(__DIR__ . "/../../vendor/autoload.php");
