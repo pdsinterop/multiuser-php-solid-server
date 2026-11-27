@@ -11,8 +11,9 @@ use Pdsinterop\PhpSolid\Routes\SolidStorage;
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-Middleware::cors();
-Middleware::pubsub();
+$middleware = new Middleware();
+$middleware->cors();
+$middleware->pubsub();
 
 switch ($method) {
 	case "OPTIONS":
@@ -20,6 +21,7 @@ switch ($method) {
 		return;
 	break;
 	default:
-		SolidStorage::respondToStorage();
+		$solidStorage = new SolidStorage();
+		$solidStorage->respondToStorage();
 	break;
 }

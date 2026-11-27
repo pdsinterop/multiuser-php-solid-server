@@ -43,11 +43,12 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			'INSERT INTO verify VALUES("test2", \'{"expires": ' . $futureTimestamp->getTimestamp() . ', "hello": "world", "code": "test2"}\')'
 		];
 
-		Db::connect();
+		$db = new Db();
+		$db->connect();
 		try {
 			// create tables
 			foreach ($statements as $statement) {
-				Db::$pdo->exec($statement);
+				$db::$pdo->exec($statement);
 			}
 		} catch (\PDOException $e) {
 			echo $e->getMessage();
@@ -61,13 +62,14 @@ class UserTest extends \PHPUnit\Framework\TestCase
 
 		$afterExpires = new \DateTime();
 		$afterExpires->add(new \DateInterval('PT31M'));
-		$token = User::saveVerifyToken("verify", [
+		$user = new User();
+		$token = $user->saveVerifyToken("verify", [
 			"hello" => "world"
 		]);
 		$this->assertTrue($token['expires'] > $beforeExpires->getTimestamp());
 		$this->assertTrue($token['expires'] < $afterExpires->getTimestamp());
 
-		$storedToken = User::getVerifyToken($token['code']);
+		$storedToken = $user->getVerifyToken($token['code']);
 		$this->assertEquals($storedToken['hello'], "world");
 	}
 
@@ -78,13 +80,14 @@ class UserTest extends \PHPUnit\Framework\TestCase
 
 		$afterExpires = new \DateTime();
 		$afterExpires->add(new \DateInterval('PT31M'));
-		$token = User::saveVerifyToken("verify", [
+		$user = new User();
+		$token = $user->saveVerifyToken("verify", [
 			"hello" => "world"
 		]);
 		$this->assertTrue($token['expires'] > $beforeExpires->getTimestamp());
 		$this->assertTrue($token['expires'] < $afterExpires->getTimestamp());
 
-		$storedToken = User::getVerifyToken($token['code']);
+		$storedToken = $user->getVerifyToken($token['code']);
 		$this->assertEquals($storedToken['hello'], "world");
 	}
 
@@ -95,25 +98,28 @@ class UserTest extends \PHPUnit\Framework\TestCase
 
 		$afterExpires = new \DateTime();
 		$afterExpires->add(new \DateInterval('PT31M'));
-		$token = User::saveVerifyToken("verify", [
+		$user = new User();
+		$token = $user->saveVerifyToken("verify", [
 			"hello" => "world"
 		]);
 		$this->assertTrue($token['expires'] > $beforeExpires->getTimestamp());
 		$this->assertTrue($token['expires'] < $afterExpires->getTimestamp());
 
-		$storedToken = User::getVerifyToken($token['code']);
+		$storedToken = $user->getVerifyToken($token['code']);
 		$this->assertEquals($storedToken['hello'], "world");
 	}
 
 	public function testExpiredToken()
 	{
-		$token = User::getVerifyToken("test1");
+		$user = new User();
+		$token = $user->getVerifyToken("test1");
 		$this->assertFalse($token);
 	}
 
 	public function testNonExpiredToken()
 	{
-		$token = User::getVerifyToken("test2");
+		$user = new User();
+		$token = $user->getVerifyToken("test2");
 		$this->assertEquals($token['hello'], "world");
 	}
 
@@ -124,13 +130,14 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 		$this->assertEquals($createdUser['email'], "user@example.com");
 		$this->assertTrue(isset($createdUser['webId']));
 		$this->assertTrue(isset($createdUser['userId']));
 		$this->assertTrue(strlen($createdUser['userId']) === 32);
 
-		$canLogIn = User::checkPassword($newUser['email'], $newUser['password']);
+		$canLogIn = $user->checkPassword($newUser['email'], $newUser['password']);
 		$this->assertTrue($canLogIn);
 	}
 
@@ -141,9 +148,10 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user2@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 
-		$userByEmail = User::getUser($newUser['email']);
+		$userByEmail = $user->getUser($newUser['email']);
 		$this->assertEquals($userByEmail['webId'], $createdUser['webId']);
 		$this->assertEquals($userByEmail['hello'], 'world');
 		$this->assertTrue(isset($userByEmail['allowedClients']));
@@ -157,9 +165,10 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user3@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 
-		$userById = User::getUserById($createdUser['userId']);
+		$userById = $user->getUserById($createdUser['userId']);
 		$this->assertEquals($userById['webId'], $createdUser['webId']);
 		$this->assertEquals($userById['hello'], 'world');
 		$this->assertTrue(isset($userById['allowedClients']));
@@ -168,7 +177,8 @@ class UserTest extends \PHPUnit\Framework\TestCase
 
 	public function testSetPasswordNonExistingUser()
 	{
-		$result = User::setUserPassword("not_here@example.com", "hello123!@#ABC");
+		$user = new User();
+		$result = $user->setUserPassword("not_here@example.com", "hello123!@#ABC");
 		$this->assertFalse($result);
 	}
 
@@ -179,8 +189,9 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user4@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
-		$result = User::setUserPassword($newUser['email'], "a");
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
+		$result = $user->setUserPassword($newUser['email'], "a");
 		$this->assertFalse($result);
 	}
 
@@ -191,9 +202,10 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user5@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 
-		$canLogIn = User::checkPassword($newUser['email'], $newUser['password']);
+		$canLogIn = $user->checkPassword($newUser['email'], $newUser['password']);
 		$this->assertTrue($canLogIn);
 	}
 
@@ -204,9 +216,10 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user6@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 
-		$canLogIn = User::checkPassword($newUser['email'], "something else");
+		$canLogIn = $user->checkPassword($newUser['email'], "something else");
 		$this->assertFalse($canLogIn);
 	}
 
@@ -217,9 +230,10 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user7@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 
-		$result = User::setUserPassword($newUser['email'], "this is a strong password because it is long enough");
+		$result = $user->setUserPassword($newUser['email'], "this is a strong password because it is long enough");
 		$this->assertTrue($result);
 	}
 
@@ -230,21 +244,22 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user8@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
-		$canLogIn = User::checkPassword($newUser['email'], $newUser['password']);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
+		$canLogIn = $user->checkPassword($newUser['email'], $newUser['password']);
 		$this->assertTrue($canLogIn);
 
 		$newPassword = "this is a strong password because it is long enough";
-		$result = User::setUserPassword($newUser['email'], $newPassword);
+		$result = $user->setUserPassword($newUser['email'], $newPassword);
 		$this->assertTrue($result);
 
-		$canLogIn = User::checkPassword($newUser['email'], "something else");
+		$canLogIn = $user->checkPassword($newUser['email'], "something else");
 		$this->assertFalse($canLogIn);
 
-		$canLogIn = User::checkPassword($newUser['email'], $newUser['password']);
+		$canLogIn = $user->checkPassword($newUser['email'], $newUser['password']);
 		$this->assertFalse($canLogIn);
 
-		$canLogIn = User::checkPassword($newUser['email'], $newPassword);
+		$canLogIn = $user->checkPassword($newUser['email'], $newPassword);
 		$this->assertTrue($canLogIn);
 	}
 
@@ -255,15 +270,16 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user9@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$userObject = new User();
+		$createdUser = $userObject->createUser($newUser);
 		$storageUrl = "https://storage.example.com";
-		User::setStorage($createdUser['userId'], $storageUrl);
+		$userObject->setStorage($createdUser['userId'], $storageUrl);
 
-		$savedStorage = User::getStorage($createdUser['userId']);
+		$savedStorage = $userObject->getStorage($createdUser['userId']);
 
 		$this->assertTrue(in_array($storageUrl, $savedStorage));
 
-		$user = User::getUser($newUser['email']);
+		$user = $userObject->getUser($newUser['email']);
 		$this->assertTrue(in_array($storageUrl, $user['storage']));
 	}
 
@@ -274,15 +290,17 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user10@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 
-		$userExists = User::userIdExists($createdUser['userId']);
+		$userExists = $user->userIdExists($createdUser['userId']);
 		$this->assertTrue($userExists);
 	}
 
 	public function testUserDoesNotExistsById()
 	{
-		$userExists = User::userIdExists("foo");
+		$user = new User();
+		$userExists = $user->userIdExists("foo");
 		$this->assertFalse($userExists);
 	}
 
@@ -293,15 +311,17 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user11@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 
-		$userExists = User::userEmailExists($newUser['email']);
+		$userExists = $user->userEmailExists($newUser['email']);
 		$this->assertTrue($userExists);
 	}
 
 	public function testUserDoesNotExistsByEmail()
 	{
-		$userExists = User::userEmailExists("foo@example.com");
+		$user = new User();
+		$userExists = $user->userEmailExists("foo@example.com");
 		$this->assertFalse($userExists);
 	}
 
@@ -312,16 +332,17 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user11@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$userObject = new User();
+		$createdUser = $userObject->createUser($newUser);
 
 		$clientId = "12345";
-		$result = User::allowClientForUser($clientId, $createdUser['userId']);
+		$result = $userObject->allowClientForUser($clientId, $createdUser['userId']);
 		$this->assertTrue($result);
 
-		$allowedClients = User::getAllowedClients($createdUser['userId']);
+		$allowedClients = $userObject->getAllowedClients($createdUser['userId']);
 		$this->assertTrue(in_array($clientId, $allowedClients));
 
-		$user = User::getUser($newUser['email']);
+		$user = $userObject->getUser($newUser['email']);
 		$this->assertTrue(in_array($clientId, $user['allowedClients']));
 	}
 
@@ -332,40 +353,43 @@ class UserTest extends \PHPUnit\Framework\TestCase
 			"email" => "user11@example.com",
 			"hello" => "world"
 		];
-		$createdUser = User::createUser($newUser);
+		$user = new User();
+		$createdUser = $user->createUser($newUser);
 		$clientId = "12345";
-		$result = User::allowClientForUser($clientId, $createdUser['userId']);
+		$result = $user->allowClientForUser($clientId, $createdUser['userId']);
 
-		$this->assertTrue(User::userIdExists($createdUser['userId']));
-		$this->assertTrue(User::userEmailExists($newUser['email']));
-		$allowedClients = User::getAllowedClients($createdUser['userId']);
+		$this->assertTrue($user->userIdExists($createdUser['userId']));
+		$this->assertTrue($user->userEmailExists($newUser['email']));
+		$allowedClients = $user->getAllowedClients($createdUser['userId']);
 		$this->assertTrue(in_array($clientId, $allowedClients));
 
-		User::deleteAccount($newUser['email']);
+		$user->deleteAccount($newUser['email']);
 
-		$this->assertFalse(User::userIdExists($createdUser['userId']));
-		$this->assertFalse(User::userEmailExists($newUser['email']));
-		$allowedClients = User::getAllowedClients($createdUser['userId']);
+		$this->assertFalse($user->userIdExists($createdUser['userId']));
+		$this->assertFalse($user->userEmailExists($newUser['email']));
+		$allowedClients = $user->getAllowedClients($createdUser['userId']);
 		$this->assertEmpty($allowedClients);
 	}
 
 	public function testCleanup()
 	{
 		// empty the verify table first so we have dependable numbers
-		$query = Db::$pdo->prepare('DELETE FROM verify WHERE NOT code=""');
+		$db = new Db();
+		$query = $db::$pdo->prepare('DELETE FROM verify WHERE NOT code=""');
 		$query->execute();
 
-		$token1 = User::saveVerifyToken("verify", [
+		$user = new User();
+		$token1 = $user->saveVerifyToken("verify", [
 			"hello" => "world",
 			"expires" => time() - 10
 		]);
-		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM verify');
+		$query = $db::$pdo->prepare('SELECT count(*) AS count FROM verify');
 		$query->execute();
 		$result = $query->fetchAll();
 		$beforeCleanup = $result[0]['count'];
 		$this->assertEquals(1, $beforeCleanup);
-		User::cleanupTokens();
-		$query = Db::$pdo->prepare('SELECT count(*) AS count FROM verify');
+		$user->cleanupTokens();
+		$query = $db::$pdo->prepare('SELECT count(*) AS count FROM verify');
 		$query->execute();
 		$result = $query->fetchAll();
 		$afterCleanup = $result[0]['count'];

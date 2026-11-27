@@ -47,7 +47,8 @@ class MailerTest extends \PHPUnit\Framework\TestCase
 {
 	public function testGetMailer()
 	{
-		$mailer = Mailer::getMailer();
+		$mailerObject = new Mailer();
+		$mailer = $mailerObject->getMailer();
 		$this->assertInstanceOf('\PHPMailer\PHPMailer\PHPMailer', $mailer);
 		$this->assertEquals($mailer->Host, MAILER['host']);
 		$this->assertEquals($mailer->From, MAILER['from']);
@@ -63,45 +64,47 @@ class MailerTest extends \PHPUnit\Framework\TestCase
 
 	public function testAccountCreated()
 	{
-		Mailer::$mailer = new MailerMock();
-		Mailer::sendAccountCreated([
+		$mailer = new Mailer();
+		$mailer->mailer = new MailerMock();
+		$mailer->sendAccountCreated([
 			'email' => 'alice@example.com',
 			'webId' => 'aliceWebId'
 		]);
-		$this->assertContains("alice@example.com", Mailer::$mailer->addresses);
-		$this->assertMatchesRegularExpression("/aliceWebId/", Mailer::$mailer->AltBody);
-		$this->assertMatchesRegularExpression("/aliceWebId/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Header -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Footer -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<html>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<body style=.*>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</body|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
+		$this->assertContains("alice@example.com", $mailer->mailer->addresses);
+		$this->assertMatchesRegularExpression("/aliceWebId/", $mailer->mailer->AltBody);
+		$this->assertMatchesRegularExpression("/aliceWebId/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Header -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Footer -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<html>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<body style=.*>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</body|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</html>|", $mailer->mailer->Body);
 		$doc = new \DOMDocument();
-		$doc->loadHTML(Mailer::$mailer->Body);
+		$doc->loadHTML($mailer->mailer->Body);
 		$this->assertEquals("Welcome to Solid!", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
 	}
 
 	public function testVerifySucces()
 	{
-		Mailer::$mailer = new MailerMock();
-		Mailer::sendVerify([
+		$mailer = new Mailer();
+		$mailer->mailer = new MailerMock();
+		$mailer->sendVerify([
 			'email' => 'alice@example.com',
 			'code' => '654321'
 		]);
-		$this->assertContains("alice@example.com", Mailer::$mailer->addresses);
-		$this->assertMatchesRegularExpression("/654321/", Mailer::$mailer->AltBody);
-		$this->assertMatchesRegularExpression("/654321/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Header -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Footer -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<html>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<body style=.*>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</body|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
+		$this->assertContains("alice@example.com", $mailer->mailer->addresses);
+		$this->assertMatchesRegularExpression("/654321/", $mailer->mailer->AltBody);
+		$this->assertMatchesRegularExpression("/654321/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Header -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Footer -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<html>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<body style=.*>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</body|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</html>|", $mailer->mailer->Body);
 		$doc = new \DOMDocument();
-		$doc->loadHTML(Mailer::$mailer->Body);
+		$doc->loadHTML($mailer->mailer->Body);
 		$this->assertEquals("Confirm your e-mail", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
 	}
 
@@ -109,9 +112,10 @@ class MailerTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->expectException(\Exception::class);
 
-		Mailer::$mailer = new MailerMock();
-		Mailer::$mailer->ErrorInfo = 'Mock Error';
-		Mailer::sendVerify([
+		$mailer = new Mailer();
+		$mailer->mailer = new MailerMock();
+		$mailer->mailer->ErrorInfo = 'Mock Error';
+		$mailer->sendVerify([
 			'email' => 'alice@example.com',
 			'code' => '654321'
 		]);
@@ -119,45 +123,47 @@ class MailerTest extends \PHPUnit\Framework\TestCase
 
 	public function testResetPassword()
 	{
-		Mailer::$mailer = new MailerMock();
-		Mailer::sendResetPassword([
+		$mailer = new Mailer();
+		$mailer->mailer = new MailerMock();
+		$mailer->sendResetPassword([
 			'email' => 'alice@example.com',
 			'code' => '654321'
 		]);
-		$this->assertContains("alice@example.com", Mailer::$mailer->addresses);
-		$this->assertMatchesRegularExpression("/654321/", Mailer::$mailer->AltBody);
-		$this->assertMatchesRegularExpression("/654321/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Header -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Footer -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<html>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<body style=.*>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</body|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
+		$this->assertContains("alice@example.com", $mailer->mailer->addresses);
+		$this->assertMatchesRegularExpression("/654321/", $mailer->mailer->AltBody);
+		$this->assertMatchesRegularExpression("/654321/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Header -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Footer -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<html>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<body style=.*>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</body|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</html>|", $mailer->mailer->Body);
 		$doc = new \DOMDocument();
-		$doc->loadHTML(Mailer::$mailer->Body);
+		$doc->loadHTML($mailer->mailer->Body);
 		$this->assertEquals("Password reset", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
 	}
 
 	public function testDeleteAccount()
 	{
-		Mailer::$mailer = new MailerMock();
-		Mailer::sendDeleteAccount([
+		$mailer = new Mailer();
+		$mailer->mailer = new MailerMock();
+		$mailer->sendDeleteAccount([
 			'email' => 'alice@example.com',
 			'code' => '654321'
 		]);
-		$this->assertContains("alice@example.com", Mailer::$mailer->addresses);
-		$this->assertMatchesRegularExpression("/654321/", Mailer::$mailer->AltBody);
-		$this->assertMatchesRegularExpression("/654321/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Header -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Footer -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<html>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|<body style=.*>|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</body|", Mailer::$mailer->Body);
-		$this->assertMatchesRegularExpression("|</html>|", Mailer::$mailer->Body);
+		$this->assertContains("alice@example.com", $mailer->mailer->addresses);
+		$this->assertMatchesRegularExpression("/654321/", $mailer->mailer->AltBody);
+		$this->assertMatchesRegularExpression("/654321/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Header -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Footer -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("/<!-- Call to action -->/", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<html>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|<body style=.*>|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</body|", $mailer->mailer->Body);
+		$this->assertMatchesRegularExpression("|</html>|", $mailer->mailer->Body);
 		$doc = new \DOMDocument();
-		$doc->loadHTML(Mailer::$mailer->Body);
+		$doc->loadHTML($mailer->mailer->Body);
 		$this->assertEquals("Delete your account", $doc->getElementsByTagName("title")[0]->textContent); // If this works, I'm assuming it is valid HTML.
 	}
 }

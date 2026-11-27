@@ -13,19 +13,20 @@ use Pdsinterop\Solid\Resources\Server as ResourceServer;
 
 class SolidStorage
 {
-	public static function respondToStorage()
+	public function respondToStorage()
 	{
 		$requestFactory = new ServerRequestFactory();
 		$rawRequest = $requestFactory->fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 
+		$storageServer = new StorageServer();
 		try {
-			StorageServer::initializeStorage();
-			$rdfAdapter = StorageServer::getRdfAdapter();
-			$filesystem = StorageServer::getFileSystem($rdfAdapter);
+			$storageServer->initializeStorage();
+			$rdfAdapter = $storageServer->getRdfAdapter();
+			$filesystem = $storageServer->getFileSystem($rdfAdapter);
 		} catch (\Exception $e) {
 			$response = new Response();
 			$response = $response->withStatus(404, "Not found");
-			StorageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
@@ -35,23 +36,24 @@ class SolidStorage
 
 		$wac = new WAC($filesystem, $rdfAdapter);
 
-		$baseUrl = Util::getServerBaseUrl();
+		$util = new Util();
+		$baseUrl = $util->getServerBaseUrl();
 		$resourceServer->setBaseUrl($baseUrl);
 		$wac->setBaseUrl($baseUrl);
 
 		try {
-			$webId = StorageServer::getWebId($rawRequest);
+			$webId = $storageServer->getWebId($rawRequest);
 		} catch (\Exception $e) {
 			$response = $resourceServer->getResponse()
 				-> withStatus(400, "Bad request");
-			StorageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
 		if (!isset($webId)) {
 			$response = $resourceServer->getResponse()
 				->withStatus(409, "Invalid token");
-			StorageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
@@ -59,8 +61,9 @@ class SolidStorage
 
 		// FIXME: Read allowed clients from the profile instead;
 
-		$ownerWebId = StorageServer::getOwnerWebId();
-		$owner = User::getUserByWebId($ownerWebId);
+		$ownerWebId = $storageServer->getOwnerWebId();
+		$user = new User();
+		$owner = $user->getUserByWebId($ownerWebId);
 
 		$allowedClients = $owner['allowedClients'] ?? [];
 		$allowedOrigins = array_merge(
@@ -77,12 +80,12 @@ class SolidStorage
 		if (!$wac->isAllowed($rawRequest, $webId, $origin, $allowedOrigins)) {
 			$response = new Response();
 			$response = $response->withStatus(403, "Access denied!");
-			StorageServer::respond($response);
+			$storageServer->respond($response);
 			exit();
 		}
 
 		$response = $resourceServer->respondToRequest($rawRequest);
 		$response = $wac->addWACHeaders($rawRequest, $response, $webId);
-		StorageServer::respond($response);
+		$storageServer->respond($response);
 	}
 }

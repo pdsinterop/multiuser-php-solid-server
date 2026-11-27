@@ -10,7 +10,8 @@ class DbTest extends \PHPUnit\Framework\TestCase
 {
 	public function testConnect()
 	{
-		Db::connect();
-		$this->assertInstanceOf("PDO", Db::$pdo);
+		$db = new Db();
+		$db->connect();
+		$this->assertInstanceOf("PDO", $db::$pdo);
 	}
 }

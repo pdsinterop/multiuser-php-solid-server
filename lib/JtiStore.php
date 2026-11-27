@@ -4,11 +4,12 @@ namespace Pdsinterop\PhpSolid;
 
 class JtiStore
 {
-	public static function hasJti($jti)
+	public function hasJti($jti)
 	{
-		Db::connect();
+		$db = new Db();
+		$db->connect();
 		$now = new \DateTime();
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'SELECT jti FROM jti WHERE jti=:jti AND expires>:now'
 		);
 		$query->execute([
@@ -22,10 +23,11 @@ class JtiStore
 		return false;
 	}
 
-	public static function saveJti($jti)
+	public function saveJti($jti)
 	{
-		Db::connect();
-		$query = Db::$pdo->prepare(
+		$db = new Db();
+		$db->connect();
+		$query = $db::$pdo->prepare(
 			'INSERT INTO jti VALUES(:jti, :expires)'
 		);
 		$expires = new \DateTime();
@@ -36,11 +38,12 @@ class JtiStore
 		]);
 	}
 
-	public static function cleanupJti()
+	public function cleanupJti()
 	{
-		Db::connect();
+		$db = new Db();
+		$db->connect();
 		$now = new \DateTime();
-		$query = Db::$pdo->prepare(
+		$query = $db::$pdo->prepare(
 			'DELETE FROM jti WHERE expires < :now'
 		);
 		$query->execute([

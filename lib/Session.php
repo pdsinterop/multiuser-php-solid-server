@@ -4,7 +4,7 @@ namespace Pdsinterop\PhpSolid;
 
 class Session
 {
-	public static function start($username)
+	public function start($username)
 	{
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start([
@@ -14,7 +14,7 @@ class Session
 		$_SESSION['username'] = $username;
 	}
 
-	public static function getLoggedInUser()
+	public function getLoggedInUser()
 	{
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();

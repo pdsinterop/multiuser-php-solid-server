@@ -15,7 +15,7 @@ use Pdsinterop\Solid\Auth\Utils\ReplayDetector;
 
 class Server
 {
-	public static function generateKeySet()
+	public function generateKeySet()
 	{
 		$config = array(
 			"digest_alg" => "sha256",
@@ -38,9 +38,9 @@ class Server
 		return $result;
 	}
 
-	public static function getAuthServer()
+	public function getAuthServer()
 	{
-		$authServerConfig = self::getAuthServerConfig();
+		$authServerConfig = $this->getAuthServerConfig();
 		$authServerFactory = new AuthorizationServerFactory($authServerConfig);
 		$authServer = $authServerFactory->create();
 		$response = new Response();
@@ -48,11 +48,11 @@ class Server
 		return $server;
 	}
 
-	public static function getAuthServerConfig()
+	public function getAuthServerConfig()
 	{
-		$keys = self::getKeys();
-		$configClient = self::getConfigClient();
-		$endpoints = self::getEndpoints();
+		$keys = $this->getKeys();
+		$configClient = $this->getConfigClient();
+		$endpoints = $this->getEndpoints();
 		$authServerConfigFactory = new ConfigFactory(
 			$configClient,
 			$keys['encryptionKey'],
@@ -64,11 +64,12 @@ class Server
 		return $authServerConfig;
 	}
 
-	public static function getConfigClient()
+	public function getConfigClient()
 	{
 		$clientId = $_GET['client_id'] ?? $_POST['client_id'] ?? null;
 		if ($clientId) {
-			$registeredClient = ClientRegistration::getRegistration($clientId);
+			$clientRegistration = new ClientRegistration();
+			$registeredClient = $clientRegistration->getRegistration($clientId);
 			if (isset($registeredClient) && isset($registeredClient['redirect_uris'])) {
 				/*
 					If the token_endpoint_auth_method is 'none',
@@ -103,14 +104,15 @@ class Server
 		}
 	}
 
-	public static function getDpop()
+	public function getDpop()
 	{
 		$replayDetector = new ReplayDetector(
 			function ($jti, $targetUri) {
-				if (JtiStore::hasJti($jti)) {
+				$jtiStore = new JtiStore();
+				if ($jtiStore->hasJti($jti)) {
 					return true;
 				} else {
-					JtiStore::saveJti($jti);
+					$jtiStore->saveJti($jti);
 					return false;
 				}
 				return false;
@@ -120,14 +122,15 @@ class Server
 		return new DPop($jtiValidator);
 	}
 
-	public static function getBearer()
+	public function getBearer()
 	{
 		$replayDetector = new ReplayDetector(
 			function ($jti, $targetUri) {
-				if (JtiStore::hasJti($jti)) {
+				$jtiStore = new JtiStore();
+				if ($jtiStore->hasJti($jti)) {
 					return true;
 				} else {
-					JtiStore::saveJti($jti);
+					$jtiStore->saveJti($jti);
 					return false;
 				}
 				return false;
@@ -137,7 +140,7 @@ class Server
 		return new Bearer($jtiValidator);
 	}
 
-	public static function getEndpoints()
+	public function getEndpoints()
 	{
 		return array(
 			"issuer"                          => BASEURL,
@@ -151,7 +154,7 @@ class Server
 		);
 	}
 
-	public static function getKeys()
+	public function getKeys()
 	{
 		$keys = array(
 			'encryptionKey' => file_get_contents(KEYDIR . "encryption.key"),
@@ -161,17 +164,17 @@ class Server
 		return $keys;
 	}
 
-	public static function getTokenGenerator()
+	public function getTokenGenerator()
 	{
 		$dpopValidFor = new \DateInterval('PT10M');
 		return new TokenGenerator(
-			self::getAuthServerConfig(),
+			$this->getAuthServerConfig(),
 			$dpopValidFor,
-			self::getDpop()
+			$this->getDpop()
 		);
 	}
 
-	public static function respond($response)
+	public function respond($response)
 	{
 		$statusCode = $response->getStatusCode();
 		$response->getBody()->rewind();
@@ -190,7 +193,7 @@ class Server
 		echo json_encode($body, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
 	}
 
-	public static function respondPodPro($response, $body)
+	public function respondPodPro($response, $body)
 	{
 		$statusCode = $response->getStatusCode();
 		$response->getBody()->rewind();

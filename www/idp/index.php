@@ -19,27 +19,31 @@ $request = explode("?", $_SERVER['REQUEST_URI'], 2)[0];
 $request = rtrim($request, '/');
 $method = $_SERVER['REQUEST_METHOD'];
 
-Middleware::cors();
+$account = new Account();
+$middleware = new Middleware();
+$solidIdp = new SolidIdp();
+
+$middleware->cors();
 
 switch ($method) {
 	case "GET":
 		switch ($request) {
 			case "/jwks":
-				SolidIdp::respondToJwks();
+				$solidIdp->respondToJwks();
 			break;
 			case "/.well-known/openid-configuration":
-				SolidIdp::respondToWellKnownOpenIdConfiguration();
+				$solidIdp->respondToWellKnownOpenIdConfiguration();
 			break;
 			case "/authorize":
-				Account::requireLoggedInUser();
-				SolidIdp::respondToAuthorize();
+				$account->requireLoggedInUser();
+				$solidIdp->respondToAuthorize();
 			break;
 			case "/dashboard":
-				Account::requireLoggedInUser();
-				Account::respondToDashboard();
+				$account->requireLoggedInUser();
+				$account->respondToDashboard();
 			break;
 			case "/logout":
-				Account::respondToLogout();
+				$account->respondToLogout();
 			break;
 			case "/login/password":
 				header("Location: /dashboard/");
@@ -54,7 +58,7 @@ switch ($method) {
 				include_once(FRONTENDDIR . "generated.html");
 			break;
 			case "/sharing":
-				Account::requireLoggedInUser();
+				$account->requireLoggedInUser();
 				include_once(FRONTENDDIR . "generated.html");
 			break;
 			case '/session':
@@ -69,34 +73,34 @@ switch ($method) {
 	case "POST":
 		switch ($request) {
 			case "/api/accounts/verify":
-				Account::respondToAccountVerify();
+				$account->respondToAccountVerify();
 			break;
 			case "/api/accounts/new":
-				Account::respondToAccountNew();
+				$account->respondToAccountNew();
 			break;
 			case "/api/accounts/reset-password":
-				Account::respondToAccountResetPassword();
+				$account->respondToAccountResetPassword();
 			break;
 			case "/api/accounts/change-password":
-				Account::respondToAccountChangePassword();
+				$account->respondToAccountChangePassword();
 			break;
 			case "/api/accounts/delete":
-				Account::respondToAccountDelete();
+				$account->respondToAccountDelete();
 			break;
 			case "/api/accounts/delete/confirm":
-				Account::respondToAccountDeleteConfirm();
+				$account->respondToAccountDeleteConfirm();
 			break;
 			case "/login/password":
-				Account::respondToLogin();
+				$account->respondToLogin();
 			break;
 			case "/register":
-				SolidIdp::respondToRegister();
+				$solidIdp->respondToRegister();
 			break;
 			case "/api/sharing":
-				SolidIdp::respondToSharing();
+				$solidIdp->respondToSharing();
 			break;
 			case "/token":
-				SolidIdp::respondToToken();
+				$solidIdp->respondToToken();
 			break;
 			default:
 				header($_SERVER['SERVER_PROTOCOL'] . " 404 Not found");
@@ -112,7 +116,11 @@ switch ($method) {
 }
 if (!file_exists(CLEANUP_FILE) || (filemtime(CLEANUP_FILE) < time())) {
 	touch(CLEANUP_FILE, time() + 3600);
-	User::cleanupTokens();
-	IpAttempts::cleanupAttempts();
-	JtiStore::cleanupJti();
+	$ipAttempts = new IpAttempts();
+	$jtiStore = new JtiStore();
+	$user = new User();
+
+	$user->cleanupTokens();
+	$ipAttempts->cleanupAttempts();
+	$jtiStore->cleanupJti();
 }

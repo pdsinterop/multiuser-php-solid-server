@@ -6,7 +6,7 @@ namespace Pdsinterop\PhpSolid;
 
 class MailTemplates
 {
-	public static function verify()
+	public function verify()
 	{
 		$mailTokens = array(
 			"title" => "Confirm your e-mail",
@@ -16,7 +16,8 @@ class MailTemplates
 		);
 
 		$mailSubject = "Confirm your e-mail: {code}";
-		$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
+		$mailTemplateGenerator = new MailTemplateGenerator();
+		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
 			$mailTokens['title'],
@@ -38,7 +39,7 @@ class MailTemplates
 		);
 	}
 
-	public static function resetPassword()
+	public function resetPassword()
 	{
 		$mailSubject = "Password reset";
 		$mailTokens = array(
@@ -49,7 +50,8 @@ class MailTemplates
 			"buttonLink" => BASEURL . "/change-password/?token={code}"
 		);
 
-		$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
+		$mailTemplateGenerator = new MailTemplateGenerator();
+		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
 			$mailTokens['title'],
@@ -72,7 +74,7 @@ class MailTemplates
 		);
 	}
 
-	public static function deleteAccount()
+	public function deleteAccount()
 	{
 		$mailSubject = "Delete your account";
 		$mailTokens = array(
@@ -83,7 +85,8 @@ class MailTemplates
 			"buttonLink" => BASEURL . "/account/delete/confirm/?token={code}"
 		);
 
-		$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
+		$mailTemplateGenerator = new MailTemplateGenerator();
+		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
 			$mailTokens['title'],
@@ -106,7 +109,7 @@ class MailTemplates
 		);
 	}
 
-	public static function accountCreated()
+	public function accountCreated()
 	{
 		$mailTokens = array(
 			"title" => "Welcome to Solid!",
@@ -116,7 +119,8 @@ class MailTemplates
 
 		$mailSubject = "Welcome to Solid!";
 
-		$mailHtmlBody = MailTemplateGenerator::mailTemplate($mailTokens);
+		$mailTemplateGenerator = new MailTemplateGenerator();
+		$mailHtmlBody = $mailTemplateGenerator->mailTemplate($mailTokens);
 
 		$mailPlainBody = implode("\n\n", array(
 			$mailTokens['title'],

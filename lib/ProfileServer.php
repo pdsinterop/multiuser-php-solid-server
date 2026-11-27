@@ -4,7 +4,7 @@ namespace Pdsinterop\PhpSolid;
 
 class ProfileServer extends Server
 {
-	public static function getMimeDetector()
+	public function getMimeDetector()
 	{
 		$extensionMap = new \League\MimeTypeDetection\OverridingExtensionToMimeTypeMap(
 			new \League\MimeTypeDetection\GeneratedExtensionToMimeTypeMap(),
@@ -20,9 +20,9 @@ class ProfileServer extends Server
 		return $mimeTypeDetector;
 	}
 
-	public static function getRdfAdapter()
+	public function getRdfAdapter()
 	{
-		$profileId = self::getProfileId();
+		$profileId = $this->getProfileId();
 
 		if (is_dir(PROFILEBASE . "$profileId/")) { // backwards compatiblity check
 			$profilePath = $profileId;
@@ -37,25 +37,26 @@ class ProfileServer extends Server
 			null, // visibilityConverter
 			LOCK_EX, // writeFlags
 			0002, // disallow links
-			self::getMimeDetector()
+			$this->getMimeDetector()
 		);
 
 		$graph = new \EasyRdf\Graph();
 		// Create Formats objects
 		$formats = new \Pdsinterop\Rdf\Formats();
-		$serverUri = Util::getServerUri();
+		$util = new Util();
+		$serverUri = $util->getServerUri();
 
 		// Create the RDF Adapter
 		return new \Pdsinterop\Rdf\Flysystem\Adapter\Rdf($adapter, $graph, $formats, $serverUri);
 	}
 
-	public static function getFileSystem($rdfAdapter)
+	public function getFileSystem($rdfAdapter)
 	{
 		$filesystem = new \League\Flysystem\Filesystem($rdfAdapter);
 		return $filesystem;
 	}
 
-	public static function respond($response)
+	public function respond($response)
 	{
 		$statusCode = $response->getStatusCode();
 		$response->getBody()->rewind();
@@ -74,60 +75,63 @@ class ProfileServer extends Server
 		echo $body;
 	}
 
-	public static function getWebId($rawRequest)
+	public function getWebId($rawRequest)
 	{
-		$dpop = self::getDpop();
+		$dpop = $this->getDpop();
 		$webId = $dpop->getWebId($rawRequest);
 		if (!isset($webId)) {
-			$bearer = self::getBearer();
+			$bearer = $this->getBearer();
 			$webId = $bearer->getWebId($rawRequest);
 		}
 		return $webId;
 	}
 
-	private static function getProfileId()
+	private function getProfileId()
 	{
-		$serverName = Util::getServerName();
+		$util = new Util();
+		$serverName = $util->getServerName();
 		$idParts = explode(".", $serverName, 2);
 		$profileId = preg_replace("/^id-/", "", $idParts[0]);
 		return $profileId;
 	}
 
-	public static function getOwner()
+	public function getOwner()
 	{
-		$profileId = self::getProfileId();
-		return User::getUserById($profileId);
+		$profileId = $this->getProfileId();
+		$user = new User();
+
+		return $user->getUserById($profileId);
 	}
 
-	public static function getOwnerWebId()
+	public function getOwnerWebId()
 	{
-		$owner = self::getOwner();
+		$owner = $this->getOwner();
 		return $owner['webId'];
 	}
 
-	public static function initializeProfile()
+	public function initializeProfile()
 	{
-		$user = self::getOwner();
+		$user = $this->getOwner();
 
 		if ($user) {
-			$rdfAdapter = self::getRdfAdapter();
-			$filesystem = self::getFilesystem($rdfAdapter);
+			$rdfAdapter = $this->getRdfAdapter();
+			$filesystem = $this->getFilesystem($rdfAdapter);
 			if (!$filesystem->fileExists("/.acl")) {
-				$defaultAcl = self::generateDefaultAcl();
+				$defaultAcl = $this->generateDefaultAcl();
 				$filesystem->write("/.acl", $defaultAcl);
 			}
 
 			// Generate default folders and ACLs:
 			if (!$filesystem->fileExists("/profile.ttl")) {
-				$profile = self::generateDefaultProfile($user);
+				$profile = $this->generateDefaultProfile($user);
 				$filesystem->write("/profile.ttl", $profile);
 			}
 		}
 	}
 
-	public static function generateDefaultAcl()
+	public function generateDefaultAcl()
 	{
-		$webId = self::getOwnerWebId();
+		$webId = $this->getOwnerWebId();
 		$acl = <<< "EOF"
 # Root ACL resource for the user account
 @prefix acl: <http://www.w3.org/ns/auth/acl#>.
@@ -159,10 +163,10 @@ EOF;
 		return $acl;
 	}
 
-	public static function generateDefaultProfile($user)
+	public function generateDefaultProfile($user)
 	{
 		if (!isset($user['storage']) || !$user['storage']) {
-			$user['storage'] = "https://storage-" . self::getProfileId() . "." . BASEDOMAIN . "/";
+			$user['storage'] = "https://storage-" . $this->getProfileId() . "." . BASEDOMAIN . "/";
 		}
 		if (is_array($user['storage'])) { // empty array is already handled
 			$user['storage'] = array_values($user['storage'])[0]; // FIXME: Handle multiple storage pods
